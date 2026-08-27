@@ -74,13 +74,13 @@ th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left}
 </div>
 <div class="card" style="margin-bottom:10px">
   <b>Ortak kayıt</b>
-  <div class="tiny">İki telefon aynı kodu kullanır. Biri kaydeder, diğeri çeker.</div>
+  <div class="tiny">Kaydı kopyala, diğer telefona yapıştır. Aynı listeyi görürsünüz.</div>
   <label style="margin-top:8px">Ortak kod
-    <input id="cloudId" type="text" placeholder="İlk kayıtta otomatik oluşur" />
+    <input id="cloudId" type="text" placeholder="Kopyalanan kaydı buraya yapıştır" />
   </label>
   <div style="display:flex;gap:8px;margin-top:8px">
-    <button class="btn good" onclick="cloudPush()">Buluta kaydet</button>
-    <button class="btn" onclick="cloudPull()">Buluttan çek</button>
+    <button class="btn good" onclick="cloudPush()">Kaydı kopyala</button>
+    <button class="btn" onclick="cloudPull()">Yapıştır / çek</button>
   </div>
 </div>
 
@@ -242,48 +242,47 @@ function setCloudCode(id){
   const el = document.getElementById('cloudId');
   if(el) el.value = id;
 }
+async function packState(){
+  return JSON.stringify({people:state.people, cezalar:state.cezalar||[], devamsizlik:state.devamsizlik||[], t:Date.now()});
+}
+async function applyState(s){
+  if(!s || !Array.isArray(s.people)) throw new Error('bos');
+  state = s;
+  if(!Array.isArray(state.cezalar)) state.cezalar = [];
+  if(!Array.isArray(state.devamsizlik)) state.devamsizlik = [];
+  persist();
+  renderListe();
+}
 async function cloudPush(){
-  try{
-    toast('Buluta kaydediliyor...');
-    const payload = JSON.stringify({people:state.people, cezalar:state.cezalar||[], devamsizlik:state.devamsizlik||[], t:Date.now()});
-    let id = cloudCode();
-    let res;
-    if(id){
-      res = await fetch(CLOUD_API+'/'+id, {method:'PUT', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:payload});
-    } else {
-      res = await fetch(CLOUD_API, {method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:payload});
-      const loc = res.headers.get('Location') || res.headers.get('location') || '';
-      id = loc.split('/').filter(Boolean).pop() || '';
-    }
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    if(!id) throw new Error('kod yok');
-    setCloudCode(id);
-    persist();
-    toast('Buluta kaydedildi');
-  }catch(e){
-    toast('Bulut kaydı olmadı');
-  }
+  const payload = await packState();
+  const el = document.getElementById('cloudId');
+  if(el) el.value = payload;
+  try{ await navigator.clipboard.writeText(payload); }catch(e){}
+  toast('Kayıt kopyalandı, diğer telefona yapıştır');
 }
 async function cloudPull(){
+  let raw = cloudCode();
+  if(!raw){
+    try{ raw = await navigator.clipboard.readText(); }catch(e){}
+  }
+  raw = (raw||'').trim();
+  if(!raw){ toast('Önce kaydı yapıştır'); return; }
   try{
-    const id = cloudCode();
-    if(!id){ toast('Önce ortak kodu yaz veya kaydet'); return; }
+    if(raw.startsWith('{')){
+      applyState(JSON.parse(raw));
+      toast('Yapıştırıldı');
+      return;
+    }
     toast('Buluttan alınıyor...');
-    const res = await fetch(CLOUD_API+'/'+id, {headers:{'Accept':'application/json'}});
+    const res = await fetch(CLOUD_API+'/'+raw, {headers:{'Accept':'application/json'}});
     if(!res.ok) throw new Error('HTTP '+res.status);
-    const s = await res.json();
-    if(!s || !Array.isArray(s.people)) throw new Error('bos');
-    state = s;
-    if(!Array.isArray(state.cezalar)) state.cezalar = [];
-    if(!Array.isArray(state.devamsizlik)) state.devamsizlik = [];
-    setCloudCode(id);
-    persist();
-    renderListe();
+    applyState(await res.json());
     toast('Buluttan alındı');
   }catch(e){
-    toast('Çekilemedi, kodu kontrol et');
+    toast('Yapıştırılan kayıt okunamadı');
   }
 }
+
 function save(){ persist(); toast('Kaydedildi'); }
 
 function toast(t){
