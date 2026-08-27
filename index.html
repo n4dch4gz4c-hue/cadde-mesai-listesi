@@ -74,13 +74,13 @@ th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left}
 </div>
 <div class="card" style="margin-bottom:10px">
   <b>Ortak kayıt</b>
-  <div class="tiny">Kaydı kopyala, diğer telefona yapıştır. Aynı listeyi görürsünüz.</div>
+  <div class="tiny">Kısa kod al, kodu diğerine yaz. O “Kodla çek” der.</div>
   <label style="margin-top:8px">Ortak kod
-    <input id="cloudId" type="text" placeholder="Kopyalanan kaydı buraya yapıştır" />
+    <input id="cloudId" type="text" placeholder="örn. SjCHJ" />
   </label>
   <div style="display:flex;gap:8px;margin-top:8px">
-    <button class="btn good" onclick="cloudPush()">Kaydı kopyala</button>
-    <button class="btn" onclick="cloudPull()">Yapıştır / çek</button>
+    <button class="btn good" onclick="cloudPush()">Kısa kod al</button>
+    <button class="btn" onclick="cloudPull()">Kodla çek</button>
   </div>
 </div>
 
@@ -253,33 +253,47 @@ async function applyState(s){
   persist();
   renderListe();
 }
+function shortFromUrl(u){
+  return String(u||'').split('/').filter(Boolean).pop().replace(/[^A-Za-z0-9_-]/g,'').slice(0,12);
+}
+async function postPaste(payload){
+  const res = await fetch('https://paste.rs', {method:'POST', body:payload});
+  const txt = (await res.text()).trim();
+  if(!res.ok) throw new Error('paste');
+  const id = shortFromUrl(txt);
+  if(!id) throw new Error('id');
+  return id;
+}
+async function getPaste(id){
+  const res = await fetch('https://paste.rs/'+id);
+  if(!res.ok) throw new Error('get');
+  return await res.json();
+}
 async function cloudPush(){
-  const payload = await packState();
-  const el = document.getElementById('cloudId');
-  if(el) el.value = payload;
-  try{ await navigator.clipboard.writeText(payload); }catch(e){}
-  toast('Kayıt kopyalandı, diğer telefona yapıştır');
+  try{
+    toast('Kisa kod uretiliyor...');
+    const payload = await packState();
+    const id = await postPaste(payload);
+    setCloudCode(id);
+    try{ await navigator.clipboard.writeText(id); }catch(e){}
+    toast('Kod: '+id);
+  }catch(e){
+    toast('Kisa kod olusmadi, tekrar dene');
+  }
 }
 async function cloudPull(){
-  let raw = cloudCode();
-  if(!raw){
-    try{ raw = await navigator.clipboard.readText(); }catch(e){}
+  const id = cloudCode();
+  if(!id){ toast('Kodu yaz'); return; }
+  if(id.startsWith('{')){
+    try{ applyState(JSON.parse(id)); toast('Yapistirildi'); }catch(e){ toast('Kod hatali'); }
+    return;
   }
-  raw = (raw||'').trim();
-  if(!raw){ toast('Önce kaydı yapıştır'); return; }
   try{
-    if(raw.startsWith('{')){
-      applyState(JSON.parse(raw));
-      toast('Yapıştırıldı');
-      return;
-    }
-    toast('Buluttan alınıyor...');
-    const res = await fetch(CLOUD_API+'/'+raw, {headers:{'Accept':'application/json'}});
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    applyState(await res.json());
-    toast('Buluttan alındı');
+    toast('Cekiliyor...');
+    applyState(await getPaste(id.trim()));
+    toast('Alindi');
   }catch(e){
-    toast('Yapıştırılan kayıt okunamadı');
+    toast('Kod bulunamadi');
   }
 }
 
