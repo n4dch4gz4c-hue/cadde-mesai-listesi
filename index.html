@@ -72,6 +72,17 @@ th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left}
   </div>
   <button class="btn" onclick="resetData()">Sıfırla</button>
 </div>
+<div class="card" style="margin-bottom:10px">
+  <b>Ortak kayıt</b>
+  <div class="tiny">İki telefon aynı kodu kullanır. Biri kaydeder, diğeri çeker.</div>
+  <label style="margin-top:8px">Ortak kod
+    <input id="cloudId" type="text" placeholder="İlk kayıtta otomatik oluşur" />
+  </label>
+  <div style="display:flex;gap:8px;margin-top:8px">
+    <button class="btn good" onclick="cloudPush()">Buluta kaydet</button>
+    <button class="btn" onclick="cloudPull()">Buluttan çek</button>
+  </div>
+</div>
 
 <div class="tabs">
   <div class="tab on" data-tab="liste" onclick="tab(this)">Personel</div>
@@ -180,6 +191,8 @@ th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left}
 <script>
 const SEED = {"people": [{"id": 1, "name": "CEMAL ÇELİK", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 8000.0, "disiplinDk": 0.0}, {"id": 2, "name": "ABDULLAH AVCI", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 3, "name": "CUMHUR YİĞİT", "mesaiSaat": 1.0, "mesaiBirim": 320, "hsSaat": 2.0, "primAdet": 0.0, "kurye": false, "yolGun": 6.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 4, "name": "HÜSAMETTİN KÖRPE", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 5, "name": "SALİH USTA", "mesaiSaat": 6.0, "mesaiBirim": 320, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 6, "name": "BURHAN BAYAKIR", "mesaiSaat": 2.5, "mesaiBirim": 300, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 7, "name": "ERDAL ÇAVDAR", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 8, "name": "HİKMET ERDOĞDU", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 9, "name": "SELİM ORTAHİSAR", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 10, "name": "MEHMET EMİN MÜDERRİSOĞLU", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 11, "name": "KÖKSAL SOYKAN", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 12, "name": "FERHAT AVCI", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 13, "name": "ERHAN SOFUOĞLU", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 14, "name": "HASAN ALİ GERZ", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 2.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 15, "name": "MUHAMMED CAN SARICI", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 16, "name": "BİLAL SÜRÜKLİ", "mesaiSaat": 1.0, "mesaiBirim": 220, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 17, "name": "MUHAMMED HASAN KOÇALAN", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 18, "name": "UĞUR GÖKER", "mesaiSaat": 2.0, "mesaiBirim": 250, "hsSaat": 3.5, "primAdet": 0.0, "kurye": true, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 19, "name": "BEDRETTİN AVCI", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 25.0, "yolBirim": 1050, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 20, "name": "EMRE POLAT", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 21, "name": "SELAHATTİN AVCI", "mesaiSaat": 0.0, "mesaiBirim": 250, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 22, "name": "CANER AVCI", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 23, "name": "ALİ AKKOCA", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 0.0, "primAdet": 0.0, "kurye": true, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 24, "name": "AZAT MYRADOV", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 25, "name": "MURAT TORUN", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 0.0, "primAdet": 0.0, "kurye": true, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 26, "name": "MEHMET ÇELİK", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 27, "name": "YILMAZ AVCI", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 29.0, "yolBirim": 1200, "izinTutar": 2900.0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 28, "name": "RAMAZAN BAYAKIR", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 4.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 29, "name": "ONUR AVCI", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 30, "name": "M. MUHAMMED MUSTAFA BAYAKIR", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 31, "name": "CİHAN AVCI", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 32, "name": "YASİR FURKAN KAVAK", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 33, "name": "SEPİDEH MENNATİ", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 34, "name": "MUHAMMET EREN ÇELİK", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 35, "name": "MURAT DAĞIDIR", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 25.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 36, "name": "SEYFİ ÇELİK", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 4.5, "primAdet": 0.0, "kurye": true, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 37, "name": "FEVZİ DOLAK", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 4.5, "primAdet": 0.0, "kurye": true, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 38, "name": "ABDULKADİR UĞURLUEL", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 3.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 39, "name": "AYDIN AVCI", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 4.0, "primAdet": 0.0, "kurye": false, "yolGun": 31.0, "yolBirim": 1050, "izinTutar": 2900.0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 40, "name": "HAKAN ATMACA", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 0.0, "primAdet": 0.0, "kurye": true, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 41, "name": "CİHAN GENÇ", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 4.0, "primAdet": 0.0, "kurye": true, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 42, "name": "ABDULLAH DENERİ", "mesaiSaat": 16.0, "mesaiBirim": 220, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 43, "name": "HAMİT AKPINAR", "mesaiSaat": 0.0, "mesaiBirim": 220, "hsSaat": 4.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 44, "name": "ADİL DEMİR ÇELİK", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 45, "name": "ABDURRAHMAN KAPAN", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 0.0, "primAdet": 0.0, "kurye": true, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 46, "name": "SAYİM GÜMÜŞ", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 4.0, "primAdet": 0.0, "kurye": true, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 47, "name": "ARDA AYDOĞAN", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 1.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 2400.0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 48, "name": "BAYRAM YETER", "mesaiSaat": 4.0, "mesaiBirim": 270, "hsSaat": 0.5, "primAdet": 0.0, "kurye": true, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 49, "name": "YUNUS EMRE ÇELİK", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 2700.0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 50, "name": "RAMAZAN YAVUZ", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 0.5, "primAdet": 0.0, "kurye": true, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 51, "name": "ZEYNEP SOFUOĞLU", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 52, "name": "MUSTAFA AYDIN", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 0.5, "primAdet": 0.0, "kurye": true, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 53, "name": "HASAN İPEK", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 54, "name": "KAAN ATASOY", "mesaiSaat": 3.0, "mesaiBirim": 220, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 1900.0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 55, "name": "ABDURRAHMAN GÜRKAN", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 0.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 2900.0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 56, "name": "VAHDETTİN AVCI", "mesaiSaat": 3.0, "mesaiBirim": 270, "hsSaat": 4.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 57, "name": "ERCAN ALTUN", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 58, "name": "OSMAN CEYLAN", "mesaiSaat": 3.5, "mesaiBirim": 270, "hsSaat": 4.0, "primAdet": 0.0, "kurye": true, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 59, "name": "SEMİH SOFUOĞLU", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 3.5, "primAdet": 0.0, "kurye": false, "yolGun": 22.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 60, "name": "ABDURRAHMAN ÖZKAN", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 3.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 61, "name": "FIRAT AVCI", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 4.5, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 62, "name": "MENDERES SOFUOĞLU", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 4.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 2900.0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 63, "name": "HİCABİ AKYILDIZ", "mesaiSaat": 0.0, "mesaiBirim": 300, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 64, "name": "ABDURRAHMAN BULUT", "mesaiSaat": 7.0, "mesaiBirim": 220, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 65, "name": "MUHİTTİN ÖZÇELİK", "mesaiSaat": 0.0, "mesaiBirim": 270, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}, {"id": 66, "name": "MUHAMMET SOFUOĞLU", "mesaiSaat": 0.0, "mesaiBirim": 320, "hsSaat": 0.0, "primAdet": 0.0, "kurye": false, "yolGun": 0.0, "yolBirim": 1200, "izinTutar": 0, "yillikTutar": 0, "disiplinDk": 0.0}], "cezalar": [{"kisi": "SELAHATTİN AVCI", "tutar": 1000, "neden": "Trendyol ceza"}, {"kisi": "MUHAMMED HASAN KOÇALAN", "tutar": 1000, "neden": "Sakal"}, {"kisi": "SELİM ORTAHİSAR", "tutar": 1000, "neden": "Sakal"}, {"kisi": "BURHAN BAYAKIR", "tutar": 1000, "neden": "Trendyol cezası"}, {"kisi": "CANER AVCI", "tutar": 1000, "neden": "Trendyol cezası"}, {"kisi": "ARDA AYDOĞAN", "tutar": 1000, "neden": "Telefon cezası"}, {"kisi": "BİLAL SÜRÜKLİ", "tutar": 1000, "neden": "Disiplin cezası"}, {"kisi": "BİLAL SÜRÜKLİ", "tutar": 1000, "neden": "Trendyol cezası"}], "devamsizlik": [{"kisi": "SELİM ORTAHİSAR", "gun": 1, "not": "Raporsuz"}, {"kisi": "BURHAN BAYAKIR", "gun": 3, "not": "Raporlu"}, {"kisi": "VAHDETTİN AVCI", "gun": 2, "not": "Raporlu"}, {"kisi": "ZEYNEP SOFUOĞLU", "gun": 3, "not": "3 gün, 1'i raporsuz"}, {"kisi": "ABDULKADİR UĞURLUEL", "gun": 1, "not": "Raporsuz"}, {"kisi": "UĞUR GÖKER", "gun": 7, "not": "Ücretsiz izin"}, {"kisi": "SEMİH SOFUOĞLU", "gun": 3, "not": "2 ücretsiz izin + 1 raporsuz"}, {"kisi": "RAMAZAN BAYAKIR", "gun": 3, "not": "Rapor"}, {"kisi": "YASİR FURKAN KAVAK", "gun": 7, "not": "Rapor"}, {"kisi": "OSMAN CEYLAN", "gun": 2, "not": "Raporsuz"}]};
 const KEY = 'cadde_bordro_v2';
+const CLOUD_KEY = 'cadde_cloud_id';
+const CLOUD_API = 'https://jsonblob.com/api/jsonBlob';
 const HS_BIRIM = 2500;
 const PRIM_BIRIM = 7;
 const DIS_BIRIM = 1;
@@ -219,6 +232,58 @@ function load(){
   return JSON.parse(JSON.stringify(SEED));
 }
 function persist(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+function cloudCode(){
+  const el = document.getElementById('cloudId');
+  return (el?.value || localStorage.getItem(CLOUD_KEY) || '').trim();
+}
+function setCloudCode(id){
+  if(!id) return;
+  localStorage.setItem(CLOUD_KEY, id);
+  const el = document.getElementById('cloudId');
+  if(el) el.value = id;
+}
+async function cloudPush(){
+  try{
+    toast('Buluta kaydediliyor...');
+    const payload = JSON.stringify({people:state.people, cezalar:state.cezalar||[], devamsizlik:state.devamsizlik||[], t:Date.now()});
+    let id = cloudCode();
+    let res;
+    if(id){
+      res = await fetch(CLOUD_API+'/'+id, {method:'PUT', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:payload});
+    } else {
+      res = await fetch(CLOUD_API, {method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:payload});
+      const loc = res.headers.get('Location') || res.headers.get('location') || '';
+      id = loc.split('/').filter(Boolean).pop() || '';
+    }
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    if(!id) throw new Error('kod yok');
+    setCloudCode(id);
+    persist();
+    toast('Buluta kaydedildi');
+  }catch(e){
+    toast('Bulut kaydı olmadı');
+  }
+}
+async function cloudPull(){
+  try{
+    const id = cloudCode();
+    if(!id){ toast('Önce ortak kodu yaz veya kaydet'); return; }
+    toast('Buluttan alınıyor...');
+    const res = await fetch(CLOUD_API+'/'+id, {headers:{'Accept':'application/json'}});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const s = await res.json();
+    if(!s || !Array.isArray(s.people)) throw new Error('bos');
+    state = s;
+    if(!Array.isArray(state.cezalar)) state.cezalar = [];
+    if(!Array.isArray(state.devamsizlik)) state.devamsizlik = [];
+    setCloudCode(id);
+    persist();
+    renderListe();
+    toast('Buluttan alındı');
+  }catch(e){
+    toast('Çekilemedi, kodu kontrol et');
+  }
+}
 function save(){ persist(); toast('Kaydedildi'); }
 
 function toast(t){
@@ -602,6 +667,10 @@ async function sharePDF(){
 function printOzet(){ sharePDF(); }
 document.getElementById('modal').addEventListener('click', e=>{ if(e.target.id==='modal') closeModal(); });
 renderListe();
+(function(){
+  const saved = localStorage.getItem(CLOUD_KEY);
+  if(saved && document.getElementById('cloudId')) document.getElementById('cloudId').value = saved;
+})();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 </body>
