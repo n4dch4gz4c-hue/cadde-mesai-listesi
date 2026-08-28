@@ -278,7 +278,7 @@
       "mesaiSaat": 2,
       "mesaiBirim": 250,
       "hsSaat": 3.5,
-      "primAdet": 0,
+      "primAdet": 10,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
@@ -358,7 +358,7 @@
       "mesaiSaat": 0,
       "mesaiBirim": 320,
       "hsSaat": 0,
-      "primAdet": 0,
+      "primAdet": 34,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
@@ -1151,5 +1151,5 @@
       "not": "Raporsuz"
     }
   ],
-  "t": 1787948451071
+  "t": 1787948699665
 }
