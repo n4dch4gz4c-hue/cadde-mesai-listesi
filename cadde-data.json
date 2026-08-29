@@ -21,7 +21,7 @@
       "name": "ABDULLAH AVCI",
       "mesaiSaat": 0,
       "mesaiBirim": 300,
-      "hsSaat": 4.5,
+      "hsSaat": 3.5,
       "primAdet": 0,
       "kurye": false,
       "yolGun": 0,
@@ -1156,5 +1156,5 @@
       "not": "Raporlu"
     }
   ],
-  "t": 1787999969188
+  "t": 1788011097405
 }
