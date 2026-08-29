@@ -278,7 +278,7 @@
       "mesaiSaat": 2,
       "mesaiBirim": 250,
       "hsSaat": 3.5,
-      "primAdet": 0,
+      "primAdet": 10,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
@@ -1161,5 +1161,5 @@
       "not": "Raporlu"
     }
   ],
-  "t": 1788022811407
+  "t": 1788023017163
 }
