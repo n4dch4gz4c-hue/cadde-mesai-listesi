@@ -602,7 +602,7 @@
       "kurye": false,
       "yolGun": 0,
       "yolBirim": 1200,
-      "izinTutar": 0,
+      "izinTutar": 2700,
       "yillikTutar": 0,
       "disiplinDk": 0,
       "yolVar": false,
@@ -1161,5 +1161,5 @@
       "not": "Raporlu"
     }
   ],
-  "t": 1788023120053
+  "t": 1788085850723
 }
