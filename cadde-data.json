@@ -67,7 +67,7 @@
     {
       "id": 5,
       "name": "SALİH USTA",
-      "mesaiSaat": 6,
+      "mesaiSaat": 8,
       "mesaiBirim": 320,
       "hsSaat": 0,
       "primAdet": 0,
@@ -867,7 +867,7 @@
     {
       "id": 55,
       "name": "ABDURRAHMAN GÜRKAN",
-      "mesaiSaat": 0,
+      "mesaiSaat": 2,
       "mesaiBirim": 320,
       "hsSaat": 0.5,
       "primAdet": 0,
@@ -1161,5 +1161,5 @@
       "not": "Raporlu"
     }
   ],
-  "t": 1788089984096
+  "t": 1788091042478
 }
