@@ -21,7 +21,7 @@
       "name": "ABDULLAH AVCI",
       "mesaiSaat": 0,
       "mesaiBirim": 300,
-      "hsSaat": 3.5,
+      "hsSaat": 4,
       "primAdet": 0,
       "kurye": false,
       "yolGun": 0,
@@ -250,7 +250,7 @@
       "kurye": false,
       "yolGun": 0,
       "yolBirim": 1200,
-      "izinTutar": 0,
+      "izinTutar": 0.5,
       "yillikTutar": 0,
       "disiplinDk": 0,
       "yolVar": false,
@@ -986,7 +986,7 @@
       "kurye": false,
       "yolGun": 0,
       "yolBirim": 1200,
-      "izinTutar": 2900,
+      "izinTutar": 0,
       "yillikTutar": 0,
       "disiplinDk": 0,
       "yolVar": false,
@@ -1161,5 +1161,5 @@
       "not": "Raporlu"
     }
   ],
-  "t": 1788085850723
+  "t": 1788087588063
 }
