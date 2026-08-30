@@ -250,8 +250,8 @@
       "kurye": false,
       "yolGun": 0,
       "yolBirim": 1200,
-      "izinTutar": 0.5,
-      "yillikTutar": 0,
+      "izinTutar": 0,
+      "yillikTutar": 1250,
       "disiplinDk": 0,
       "yolVar": false,
       "hsVar": false
@@ -1161,5 +1161,5 @@
       "not": "Raporlu"
     }
   ],
-  "t": 1788087588063
+  "t": 1788089984096
 }
