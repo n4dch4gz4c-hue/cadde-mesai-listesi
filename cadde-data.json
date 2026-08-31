@@ -12,41 +12,35 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 8000,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 2,
       "name": "ABDULLAH AVCI",
       "mesaiSaat": 0,
       "mesaiBirim": 300,
-      "hsSaat": 4,
+      "hsSaat": 4.5,
       "primAdet": 0,
       "kurye": false,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 3,
       "name": "CUMHUR YİĞİT",
-      "mesaiSaat": 1,
+      "mesaiSaat": 0,
       "mesaiBirim": 320,
-      "hsSaat": 2,
+      "hsSaat": 0,
       "primAdet": 0,
       "kurye": false,
-      "yolGun": 6,
+      "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": true,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 4,
@@ -60,14 +54,12 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 5,
       "name": "SALİH USTA",
-      "mesaiSaat": 8,
+      "mesaiSaat": 0,
       "mesaiBirim": 320,
       "hsSaat": 0,
       "primAdet": 0,
@@ -76,25 +68,21 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 6,
       "name": "BURHAN BAYAKIR",
-      "mesaiSaat": 2.5,
+      "mesaiSaat": 0,
       "mesaiBirim": 300,
-      "hsSaat": 4.5,
+      "hsSaat": 0,
       "primAdet": 0,
       "kurye": false,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 7,
@@ -108,9 +96,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 8,
@@ -124,9 +110,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 9,
@@ -140,9 +124,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 10,
@@ -156,9 +138,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 11,
@@ -172,9 +152,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 12,
@@ -188,9 +166,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 13,
@@ -204,9 +180,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 14,
@@ -220,9 +194,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 15,
@@ -236,14 +208,12 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 16,
       "name": "BİLAL SÜRÜKLİ",
-      "mesaiSaat": 1,
+      "mesaiSaat": 0,
       "mesaiBirim": 220,
       "hsSaat": 0,
       "primAdet": 0,
@@ -251,10 +221,8 @@
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
-      "yillikTutar": 1250,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "yillikTutar": 0,
+      "disiplinDk": 0
     },
     {
       "id": 17,
@@ -268,25 +236,21 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 18,
       "name": "UĞUR GÖKER",
-      "mesaiSaat": 2,
+      "mesaiSaat": 0,
       "mesaiBirim": 250,
-      "hsSaat": 3.5,
-      "primAdet": 532,
+      "hsSaat": 0,
+      "primAdet": 0,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 19,
@@ -300,9 +264,7 @@
       "yolBirim": 1050,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": true,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 20,
@@ -316,9 +278,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 21,
@@ -332,9 +292,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 22,
@@ -348,9 +306,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 23,
@@ -358,15 +314,13 @@
       "mesaiSaat": 0,
       "mesaiBirim": 320,
       "hsSaat": 0,
-      "primAdet": 728,
+      "primAdet": 0,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 24,
@@ -380,9 +334,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 25,
@@ -390,15 +342,13 @@
       "mesaiSaat": 0,
       "mesaiBirim": 270,
       "hsSaat": 0,
-      "primAdet": 655,
+      "primAdet": 0,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 26,
@@ -412,25 +362,21 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 27,
       "name": "YILMAZ AVCI",
       "mesaiSaat": 0,
       "mesaiBirim": 320,
-      "hsSaat": 4.5,
+      "hsSaat": 0,
       "primAdet": 0,
       "kurye": false,
-      "yolGun": 29,
+      "yolGun": 0,
       "yolBirim": 1200,
-      "izinTutar": 2900,
+      "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": true,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 28,
@@ -444,9 +390,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 29,
@@ -460,9 +404,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 30,
@@ -476,9 +418,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 31,
@@ -492,9 +432,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 32,
@@ -508,9 +446,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 33,
@@ -524,9 +460,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 34,
@@ -540,9 +474,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 35,
@@ -556,9 +488,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": true,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 36,
@@ -566,15 +496,13 @@
       "mesaiSaat": 0,
       "mesaiBirim": 270,
       "hsSaat": 4.5,
-      "primAdet": 712,
+      "primAdet": 0,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 37,
@@ -582,15 +510,13 @@
       "mesaiSaat": 0,
       "mesaiBirim": 270,
       "hsSaat": 4.5,
-      "primAdet": 715,
+      "primAdet": 0,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 38,
@@ -602,27 +528,23 @@
       "kurye": false,
       "yolGun": 0,
       "yolBirim": 1200,
-      "izinTutar": 2700,
+      "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 39,
       "name": "AYDIN AVCI",
       "mesaiSaat": 0,
       "mesaiBirim": 320,
-      "hsSaat": 4,
+      "hsSaat": 0,
       "primAdet": 0,
       "kurye": false,
-      "yolGun": 31,
+      "yolGun": 0,
       "yolBirim": 1050,
-      "izinTutar": 2900,
+      "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": true,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 40,
@@ -630,15 +552,13 @@
       "mesaiSaat": 0,
       "mesaiBirim": 270,
       "hsSaat": 0,
-      "primAdet": 744,
+      "primAdet": 0,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 41,
@@ -646,31 +566,27 @@
       "mesaiSaat": 0,
       "mesaiBirim": 270,
       "hsSaat": 4,
-      "primAdet": 727,
+      "primAdet": 0,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 42,
       "name": "ABDULLAH DENERİ",
-      "mesaiSaat": 16,
+      "mesaiSaat": 0,
       "mesaiBirim": 220,
-      "hsSaat": 4.5,
+      "hsSaat": 0,
       "primAdet": 0,
       "kurye": false,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 43,
@@ -684,9 +600,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 44,
@@ -700,9 +614,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 45,
@@ -710,15 +622,13 @@
       "mesaiSaat": 0,
       "mesaiBirim": 270,
       "hsSaat": 0,
-      "primAdet": 723,
+      "primAdet": 0,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 46,
@@ -726,47 +636,41 @@
       "mesaiSaat": 0,
       "mesaiBirim": 270,
       "hsSaat": 4,
-      "primAdet": 743,
+      "primAdet": 0,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 47,
       "name": "ARDA AYDOĞAN",
       "mesaiSaat": 0,
       "mesaiBirim": 270,
-      "hsSaat": 1.5,
+      "hsSaat": 0,
       "primAdet": 0,
       "kurye": false,
       "yolGun": 0,
       "yolBirim": 1200,
-      "izinTutar": 2400,
+      "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 48,
       "name": "BAYRAM YETER",
-      "mesaiSaat": 4,
+      "mesaiSaat": 0,
       "mesaiBirim": 270,
-      "hsSaat": 0.5,
-      "primAdet": 402,
+      "hsSaat": 0,
+      "primAdet": 0,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 49,
@@ -778,11 +682,9 @@
       "kurye": false,
       "yolGun": 0,
       "yolBirim": 1200,
-      "izinTutar": 2700,
+      "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 50,
@@ -790,15 +692,13 @@
       "mesaiSaat": 0,
       "mesaiBirim": 270,
       "hsSaat": 0.5,
-      "primAdet": 733,
+      "primAdet": 0,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 51,
@@ -812,9 +712,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 52,
@@ -822,15 +720,13 @@
       "mesaiSaat": 0,
       "mesaiBirim": 270,
       "hsSaat": 0.5,
-      "primAdet": 810,
+      "primAdet": 0,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 53,
@@ -844,57 +740,49 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 54,
       "name": "KAAN ATASOY",
-      "mesaiSaat": 3,
+      "mesaiSaat": 0,
       "mesaiBirim": 220,
       "hsSaat": 0,
       "primAdet": 0,
       "kurye": false,
       "yolGun": 0,
       "yolBirim": 1200,
-      "izinTutar": 1900,
+      "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 55,
       "name": "ABDURRAHMAN GÜRKAN",
-      "mesaiSaat": 2,
+      "mesaiSaat": 0,
       "mesaiBirim": 320,
-      "hsSaat": 0.5,
-      "primAdet": 0,
-      "kurye": false,
-      "yolGun": 0,
-      "yolBirim": 1200,
-      "izinTutar": 2900,
-      "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
-    },
-    {
-      "id": 56,
-      "name": "VAHDETTİN AVCI",
-      "mesaiSaat": 3,
-      "mesaiBirim": 270,
-      "hsSaat": 4,
+      "hsSaat": 0,
       "primAdet": 0,
       "kurye": false,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
+    },
+    {
+      "id": 56,
+      "name": "VAHDETTİN AVCI",
+      "mesaiSaat": 0,
+      "mesaiBirim": 270,
+      "hsSaat": 0,
+      "primAdet": 0,
+      "kurye": false,
+      "yolGun": 0,
+      "yolBirim": 1200,
+      "izinTutar": 0,
+      "yillikTutar": 0,
+      "disiplinDk": 0
     },
     {
       "id": 57,
@@ -908,25 +796,21 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 58,
       "name": "OSMAN CEYLAN",
-      "mesaiSaat": 3.5,
+      "mesaiSaat": 0,
       "mesaiBirim": 270,
-      "hsSaat": 4,
-      "primAdet": 631,
+      "hsSaat": 0,
+      "primAdet": 0,
       "kurye": true,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 59,
@@ -940,9 +824,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": true,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 60,
@@ -956,9 +838,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 61,
@@ -972,25 +852,21 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 62,
       "name": "MENDERES SOFUOĞLU",
       "mesaiSaat": 0,
       "mesaiBirim": 320,
-      "hsSaat": 4,
+      "hsSaat": 0,
       "primAdet": 0,
       "kurye": false,
       "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": true
+      "disiplinDk": 0
     },
     {
       "id": 63,
@@ -1004,14 +880,12 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 64,
       "name": "ABDURRAHMAN BULUT",
-      "mesaiSaat": 7,
+      "mesaiSaat": 0,
       "mesaiBirim": 220,
       "hsSaat": 0,
       "primAdet": 0,
@@ -1020,9 +894,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 65,
@@ -1036,9 +908,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     },
     {
       "id": 66,
@@ -1052,9 +922,7 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0,
-      "yolVar": false,
-      "hsVar": false
+      "disiplinDk": 0
     }
   ],
   "cezalar": [
@@ -1149,17 +1017,7 @@
       "kisi": "OSMAN CEYLAN",
       "gun": 2,
       "not": "Raporsuz"
-    },
-    {
-      "kisi": "ARDA AYDOĞAN",
-      "gun": 1,
-      "not": "Raporlu"
-    },
-    {
-      "kisi": "ABDULLAH AVCI",
-      "gun": 3,
-      "not": "Raporlu"
     }
   ],
-  "t": 1788122656712
+  "t": 1788166628549
 }
