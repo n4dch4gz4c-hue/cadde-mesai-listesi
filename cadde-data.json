@@ -925,99 +925,13 @@
       "disiplinDk": 0
     }
   ],
-  "cezalar": [
-    {
-      "kisi": "SELAHATTİN AVCI",
-      "tutar": 1000,
-      "neden": "Trendyol ceza"
-    },
-    {
-      "kisi": "MUHAMMED HASAN KOÇALAN",
-      "tutar": 1000,
-      "neden": "Sakal"
-    },
-    {
-      "kisi": "SELİM ORTAHİSAR",
-      "tutar": 1000,
-      "neden": "Sakal"
-    },
-    {
-      "kisi": "BURHAN BAYAKIR",
-      "tutar": 1000,
-      "neden": "Trendyol cezası"
-    },
-    {
-      "kisi": "CANER AVCI",
-      "tutar": 1000,
-      "neden": "Trendyol cezası"
-    },
-    {
-      "kisi": "ARDA AYDOĞAN",
-      "tutar": 1000,
-      "neden": "Telefon cezası"
-    },
-    {
-      "kisi": "BİLAL SÜRÜKLİ",
-      "tutar": 1000,
-      "neden": "Disiplin cezası"
-    },
-    {
-      "kisi": "BİLAL SÜRÜKLİ",
-      "tutar": 1000,
-      "neden": "Trendyol cezası"
-    }
-  ],
+  "cezalar": [],
   "devamsizlik": [
     {
-      "kisi": "SELİM ORTAHİSAR",
-      "gun": 1,
-      "not": "Raporsuz"
-    },
-    {
-      "kisi": "BURHAN BAYAKIR",
-      "gun": 3,
-      "not": "Raporlu"
-    },
-    {
-      "kisi": "VAHDETTİN AVCI",
-      "gun": 2,
-      "not": "Raporlu"
-    },
-    {
-      "kisi": "ZEYNEP SOFUOĞLU",
-      "gun": 3,
-      "not": "3 gün, 1'i raporsuz"
-    },
-    {
-      "kisi": "ABDULKADİR UĞURLUEL",
-      "gun": 1,
-      "not": "Raporsuz"
-    },
-    {
-      "kisi": "UĞUR GÖKER",
+      "kisi": "ABDULLAH AVCI",
       "gun": 7,
-      "not": "Ücretsiz izin"
-    },
-    {
-      "kisi": "SEMİH SOFUOĞLU",
-      "gun": 3,
-      "not": "2 ücretsiz izin + 1 raporsuz"
-    },
-    {
-      "kisi": "RAMAZAN BAYAKIR",
-      "gun": 3,
-      "not": "Rapor"
-    },
-    {
-      "kisi": "YASİR FURKAN KAVAK",
-      "gun": 7,
-      "not": "Rapor"
-    },
-    {
-      "kisi": "OSMAN CEYLAN",
-      "gun": 2,
-      "not": "Raporsuz"
+      "not": "Raporlu"
     }
   ],
-  "t": 1788166628549
+  "t": 1788167239475
 }
