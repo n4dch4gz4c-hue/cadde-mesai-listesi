@@ -31,12 +31,12 @@
     {
       "id": 3,
       "name": "CUMHUR YİĞİT",
-      "mesaiSaat": 1,
+      "mesaiSaat": 0,
       "mesaiBirim": 320,
-      "hsSaat": 2,
+      "hsSaat": 0,
       "primAdet": 0,
       "kurye": false,
-      "yolGun": 6,
+      "yolGun": 0,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
@@ -59,7 +59,7 @@
     {
       "id": 5,
       "name": "SALİH USTA",
-      "mesaiSaat": 6,
+      "mesaiSaat": 0,
       "mesaiBirim": 320,
       "hsSaat": 0,
       "primAdet": 0,
@@ -1019,5 +1019,5 @@
       "not": "Raporsuz"
     }
   ],
-  "t": 1788261281838
+  "t": 1788261352116
 }
