@@ -107,6 +107,7 @@ th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left}
     <div class="tab" data-tab="devam" onclick="tab(this)">Devamsızlık</div>
   <div class="tab" data-tab="ceza" onclick="tab(this)">Cezalar</div>
   <div class="tab" data-tab="ozet" onclick="tab(this)">Özet</div>
+  <div class="tab" data-tab="finans" onclick="tab(this)">Finansal rapor</div>
 </div>
 
 <section id="sec-liste">
@@ -165,7 +166,14 @@ th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left}
   <div id="cezaList"></div>
 </section>
 
+<section id="sec-finans" class="hide">
+  <div id="finansBox"></div>
+</section>
 <section id="sec-ozet" class="hide">
+  <div class="pills" style="margin-top:0">
+    <button class="pill on" data-oz="ayrinti" onclick="setOzetMode(this)">Ayrıntılı</button>
+    <button class="pill" data-oz="kisa" onclick="setOzetMode(this)">Kısa özet</button>
+  </div>
   <div class="card" id="ozetBox"></div>
 </section>
 <div id="printSheet"></div>
@@ -217,11 +225,17 @@ const HS_BIRIM = 2500;
 const PRIM_BIRIM = 7;
 const DIS_BIRIM = 1;
 
-let state = load();
-state.people.forEach(p => {
-  if (p.yolVar === undefined) p.yolVar = (p.yolGun || 0) > 0;
-  if (p.hsVar === undefined) p.hsVar = (p.hsSaat || 0) > 0;
-});
+function hydratePeople(s){
+  if(!s || !Array.isArray(s.people)) return s;
+  s.people.forEach(p => {
+    if (p.yolVar === undefined) p.yolVar = (p.yolGun || 0) > 0;
+    if (p.hsVar === undefined) p.hsVar = (p.hsSaat || 0) > 0;
+  });
+  if(!Array.isArray(s.cezalar)) s.cezalar = [];
+  if(!Array.isArray(s.devamsizlik)) s.devamsizlik = [];
+  return s;
+}
+let state = hydratePeople(load());
 let filter = 'hepsi';
 let editId = null;
 let moveId = null;
@@ -297,15 +311,14 @@ async function packState(){
 }
 async function applyState(s){
   if(!s || !Array.isArray(s.people)) throw new Error('bos');
-  state = s;
-  if(!Array.isArray(state.cezalar)) state.cezalar = [];
-  if(!Array.isArray(state.devamsizlik)) state.devamsizlik = [];
+  state = hydratePeople(s);
   persist();
   renderListe();
   if(typeof renderKurye==='function') renderKurye();
   if(typeof renderDevam==='function') renderDevam();
   if(typeof renderCeza==='function') renderCeza();
   if(typeof renderOzet==='function') renderOzet();
+  if(typeof renderFinans==='function') renderFinans();
 }
 function ghHeaders(token){
   return {
@@ -397,13 +410,15 @@ function tab(el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   el.classList.add('on');
   const id = el.dataset.tab;
-  ['liste','kurye','devam','ceza','ozet'].forEach(s=>{
-    document.getElementById('sec-'+s).classList.toggle('hide', s!==id);
+  ['liste','kurye','devam','ceza','ozet','finans'].forEach(s=>{
+    const el = document.getElementById('sec-'+s);
+    if(el) el.classList.toggle('hide', s!==id);
   });
   if(id==='kurye') renderKurye();
   if(id==='devam') renderDevam();
   if(id==='ceza') renderCeza();
   if(id==='ozet') renderOzet();
+  if(id==='finans') renderFinans();
 }
 function filt(el){
   document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
@@ -446,8 +461,6 @@ function renderListe(){
       <div class="tiny">No ${p.id} · Mesai ${p.mesaiSaat}×${p.mesaiBirim}${p.hsVar ? ` · HS ${p.hsSaat}×2500` : ""}${p.kurye ? ` · Prim ${p.primAdet}×7` : ""}${p.yolVar ? ` · Yol ${p.yolGun}×${p.yolBirim}` : ""}</div>
       <div class="rowtot"><span>Toplam</span><span>${tl(c.toplam)}</span></div>
       <div class="movebar">
-        <button class="btn" onclick="event.stopPropagation();moveBy(${p.id},-1)">Yukarı</button>
-        <button class="btn" onclick="event.stopPropagation();moveBy(${p.id},1)">Aşağı</button>
         <button class="btn" onclick="startMove(${p.id}, event)">Taşı</button>
         <button class="btn bad" onclick="event.stopPropagation();delFromList(${p.id})">Sil</button>
       </div>
@@ -564,15 +577,97 @@ function renderCeza(){
     `<div class="card"><div class="rowtot"><span>${rows.length} kayıt</span><span>${tl(sum)}</span></div></div>`;
 }
 
+function renderFinans(){
+  const rows = state.people || [];
+  const parts = rows.map(p => ({p, c: calc(p)}));
+  const sum = (key) => parts.reduce((a,x)=>a+(x.c[key]||0),0);
+  const cnt = (key) => parts.filter(x=>(x.c[key]||0)>0).length;
+  const mesai = sum('mesai');
+  const hs = sum('hs');
+  const yol = sum('yol');
+  const prim = sum('prim');
+  const izin = sum('izin');
+  const yillik = sum('yillik');
+  const dis = sum('dis');
+  const genel = sum('toplam');
+  const cezalar = (state.cezalar||[]).reduce((a,x)=>a+(parseFloat(x.tutar)||0),0);
+  const kalemler = [
+    {ad:'Normal mesai', tutar:mesai, kisi:cnt('mesai'), acik:'Mesai saat × birim'},
+    {ad:'Hafta sonu mesaisi', tutar:hs, kisi:cnt('hs'), acik:'HS saat × 2.500 TL'},
+    {ad:'Yol parası', tutar:yol, kisi:cnt('yol'), acik:'Yol gün × birim'},
+    {ad:'Kurye primi (×7)', tutar:prim, kisi:cnt('prim'), acik:'Prim adet × 7 TL'},
+    {ad:'İzin tutarı', tutar:izin, kisi:cnt('izin'), acik:'Girilen izin ödemesi'},
+    {ad:'Yıllık izin', tutar:yillik, kisi:cnt('yillik'), acik:'Yıllık izin ödemesi'},
+    {ad:'Disiplin tutarı', tutar:dis, kisi:cnt('dis'), acik:'Disiplin kalemi'}
+  ];
+  const box = document.getElementById('finansBox');
+  if(!box) return;
+  box.innerHTML = `
+    <div class="stats">
+      <div class="stat"><span>Ödenecek genel toplam</span><b>${tl(genel)}</b></div>
+      <div class="stat"><span>Mesai + HS + yol</span><b>${tl(mesai+hs+yol)}</b></div>
+      <div class="stat"><span>Kayıtlı ceza (ayrı)</span><b>${tl(cezalar)}</b></div>
+      <div class="stat"><span>Personel</span><b>${rows.length}</b></div>
+    </div>
+    <div class="card">
+      <b>Kalem kalem ödeme</b>
+      <div class="tiny" style="margin:4px 0 10px">Bu dönemde bu kalemlere ne kadar para çıkıyor</div>
+      <table>
+        <tr><th>Kalem</th><th>Kişi</th><th>Tutar</th></tr>
+        ${kalemler.map(k=>`<tr><td>${k.ad}<div class="tiny">${k.acik}</div></td><td>${k.kisi}</td><td>${tl(k.tutar)}</td></tr>`).join('')}
+        <tr><td><b>Toplam ödeme</b></td><td></td><td><b>${tl(genel)}</b></td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <b>Kalem payı</b>
+      <div class="tiny" style="margin:4px 0 8px">Genel toplama oranı</div>
+      ${kalemler.filter(k=>k.tutar>0).map(k=>{
+        const pct = genel ? Math.round(k.tutar*1000/genel)/10 : 0;
+        return `<div style="margin:8px 0 10px">
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span>${k.ad}</span><span>${pct}%</span></div>
+          <div style="height:8px;background:#0c1422;border-radius:99px;overflow:hidden;border:1px solid var(--line)">
+            <div style="height:100%;width:${Math.min(100,pct)}%;background:var(--acc)"></div>
+          </div>
+        </div>`;
+      }).join('') || '<div class="tiny">Henüz tutar yok</div>'}
+    </div>`;
+}
+let ozetMode = 'ayrinti';
+function setOzetMode(el){
+  document.querySelectorAll('#sec-ozet .pill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  ozetMode = el.dataset.oz || 'ayrinti';
+  renderOzet();
+}
 function renderOzet(){
   const rows = state.people;
   const sum = rows.reduce((a,p)=>a+calc(p).toplam,0);
-  document.getElementById('ozetBox').innerHTML = `
-    <b>Özet</b>
+  const box = document.getElementById('ozetBox');
+  if(!box) return;
+  if(ozetMode === 'kisa'){
+    box.innerHTML = `
+      <b>Kısa özet</b>
+      <div class="tiny" style="margin:4px 0 10px">Sadece isim ve ödenecek tutar</div>
+      <table>
+        <tr><th>Ad Soyad</th><th>Tutar</th></tr>
+        ${rows.map(p=>`<tr><td>${p.name}</td><td>${tl(calc(p).toplam)}</td></tr>`).join('')}
+        <tr><td><b>Toplam</b></td><td><b>${tl(sum)}</b></td></tr>
+      </table>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn good" onclick="sharePDF('kisa')">Kısa PDF paylaş</button>
+      </div>`;
+    return;
+  }
+  box.innerHTML = `
+    <b>Ayrıntılı özet</b>
+    <div class="tiny" style="margin:4px 0 10px">Kalem kalem: mesai, HS, yol, prim, izin</div>
     <table>
-      <tr><th>#</th><th>Ad Soyad</th><th>Toplam</th></tr>
-      ${rows.map(p=>`<tr><td>${p.id}</td><td>${p.name}${p.kurye?' ★':''}</td><td>${tl(calc(p).toplam)}</td></tr>`).join('')}
-      <tr><td></td><td><b>Personel toplam</b></td><td><b>${tl(sum)}</b></td></tr>
+      <tr><th>#</th><th>Ad Soyad</th><th>Mesai</th><th>HS</th><th>Yol</th><th>İzin</th><th>Yıllık</th><th>Prim</th><th>Toplam</th></tr>
+      ${rows.map((p,i)=>{
+        const c = calc(p);
+        return `<tr><td>${i+1}</td><td>${p.name}${p.kurye?' ★':''}</td><td>${tl(c.mesai)}</td><td>${tl(c.hs)}</td><td>${tl(c.yol)}</td><td>${tl(c.izin)}</td><td>${tl(c.yillik)}</td><td>${tl(c.prim)}</td><td>${tl(c.toplam)}</td></tr>`;
+      }).join('')}
+      <tr><td></td><td><b>Toplam</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td><b>${tl(sum)}</b></td></tr>
     </table>
     <div style="margin-top:16px"><b>Devamsızlık</b></div>
     <table>
@@ -583,7 +678,11 @@ function renderOzet(){
     <table>
       <tr><th>Kişi</th><th>Tutar</th><th>Neden</th></tr>
       ${(state.cezalar||[]).map(d=>`<tr><td>${d.kisi||''}</td><td>${tl(d.tutar||0)}</td><td>${d.neden||''}</td></tr>`).join('') || '<tr><td colspan="3">Kayıt yok</td></tr>'}
-    </table>`;
+    </table>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn good" onclick="sharePDF('ayrinti')">Ayrıntılı PDF paylaş</button>
+      <button class="btn" onclick="sharePDF('kisa')">Kısa PDF paylaş</button>
+    </div>`;
 }
 
 
@@ -724,10 +823,21 @@ function delPerson(){
   persist(); closeModal(); renderListe();
 }
 function resetData(){
-  if(!confirm('Excel’deki ilk haline dönülsün mü? Yerel kayıt silinir.')) return;
+  if(!confirm('Excel’deki ilk haline dönülsün mü? Yerel kayıt silinir. GitHub dosyası değişmez; orayı da sıfırlamak için sonra GitHub’a gönder.')) return;
   localStorage.removeItem(KEY);
-  state = load();
+  moveId = null;
+  editId = null;
+  filter = 'hepsi';
+  state = hydratePeople(JSON.parse(JSON.stringify(SEED)));
+  persist();
+  document.querySelectorAll('.pill').forEach(p=>p.classList.toggle('on', p.dataset.f==='hepsi'));
+  const q = document.getElementById('q'); if(q) q.value='';
   renderListe();
+  if(typeof renderKurye==='function') renderKurye();
+  if(typeof renderDevam==='function') renderDevam();
+  if(typeof renderCeza==='function') renderCeza();
+  if(typeof renderOzet==='function') renderOzet();
+  toast('İlk haline döndü');
 }
 function exportCSV(){
   const head = ['No','Ad Soyad','Kurye','Mesai saat','Mesai birim','Mesai TL','HS saat','HS TL','Prim adet','Prim TL','Yol gün','Yol TL','İzin','Yıllık','Disiplin tutar','Disiplin TL','Toplam'];
@@ -749,7 +859,8 @@ async function attachTrFont(doc){
   doc.setFont('DejaVu', 'normal');
 }
 function para(n){ return String(Math.round(n||0)); }
-async function sharePDF(){
+async function sharePDF(mode){
+  mode = mode || ozetMode || 'ayrinti';
   persist();
   if(!window.jspdf || !window.jspdf.jsPDF){
     toast('PDF kutuphanesi yuklenemedi, tekrar dene');
@@ -765,15 +876,18 @@ async function sharePDF(){
   const cezaToplam = cezalar.reduce((a,x)=>a+(parseFloat(x.tutar)||0),0);
   const tarih = new Date().toLocaleDateString('tr-TR');
   const left = 6, right = 291, pageBottom = 202;
-  const personRows = rows.map(p=>{
+  const kisa = mode === 'kisa';
+  const personRows = rows.map((p,i)=>{
     const c = calc(p);
-    return [String(p.id), asciiTR(p.name)+(p.kurye?' *':''), para(c.mesai), para(c.hs), para(c.yol), para(c.izin), para(c.prim), para(c.toplam)];
+    if(kisa) return [asciiTR(p.name), para(c.toplam)+' TL'];
+    return [String(i+1), asciiTR(p.name)+(p.kurye?' *':''), para(c.mesai), para(c.hs), para(c.yol), para(c.izin), para(c.prim), para(c.toplam)];
   });
-  personRows.push(['', 'TOPLAM', '', '', '', '', '', para(sum)+' TL']);
+  if(kisa) personRows.push(['TOPLAM', para(sum)+' TL']);
+  else personRows.push(['', 'TOPLAM', '', '', '', '', '', para(sum)+' TL']);
   const devamRows = devam.length ? devam.map(d=>[asciiTR(d.kisi), String(d.gun||0), asciiTR(d.not)]) : [['-', '-', 'Kayit yok']];
   const cezaRows = cezalar.length ? cezalar.map(d=>[asciiTR(d.kisi), para(d.tutar)+' TL', asciiTR(d.neden)]) : [['-', '-', 'Kayit yok']];
   if(cezalar.length) cezaRows.push(['TOPLAM', para(cezaToplam)+' TL', '']);
-  const extraBlocks = 2 + devamRows.length + cezaRows.length;
+  const extraBlocks = kisa ? 0 : (2 + devamRows.length + cezaRows.length);
   let rowH = (pageBottom*2 - 40) / (personRows.length + extraBlocks + 6);
   if(rowH > 5.2) rowH = 5.2;
   if(rowH < 3.3) rowH = 3.3;
@@ -818,15 +932,20 @@ async function sharePDF(){
   }
   doc.setFontSize(12);
   doc.setFont('DejaVu','bold');
-  doc.text('Cadde Mesai Listesi', left, 8);
+  doc.text(kisa ? 'Cadde Mesai - Kisa Ozet' : 'Cadde Mesai Listesi', left, 8);
   doc.setFontSize(8);
   doc.setFont('DejaVu','normal');
   doc.text(asciiTR(tarih + '  |  ' + rows.length + ' kisi  |  Genel ' + para(sum) + ' TL'), left, 13);
-  let y = drawTable('Personel', ['No','Ad Soyad','Mesai','HS','Yol','Izin','Prim','Toplam'], [10, 78, 28, 26, 26, 26, 26, 45], personRows, 16);
-  y = drawTable('Devamsizlik', ['Kisi','Gun','Not'], [88, 22, 175], devamRows, y);
-  drawTable('Cezalar', ['Kisi','Tutar','Neden'], [88, 32, 165], cezaRows, y);
+  let y;
+  if(kisa){
+    y = drawTable('Ozet', ['Ad Soyad','Tutar'], [200, 85], personRows, 16);
+  } else {
+    y = drawTable('Personel', ['No','Ad Soyad','Mesai','HS','Yol','Izin','Prim','Toplam'], [10, 78, 28, 26, 26, 26, 26, 45], personRows, 16);
+    y = drawTable('Devamsizlik', ['Kisi','Gun','Not'], [88, 22, 175], devamRows, y);
+    drawTable('Cezalar', ['Kisi','Tutar','Neden'], [88, 32, 165], cezaRows, y);
+  }
   const blob = doc.output('blob');
-  const file = new File([blob], 'cadde-mesai-listesi.pdf', { type: 'application/pdf' });
+  const file = new File([blob], kisa ? 'cadde-mesai-kisa.pdf' : 'cadde-mesai-listesi.pdf', { type: 'application/pdf' });
   try{
     if(navigator.canShare && navigator.canShare({ files:[file] })){
       await navigator.share({ files:[file], title:'Cadde Mesai Listesi' });
