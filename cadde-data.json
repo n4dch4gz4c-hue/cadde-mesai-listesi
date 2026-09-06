@@ -12,7 +12,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 8000,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 2,
@@ -26,21 +28,25 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 3,
       "name": "CUMHUR YİĞİT",
-      "mesaiSaat": 0,
+      "mesaiSaat": 1,
       "mesaiBirim": 320,
-      "hsSaat": 0,
+      "hsSaat": 2,
       "primAdet": 0,
       "kurye": false,
-      "yolGun": 0,
+      "yolGun": 6,
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": true,
+      "hsVar": true
     },
     {
       "id": 4,
@@ -54,12 +60,14 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 5,
       "name": "SALİH USTA",
-      "mesaiSaat": 0,
+      "mesaiSaat": 6,
       "mesaiBirim": 320,
       "hsSaat": 0,
       "primAdet": 0,
@@ -68,7 +76,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 6,
@@ -82,7 +92,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 7,
@@ -96,7 +108,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 8,
@@ -110,7 +124,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 9,
@@ -124,7 +140,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 10,
@@ -138,7 +156,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 11,
@@ -152,7 +172,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 12,
@@ -166,7 +188,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 13,
@@ -180,7 +204,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 14,
@@ -194,7 +220,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 15,
@@ -208,7 +236,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 16,
@@ -222,7 +252,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 17,
@@ -236,7 +268,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 18,
@@ -250,7 +284,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 19,
@@ -264,7 +300,9 @@
       "yolBirim": 1050,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": true,
+      "hsVar": true
     },
     {
       "id": 20,
@@ -278,7 +316,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 21,
@@ -292,7 +332,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 22,
@@ -306,7 +348,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 23,
@@ -320,7 +364,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 24,
@@ -334,7 +380,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 25,
@@ -348,7 +396,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 26,
@@ -362,7 +412,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 27,
@@ -376,7 +428,9 @@
       "yolBirim": 1200,
       "izinTutar": 2900,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": true,
+      "hsVar": true
     },
     {
       "id": 28,
@@ -390,7 +444,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 29,
@@ -404,7 +460,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 30,
@@ -418,7 +476,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 31,
@@ -432,7 +492,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 32,
@@ -446,7 +508,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 33,
@@ -460,7 +524,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 34,
@@ -474,7 +540,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 35,
@@ -488,7 +556,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": true,
+      "hsVar": true
     },
     {
       "id": 36,
@@ -502,7 +572,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 37,
@@ -516,7 +588,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 38,
@@ -530,7 +604,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 39,
@@ -544,7 +620,9 @@
       "yolBirim": 1050,
       "izinTutar": 2900,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": true,
+      "hsVar": true
     },
     {
       "id": 40,
@@ -558,7 +636,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 41,
@@ -572,7 +652,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 42,
@@ -586,7 +668,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 43,
@@ -600,7 +684,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 44,
@@ -614,7 +700,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 45,
@@ -628,7 +716,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 46,
@@ -642,7 +732,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 47,
@@ -656,7 +748,9 @@
       "yolBirim": 1200,
       "izinTutar": 2400,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 48,
@@ -670,7 +764,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 49,
@@ -684,7 +780,9 @@
       "yolBirim": 1200,
       "izinTutar": 2700,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 50,
@@ -698,7 +796,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 51,
@@ -712,7 +812,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 52,
@@ -726,7 +828,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 53,
@@ -740,7 +844,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 54,
@@ -754,7 +860,9 @@
       "yolBirim": 1200,
       "izinTutar": 1900,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 55,
@@ -768,7 +876,9 @@
       "yolBirim": 1200,
       "izinTutar": 2900,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 56,
@@ -782,7 +892,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 57,
@@ -796,7 +908,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 58,
@@ -810,7 +924,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 59,
@@ -824,7 +940,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": true,
+      "hsVar": true
     },
     {
       "id": 60,
@@ -838,7 +956,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 61,
@@ -852,7 +972,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 62,
@@ -866,7 +988,9 @@
       "yolBirim": 1200,
       "izinTutar": 2900,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": true
     },
     {
       "id": 63,
@@ -880,7 +1004,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 64,
@@ -894,7 +1020,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 65,
@@ -908,7 +1036,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     },
     {
       "id": 66,
@@ -922,7 +1052,9 @@
       "yolBirim": 1200,
       "izinTutar": 0,
       "yillikTutar": 0,
-      "disiplinDk": 0
+      "disiplinDk": 0,
+      "yolVar": false,
+      "hsVar": false
     }
   ],
   "cezalar": [
@@ -1019,5 +1151,5 @@
       "not": "Raporsuz"
     }
   ],
-  "t": 1788261352116
+  "t": 1788692492998
 }
