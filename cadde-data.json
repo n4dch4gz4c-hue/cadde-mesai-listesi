@@ -1058,6 +1058,12 @@
     }
   ],
   "cezalar": [],
-  "devamsizlik": [],
-  "t": 1788709843034
+  "devamsizlik": [
+    {
+      "kisi": "MUHAMMED HASAN KOÇALAN",
+      "gun": 1,
+      "not": "Raporlu"
+    }
+  ],
+  "t": 1788709894733
 }
