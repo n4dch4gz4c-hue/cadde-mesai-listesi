@@ -823,21 +823,41 @@ function delPerson(){
   persist(); closeModal(); renderListe();
 }
 function resetData(){
-  if(!confirm('Excel’deki ilk haline dönülsün mü? Yerel kayıt silinir. GitHub dosyası değişmez; orayı da sıfırlamak için sonra GitHub’a gönder.')) return;
-  localStorage.removeItem(KEY);
+  if(!confirm('Tüm mesai, yol, prim, izin, ceza ve devamsızlık silinsin mi? İsim listesi kalır. GitHub’ı da temizlemek için sonra GitHub’a gönder.')) return;
   moveId = null;
   editId = null;
   filter = 'hepsi';
-  state = hydratePeople(JSON.parse(JSON.stringify(SEED)));
+  const base = (state.people && state.people.length)
+    ? state.people
+    : (JSON.parse(JSON.stringify(SEED)).people || []);
+  state.people = base.map(p => ({
+    id: p.id,
+    name: p.name,
+    kurye: !!p.kurye,
+    mesaiSaat: 0,
+    mesaiBirim: p.mesaiBirim || 300,
+    hsSaat: 0,
+    hsVar: false,
+    primAdet: 0,
+    yolGun: 0,
+    yolBirim: p.yolBirim || 1200,
+    yolVar: false,
+    izinTutar: 0,
+    yillikTutar: 0,
+    disiplinDk: 0
+  }));
+  state.cezalar = [];
+  state.devamsizlik = [];
   persist();
-  document.querySelectorAll('.pill').forEach(p=>p.classList.toggle('on', p.dataset.f==='hepsi'));
+  document.querySelectorAll('.pill').forEach(el=>el.classList.toggle('on', el.dataset.f==='hepsi'));
   const q = document.getElementById('q'); if(q) q.value='';
   renderListe();
   if(typeof renderKurye==='function') renderKurye();
   if(typeof renderDevam==='function') renderDevam();
   if(typeof renderCeza==='function') renderCeza();
   if(typeof renderOzet==='function') renderOzet();
-  toast('İlk haline döndü');
+  if(typeof renderFinans==='function') renderFinans();
+  toast('Her şey sıfırlandı');
 }
 function exportCSV(){
   const head = ['No','Ad Soyad','Kurye','Mesai saat','Mesai birim','Mesai TL','HS saat','HS TL','Prim adet','Prim TL','Yol gün','Yol TL','İzin','Yıllık','Disiplin tutar','Disiplin TL','Toplam'];
