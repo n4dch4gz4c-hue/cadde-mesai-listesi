@@ -12,7 +12,7 @@
       "yolGun": 0,
       "yolBirim": 1200,
       "yolVar": false,
-      "izinTutar": 0,
+      "izinTutar": 8000,
       "yillikTutar": 0,
       "disiplinDk": 0
     },
@@ -1059,5 +1059,5 @@
   ],
   "cezalar": [],
   "devamsizlik": [],
-  "t": 1788692875102
+  "t": 1788697637861
 }
