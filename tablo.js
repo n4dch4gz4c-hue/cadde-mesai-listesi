@@ -34,7 +34,8 @@ function renderTopluHs(){
   list.forEach(function(p){
     var saat=p.hsVar?(p.hsSaat||0):0;
     var sira=state.people.findIndex(function(x){return x.id===p.id;})+1;
-    h+='<tr'+(saat>0?' class="on"':'')+'>";
+    h+='<tr'+(saat>0?' class="on"':'')+'>
+';
     h+='<td><input type="checkbox" class="hsChk" data-id="'+p.id+'" '+(saat>0?'checked':'')+'></td>';
     h+='<td>'+sira+'</td><td class="ad">'+p.name+'</td>';
     h+='<td><input type="number" step="0.5" value="'+saat+'" onchange="setF('+p.id+',\'hsSaat\',this.value)"></td>';
