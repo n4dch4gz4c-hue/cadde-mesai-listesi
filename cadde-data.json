@@ -12,7 +12,7 @@
       "yolGun": 0,
       "yolBirim": 1200,
       "yolVar": false,
-      "izinTutar": 8000,
+      "izinTutar": 0,
       "yillikTutar": 0,
       "disiplinDk": 0
     },
@@ -1058,12 +1058,6 @@
     }
   ],
   "cezalar": [],
-  "devamsizlik": [
-    {
-      "kisi": "MUHAMMED HASAN KOÇALAN",
-      "gun": 1,
-      "not": "Raporlu"
-    }
-  ],
-  "t": 1788709894733
+  "devamsizlik": [],
+  "t": 1789136119394
 }
