@@ -1,0 +1,1 @@
+const SEED={"people":[{"id":1,"name":"CEMAL CELIK","kurye":false,"mesaiSaat":0,"mesaiBirim":320,"hsSaat":0,"primAdet":0,"yolGun":0,"yolBirim":1200,"izinTutar":0,"yillikTutar":8000,"disiplinDk":0}],"cezalar":[],"devamsizlik":[]};
