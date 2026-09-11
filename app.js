@@ -1,6 +1,7 @@
 const KEY="cadde_bordro_v3";
 const HS_BIRIM=2500,PRIM_BIRIM=7,DIS_BIRIM=1,YOL_BIRIM=1200;
 function num(v,d){const n=parseFloat(v);return Number.isFinite(n)?n:(d||0);}
+function fold(s){return String(s||"").replace(/\u0130/g,"I").replace(/\u0131/g,"i").replace(/\u011e/g,"G").replace(/\u011f/g,"g").replace(/\u00dc/g,"U").replace(/\u00fc/g,"u").replace(/\u015e/g,"S").replace(/\u015f/g,"s").replace(/\u00d6/g,"O").replace(/\u00f6/g,"o").replace(/\u00c7/g,"C").replace(/\u00e7/g,"c").toUpperCase();}
 function hydratePerson(p){
   p=p||{};
   const hs=num(p.hsSaat??p.hsAdet??p.hs,0);
@@ -18,13 +19,26 @@ function hydratePerson(p){
     disiplinDk:num(p.disiplinDk,0)
   };
 }
+function applyOfficialNames(s){
+  const byId={};
+  const byFold={};
+  (SEED.people||[]).forEach(p=>{byId[p.id]=p.name;byFold[fold(p.name)]=p.name;});
+  s.people.forEach(p=>{
+    if(byId[p.id])p.name=byId[p.id];
+    else if(byFold[fold(p.name)])p.name=byFold[fold(p.name)];
+  });
+  (s.devamsizlik||[]).forEach(d=>{if(byFold[fold(d.kisi)])d.kisi=byFold[fold(d.kisi)];});
+  (s.cezalar||[]).forEach(d=>{if(byFold[fold(d.kisi)])d.kisi=byFold[fold(d.kisi)];});
+  return s;
+}
 function hydrate(s){
   s=s||{};
-  return {
+  s={
     people:Array.isArray(s.people)?s.people.map(hydratePerson):[],
     cezalar:Array.isArray(s.cezalar)?s.cezalar:[],
     devamsizlik:Array.isArray(s.devamsizlik)?s.devamsizlik:[]
   };
+  return applyOfficialNames(s);
 }
 function load(){
   try{
@@ -35,6 +49,7 @@ function load(){
 }
 let state=load();
 function persist(){localStorage.setItem(KEY,JSON.stringify(state));}
+persist();
 function calc(p){
   p=hydratePerson(p);
   const mesai=p.mesaiSaat*p.mesaiBirim;
