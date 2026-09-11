@@ -1,0 +1,1 @@
+fetch("cadde-data.json").then(r=>r.json()).then(s=>{try{const raw=localStorage.getItem("cadde_bordro_v2");if(raw){const o=JSON.parse(raw);if(o&&o.people&&o.people.length>1)return;}}catch(e){}if(s&&Array.isArray(s.people)&&s.people.length){state=hydratePeople(s);persist();renderListe();}}).catch(()=>{});
