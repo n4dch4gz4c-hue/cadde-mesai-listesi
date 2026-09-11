@@ -1,0 +1,21 @@
+@media(min-width:900px){
+html,body{font-size:14px!important}
+body{max-width:1680px!important;margin:0 auto!important;padding:10px 14px 88px!important}
+h1{font-size:22px!important}
+.sub{font-size:11px}
+.stat{padding:8px 10px}
+.stat b{font-size:18px!important}
+.card{padding:8px 10px!important;margin-bottom:0!important;border-radius:10px}
+#list,#hsList{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important}
+.name strong{font-size:13px}
+.tiny{font-size:10px!important}
+.rowtot{margin-top:6px;padding-top:6px;font-size:13px}
+.movebar{margin-top:4px;gap:4px}
+.movebar .btn{padding:3px 8px;font-size:11px}
+.search{padding:8px;margin:4px 0}
+.tabs{margin:6px 0}
+.top{margin-bottom:6px}
+}
+@media(min-width:1400px){
+#list,#hsList{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+}
