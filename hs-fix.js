@@ -1,0 +1,1 @@
+function calc(p){const mesai=(p.mesaiSaat||0)*(p.mesaiBirim||0);const hs=p.hsVar?(p.hsSaat||0)*1250:0;const prim=p.kurye?(p.primAdet||0)*PRIM_BIRIM:0;const yol=p.yolVar?(p.yolGun||0)*(p.yolBirim||1200):0;const izin=p.izinTutar||0,yillik=p.yillikTutar||0,dis=(p.disiplinDk||0)*DIS_BIRIM;return{mesai,hs,prim,yol,izin,yillik,dis,toplam:mesai+hs+prim+yol+izin+yillik+dis};}
