@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Cadde Kurye · Test</title>
+<style>
+:root{--bg:#101418;--card:#1a2128;--line:#2c3640;--txt:#eef3f7;--mut:#8b9aab;--acc:#2f6fed;--ok:#1f9d5a;--warn:#c9841a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:14px 16px 8px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+h1{font-size:18px;margin:0}
+.sub{color:var(--mut);font-size:12px;margin:3px 0 0}
+.wrap{padding:0 16px 28px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 10px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+input,select,textarea,button{font:inherit;border-radius:10px;border:1px solid var(--line);background:#12181e;color:var(--txt);padding:10px}
+input,select,textarea{width:100%}
+textarea{min-height:70px}
+button{background:var(--acc);border-color:var(--acc);cursor:pointer}
+button.ghost{background:transparent;color:var(--txt)}
+button.ok{background:var(--ok);border-color:var(--ok)}
+button.warn{background:var(--warn);border-color:var(--warn)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pill{display:inline-block;padding:3px 8px;border-radius:99px;font-size:11px}
+.pill.acik{background:#3a2a12;color:#f3c27a}
+.pill.yolda{background:#123a28;color:#7ee0a8}
+.pill.teslim{background:#1c2430;color:#9fb0c0}
+.pkg b{font-size:16px}
+.muted{color:var(--mut);font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stat b{display:block;font-size:20px}
+#toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#000;padding:8px 12px;border-radius:8px;display:none}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Cadde Kurye</h1><p class="sub" id="sub">Test · mesai listesinden ayrı</p></div>
+  <button class="ghost" onclick="logout()">Çıkış</button>
+</header>
+<div class="wrap" id="app"></div>
+<div id="toast"></div>
+<script>
+const KEY="cadde_kurye_v1";
+const PIN="2580";
+const KURYE=["CİHAN GENÇ","HAKAN ATMACA","UĞUR GÖKER","MUSTAFA AYDIN","SAYIM GÜMÜŞ","ABDURRAHMAN KAPAN","SEYFİ ÇELİK","FEVZİ DOLAK","OSMAN CEYLAN","ALİ AKKOCA","MURAT TORUN","BAYRAM YETER","RAMAZAN YAVUZ"];
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{packages:[]};}catch(e){return{packages:[]};}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));}
+let state=load();
+let role=sessionStorage.getItem("ck_role")||"";
+let me=sessionStorage.getItem("ck_me")||"";
+function toast(t){const e=document.getElementById("toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",1400);}
+function now(){return new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});}
+function logout(){sessionStorage.removeItem("ck_role");sessionStorage.removeItem("ck_me");role="";me="";draw();}
+function setRole(r,n){role=r;me=n||"";sessionStorage.setItem("ck_role",r);sessionStorage.setItem("ck_me",me);draw();}
+function addPkg(){
+  const kurye=document.getElementById("pKurye").value;
+  const adres=document.getElementById("pAdres").value.trim();
+  if(!kurye||!adres){toast("Kurye ve adres");return;}
+  state.packages.unshift({id:Date.now(),saat:now(),musteri:document.getElementById("pMusteri").value.trim()||"-",adres,tel:document.getElementById("pTel").value.trim(),tutar:Number(document.getElementById("pTutar").value||0),kanal:document.getElementById("pKanal").value,kurye,durum:"acik"});
+  save();toast("Paket eklendi");draw();
+}
+function setDurum(id,d){const p=state.packages.find(x=>x.id===id);if(!p)return;p.durum=d;if(d==="teslim")p.teslim=now();save();draw();}
+function sil(id){state.packages=state.packages.filter(x=>x.id!==id);save();draw();}
+function stats(){const a=state.packages;return {acik:a.filter(x=>x.durum==="acik").length,yolda:a.filter(x=>x.durum==="yolda").length,teslim:a.filter(x=>x.durum==="teslim").length};}
+function pkgCard(p,ofis){
+  const map={acik:"Açık",yolda:"Yolda",teslim:"Teslim"};
+  return `<article class="card pkg"><div class="row" style="justify-content:space-between"><b>${p.musteri}</b><span class="pill ${p.durum}">${map[p.durum]}</span></div><div>${p.adres}</div><div class="muted">${p.saat} · ${p.kurye} · ${p.kanal}${p.tutar?(" · "+p.tutar+" TL"):""}${p.tel?(" · "+p.tel):""}</div><div class="row">${p.durum==="acik"?`<button class="warn" onclick="setDurum(${p.id},'yolda')">Yola çıktım</button>`:""}${p.durum!=="teslim"?`<button class="ok" onclick="setDurum(${p.id},'teslim')">Teslim</button>`:""}${ofis?`<button class="ghost" onclick="sil(${p.id})">Sil</button>`:""}</div></article>`;
+}
+function drawLogin(){
+  document.getElementById("sub").textContent="Giriş";
+  document.getElementById("app").innerHTML=`<div class="card"><b>Ofis</b><p class="muted">PIN: 2580</p><div class="row"><input id="pin" type="password" inputmode="numeric" placeholder="PIN"/><button onclick="document.getElementById('pin').value==='2580'?setRole('ofis'):toast('PIN yanlış')">Ofis gir</button></div></div><div class="card"><b>Kurye</b><select id="kSec">${KURYE.map(k=>`<option>${k}</option>`).join("")}</select><div style="height:8px"></div><button onclick="setRole('kurye',document.getElementById('kSec').value)">Kurye gir</button></div>`;
+}
+function drawOfis(){
+  const s=stats();
+  document.getElementById("sub").textContent="Ofis ekranı";
+  document.getElementById("app").innerHTML=`<div class="stats"><div class="stat"><span>Açık</span><b>${s.acik}</b></div><div class="stat"><span>Yolda</span><b>${s.yolda}</b></div><div class="stat"><span>Teslim</span><b>${s.teslim}</b></div></div><div class="card"><b>Yeni paket</b><div class="grid" style="margin-top:8px"><input id="pMusteri" placeholder="Müşteri"/><input id="pTel" placeholder="Telefon"/><input id="pTutar" type="number" placeholder="Tutar"/><select id="pKanal"><option>Trendyol</option><option>Telefon</option><option>Yemeksepeti</option><option>Getir</option></select></div><div style="height:8px"></div><textarea id="pAdres" placeholder="Adres / semt"></textarea><div style="height:8px"></div><select id="pKurye">${KURYE.map(k=>`<option>${k}</option>`).join("")}</select><div style="height:8px"></div><button onclick="addPkg()">Paketi kuryeye ver</button></div>${state.packages.map(p=>pkgCard(p,true)).join("")||'<div class="muted">Henüz paket yok.</div>'}`;
+}
+function drawKurye(){
+  const mine=state.packages.filter(p=>p.kurye===me && p.durum!=="teslim");
+  const done=state.packages.filter(p=>p.kurye===me && p.durum==="teslim");
+  document.getElementById("sub").textContent=me;
+  document.getElementById("app").innerHTML=`<div class="stats"><div class="stat"><span>Açık iş</span><b>${mine.length}</b></div><div class="stat"><span>Teslim</span><b>${done.length}</b></div><div class="stat"><span>Toplam</span><b>${mine.length+done.length}</b></div></div><b>Aktif paketlerim</b>${mine.map(p=>pkgCard(p,false)).join("")||'<div class="card muted">Sana açık paket yok.</div>'}<div style="height:12px"></div><b>Teslim edilenler</b>${done.slice(0,10).map(p=>pkgCard(p,false)).join("")||'<div class="muted">Yok</div>'}`;
+}
+function draw(){if(role==="ofis")drawOfis();else if(role==="kurye")drawKurye();else drawLogin();}
+draw();
+</script>
+</body>
+</html>
