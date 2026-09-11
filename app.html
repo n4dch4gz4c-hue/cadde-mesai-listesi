@@ -2,166 +2,89 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<meta name="theme-color" content="#0f172a"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<title>Cadde Mesai</title>
+<title>Cadde Mesai Listesi</title>
 <link rel="stylesheet" href="app.css"/>
 </head>
 <body>
-<div class="app">
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="logo">C</div>
-      <div>
-        <strong>Cadde Mesai</strong>
-        <div class="muted">Bordro ve prim</div>
-      </div>
-    </div>
-    <nav class="nav" id="nav">
-      <button class="nav-btn on" data-tab="liste" onclick="tab(this)">Personel</button>
-      <button class="nav-btn" data-tab="hs" onclick="tab(this)">Toplu HS</button>
-      <button class="nav-btn" data-tab="kurye" onclick="tab(this)">Kurye prim</button>
-      <button class="nav-btn" data-tab="devam" onclick="tab(this)">Devamsizlik</button>
-      <button class="nav-btn" data-tab="ceza" onclick="tab(this)">Cezalar</button>
-      <button class="nav-btn" data-tab="ozet" onclick="tab(this)">Ozet</button>
-      <button class="nav-btn" data-tab="finans" onclick="tab(this)">Finans</button>
-    </nav>
-    <div class="sidebar-foot">
-      <button class="btn ghost" onclick="resetData()">Sifirla</button>
-    </div>
-  </aside>
-
-  <main class="main">
-    <header class="topbar">
-      <div>
-        <h1 id="pageTitle">Personel</h1>
-        <p class="muted" id="pageSub">66 kisi · yerel kayit</p>
-      </div>
-      <div class="top-actions">
-        <button class="btn" onclick="exportCSV()">CSV</button>
-        <button class="btn" onclick="sharePDF()">PDF</button>
-        <button class="btn primary" onclick="save()">Kaydet</button>
-        <button class="btn dark" onclick="openAdd()">+ Kisi</button>
-      </div>
-    </header>
-
-    <section id="sec-liste">
-      <div class="stats" id="stats"></div>
-      <div class="toolbar">
-        <input class="search" id="q" placeholder="Isim ara..." oninput="renderListe()"/>
-        <div class="pills">
-          <button class="pill on" data-f="hepsi" onclick="filt(this)">Hepsi</button>
-          <button class="pill" data-f="kurye" onclick="filt(this)">Kurye</button>
-          <button class="pill" data-f="pozitif" onclick="filt(this)">Tutari olan</button>
-          <button class="pill" data-f="sifir" onclick="filt(this)">0 TL</button>
-        </div>
-      </div>
-      <div id="list" class="cards"></div>
-    </section>
-
-    <section id="sec-hs" class="hide">
-      <div class="panel">
-        <h2>Toplu hafta sonu</h2>
-        <p class="muted">Secilenlere ayni HS saatini uygula. Birim: 2.500 TL / saat</p>
-        <div class="grid2">
-          <label>Ortak saat<input id="hsTopluSaat" type="number" step="0.5" value="1"/></label>
-          <label>Isim ara<input id="hsQ" type="text" oninput="renderTopluHs()"/></label>
-        </div>
-        <div class="pills wrap">
-          <button class="btn" onclick="hsSec(true)">Hepsini sec</button>
-          <button class="btn" onclick="hsSec(false)">Secimi kaldir</button>
-          <button class="btn primary" onclick="hsUygulaSecili()">Secilenlere uygula</button>
-          <button class="btn" onclick="hsUygulaHepsine()">Listedekilere uygula</button>
-          <button class="btn danger" onclick="hsSifirlaSecili()">Secilenleri sifirla</button>
-        </div>
-      </div>
-      <div id="hsList" class="cards"></div>
-    </section>
-
-    <section id="sec-kurye" class="hide">
-      <div class="panel"><h2>Kurye primi</h2><p class="muted">Adet x 7 TL</p></div>
-      <div id="kuryeList" class="cards"></div>
-    </section>
-
-    <section id="sec-devam" class="hide">
-      <div class="panel">
-        <h2>Yeni devamsizlik</h2>
-        <div class="grid3">
-          <label>Kisi<select id="dKisi"></select></label>
-          <label>Gun<input id="dGun" type="number" step="0.5" value="1"/></label>
-          <label>Not<input id="dNot" type="text"/></label>
-        </div>
-        <button class="btn primary" onclick="addDevam()">Ekle</button>
-      </div>
-      <div id="devamList" class="cards"></div>
-    </section>
-
-    <section id="sec-ceza" class="hide">
-      <div class="panel">
-        <h2>Yeni ceza</h2>
-        <div class="grid3">
-          <label>Kisi<select id="cKisi"></select></label>
-          <label>Tutar<input id="cTutar" type="number" value="1000"/></label>
-          <label>Neden<input id="cNeden" type="text"/></label>
-        </div>
-        <button class="btn primary" onclick="addCeza()">Ekle</button>
-      </div>
-      <div id="cezaList" class="cards"></div>
-    </section>
-
-    <section id="sec-ozet" class="hide">
-      <div class="pills">
-        <button class="pill on" data-oz="ayrinti" onclick="setOzetMode(this)">Ayrintili</button>
-        <button class="pill" data-oz="kisa" onclick="setOzetMode(this)">Sadece tutari olan</button>
-      </div>
-      <div class="panel" id="ozetBox"></div>
-    </section>
-
-    <section id="sec-finans" class="hide">
-      <div id="finansBox"></div>
-    </section>
-  </main>
-</div>
-
-<nav class="mobile-nav" id="mobileNav"></nav>
-
-<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
-  <div class="sheet">
-    <div class="sheet-head">
-      <h3 id="modalTitle">Kisi</h3>
-      <button class="icon-btn" onclick="closeModal()">x</button>
-    </div>
-    <div class="grid2">
-      <label class="full">Ad Soyad <input id="fName" type="text"/></label>
-      <label>Sira <input id="fSira" type="number" min="1"/></label>
-      <label>Kurye?
-        <select id="fKurye" onchange="document.getElementById('primBox').classList.toggle('hide', this.value!=='1')">
-          <option value="0">Hayir</option>
-          <option value="1">Evet</option>
-        </select>
-      </label>
-      <label>Mesai saat <input id="fMesai" type="number" step="0.5"/></label>
-      <label>Mesai birim <input id="fMesaiBirim" type="number"/></label>
-      <label>HS saat <input id="fHs" type="number" step="0.5"/></label>
-      <label id="primBox" class="hide">Prim adet <input id="fPrim" type="number"/></label>
-      <label>Yol gun <input id="fYol" type="number"/></label>
-      <label>Yol birim <input id="fYolBirim" type="number"/></label>
-      <label>Izin <input id="fIzin" type="number"/></label>
-      <label>Yillik <input id="fYillik" type="number"/></label>
-      <label>Disiplin dk <input id="fDisk" type="number"/></label>
-    </div>
-    <div class="sheet-actions">
-      <button class="btn primary" onclick="savePerson()">Kaydet</button>
-      <button class="btn" onclick="closeModal()">Vazgec</button>
-      <button class="btn danger" onclick="delPerson()">Sil</button>
-    </div>
+<header class="bar">
+  <div>
+    <h1>Cadde Mesai Listesi</h1>
+    <p class="sub" id="pageSub"></p>
   </div>
-</div>
-
+  <div class="bar-actions">
+    <input id="q" class="search" placeholder="Isim ara..." oninput="renderAll()"/>
+    <button class="btn" onclick="exportCSV()">CSV</button>
+    <button class="btn" onclick="sharePDF()">PDF</button>
+    <button class="btn" onclick="resetData()">PDF listesini yukle</button>
+    <button class="btn primary" onclick="save()">Kaydet</button>
+  </div>
+</header>
+<nav class="tabs">
+  <button class="tab on" data-tab="liste" onclick="tab(this)">Liste / Giris</button>
+  <button class="tab" data-tab="kurye" onclick="tab(this)">Kurye prim</button>
+  <button class="tab" data-tab="devam" onclick="tab(this)">Devamsizlik</button>
+  <button class="tab" data-tab="ceza" onclick="tab(this)">Cezalar</button>
+  <button class="tab" data-tab="ozet" onclick="tab(this)">Ozet</button>
+</nav>
+<section id="sec-liste">
+  <div class="stats" id="stats"></div>
+  <div class="table-wrap">
+    <table class="sheet">
+      <thead>
+        <tr>
+          <th rowspan="2">No</th>
+          <th rowspan="2">Ad Soyad</th>
+          <th colspan="2">Mesai</th>
+          <th colspan="2">Hafta sonu</th>
+          <th>Prim</th>
+          <th>Yol</th>
+          <th colspan="2">Izin</th>
+          <th>Yillik izin</th>
+          <th>Disiplin</th>
+          <th rowspan="2">Toplam</th>
+        </tr>
+        <tr>
+          <th>Saat</th><th>Tutar</th>
+          <th>Adet</th><th>Tutar</th>
+          <th>Ekstra</th>
+          <th>Tutar</th>
+          <th>Gun</th><th>Tutar</th>
+          <th>Tutar</th>
+          <th>dk</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+      <tfoot id="tfoot"></tfoot>
+    </table>
+  </div>
+</section>
+<section id="sec-kurye" class="hide">
+  <div class="panel"><h2>Kurye primleri</h2><p class="sub">Sadece kuryeler. Adet x 7 TL listeye yansir.</p></div>
+  <div id="kuryeList" class="cards"></div>
+</section>
+<section id="sec-devam" class="hide">
+  <div class="panel"><h2>Devamsizlik</h2><div class="row">
+      <label>Kisi<select id="dKisi"></select></label>
+      <label>Gun<input id="dGun" type="number" step="0.5" value="1"/></label>
+      <label>Not<input id="dNot" type="text"/></label>
+      <button class="btn primary" onclick="addDevam()">Ekle</button>
+    </div></div>
+  <div id="devamList" class="cards"></div>
+</section>
+<section id="sec-ceza" class="hide">
+  <div class="panel"><h2>Cezalar</h2><div class="row">
+      <label>Kisi<select id="cKisi"></select></label>
+      <label>Tutar<input id="cTutar" type="number" value="1000"/></label>
+      <label>Neden<input id="cNeden" type="text"/></label>
+      <button class="btn primary" onclick="addCeza()">Ekle</button>
+    </div></div>
+  <div id="cezaList" class="cards"></div>
+</section>
+<section id="sec-ozet" class="hide"><div class="panel" id="ozetBox"></div></section>
 <div id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="seed.js"></script>
 <script src="app.js"></script>
-</body>
-</html>
+</body></html>
