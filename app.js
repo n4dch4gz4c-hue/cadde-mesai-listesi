@@ -1,13 +1,17 @@
-const KEY="cadde_bordro_v3";
+const KEY="cadde_bordro_v4";
 const HS_BIRIM=2500,PRIM_BIRIM=7,DIS_BIRIM=1,YOL_BIRIM=1200;
 function num(v,d){const n=parseFloat(v);return Number.isFinite(n)?n:(d||0);}
-function fold(s){return String(s||"").replace(/\u0130/g,"I").replace(/\u0131/g,"i").replace(/\u011e/g,"G").replace(/\u011f/g,"g").replace(/\u00dc/g,"U").replace(/\u00fc/g,"u").replace(/\u015e/g,"S").replace(/\u015f/g,"s").replace(/\u00d6/g,"O").replace(/\u00f6/g,"o").replace(/\u00c7/g,"C").replace(/\u00e7/g,"c").toUpperCase();}
 function hydratePerson(p){
   p=p||{};
   const hs=num(p.hsSaat??p.hsAdet??p.hs,0);
   const yol=num(p.yolGun??p.yol,0);
+  let name=p.name||"";
+  if(typeof SEED!=="undefined" && SEED.people){
+    const off=SEED.people.find(x=>x.id===p.id);
+    if(off&&off.name)name=off.name;
+  }
   return {
-    id:p.id,name:p.name||"",kurye:!!p.kurye,
+    id:p.id,name,kurye:!!p.kurye,
     mesaiSaat:num(p.mesaiSaat??p.saat,0),
     mesaiBirim:num(p.mesaiBirim??p.birim,300),
     hsSaat:hs,hsVar:hs>0,
@@ -19,26 +23,9 @@ function hydratePerson(p){
     disiplinDk:num(p.disiplinDk,0)
   };
 }
-function applyOfficialNames(s){
-  const byId={};
-  const byFold={};
-  (SEED.people||[]).forEach(p=>{byId[p.id]=p.name;byFold[fold(p.name)]=p.name;});
-  s.people.forEach(p=>{
-    if(byId[p.id])p.name=byId[p.id];
-    else if(byFold[fold(p.name)])p.name=byFold[fold(p.name)];
-  });
-  (s.devamsizlik||[]).forEach(d=>{if(byFold[fold(d.kisi)])d.kisi=byFold[fold(d.kisi)];});
-  (s.cezalar||[]).forEach(d=>{if(byFold[fold(d.kisi)])d.kisi=byFold[fold(d.kisi)];});
-  return s;
-}
 function hydrate(s){
   s=s||{};
-  s={
-    people:Array.isArray(s.people)?s.people.map(hydratePerson):[],
-    cezalar:Array.isArray(s.cezalar)?s.cezalar:[],
-    devamsizlik:Array.isArray(s.devamsizlik)?s.devamsizlik:[]
-  };
-  return applyOfficialNames(s);
+  return {people:Array.isArray(s.people)?s.people.map(hydratePerson):[],cezalar:Array.isArray(s.cezalar)?s.cezalar:[],devamsizlik:Array.isArray(s.devamsizlik)?s.devamsizlik:[]};
 }
 function load(){
   try{
@@ -61,7 +48,7 @@ function calc(p){
 }
 function tl(n){n=Math.round(n)||0;return n.toLocaleString("tr-TR");}
 function dash(n){return (Math.round(n)||0)===0?"-":tl(n);}
-function toast(t){const el=document.getElementById("toast");el.textContent=t;el.style.display="block";setTimeout(()=>el.style.display="none",1400);}
+function toast(t){const el=document.getElementById("toast");if(!el)return;el.textContent=t;el.style.display="block";setTimeout(()=>el.style.display="none",1400);}
 function qv(){return (document.getElementById("q")?.value||"").toLocaleLowerCase("tr-TR");}
 function visible(){const q=qv();return state.people.filter(p=>!q||(p.name||"").toLocaleLowerCase("tr-TR").includes(q));}
 function setVal(id,field,val){
@@ -79,8 +66,9 @@ function renderListe(){
   const rows=visible();
   const all=state.people.map(p=>({p,c:calc(p)}));
   const sum=x=>all.reduce((a,r)=>a+r.c[x],0);
-  document.getElementById("pageSub").textContent=state.people.length+" kisi · genel toplam "+tl(sum("toplam"))+" TL";
-  document.getElementById("stats").innerHTML=`<div class="stat"><span>Genel toplam</span><b>${tl(sum("toplam"))} TL</b></div><div class="stat"><span>Odemesi olan</span><b>${all.filter(r=>r.c.toplam>0).length} / ${state.people.length}</b></div><div class="stat"><span>Hafta sonu</span><b>${tl(sum("hs"))} TL</b></div><div class="stat"><span>Mesai</span><b>${tl(sum("mesai"))} TL</b></div>`;
+  const sub=document.getElementById("pageSub");
+  if(sub)sub.textContent=state.people.length+" kişi · genel toplam "+tl(sum("toplam"))+" TL";
+  document.getElementById("stats").innerHTML=`<div class="stat"><span>Genel toplam</span><b>${tl(sum("toplam"))} TL</b></div><div class="stat"><span>Ödemesi olan</span><b>${all.filter(r=>r.c.toplam>0).length} / ${state.people.length}</b></div><div class="stat"><span>Hafta sonu</span><b>${tl(sum("hs"))} TL</b></div><div class="stat"><span>Mesai</span><b>${tl(sum("mesai"))} TL</b></div>`;
   document.getElementById("tbody").innerHTML=rows.map(p=>{
     const c=calc(p);
     const cls=c.toplam>0?"pay":"zero";
@@ -96,35 +84,35 @@ function renderKurye(){
   document.getElementById("kuryeList").innerHTML=list.map(p=>`<article class="card"><b>${p.name}</b><label>Prim adet<input type="number" value="${p.primAdet||0}" onchange="setPrim(${p.id},this.value)"/></label><div>${tl((p.primAdet||0)*PRIM_BIRIM)} TL</div></article>`).join("")+`<article class="card"><b>Toplam adet ${sum}</b><div>${tl(sum*PRIM_BIRIM)} TL</div></article>`;
 }
 function setPrim(id,v){const p=state.people.find(x=>x.id===id);if(!p)return;p.primAdet=num(v,0);persist();renderKurye();renderListe();}
-function fillSel(id){const sel=document.getElementById(id);if(!sel)return;const cur=sel.value;sel.innerHTML='<option value="">Kisi sec</option>'+state.people.map(p=>`<option value="${p.name}">${p.name}</option>`).join("");if(cur)sel.value=cur;}
+function fillSel(id){const sel=document.getElementById(id);if(!sel)return;const cur=sel.value;sel.innerHTML='<option value="">Kişi seç</option>'+state.people.map(p=>`<option value="${p.name}">${p.name}</option>`).join("");if(cur)sel.value=cur;}
 function renderDevam(){
   fillSel("dKisi");
-  document.getElementById("devamList").innerHTML=(state.devamsizlik||[]).map((d,i)=>`<article class="card"><b>${d.kisi}</b><div class="sub">${d.gun} gun · ${d.not||""}</div><button class="btn" onclick="state.devamsizlik.splice(${i},1);persist();renderDevam()">Sil</button></article>`).join("");
+  document.getElementById("devamList").innerHTML=(state.devamsizlik||[]).map((d,i)=>`<article class="card"><b>${d.kisi}</b><div>${d.gun} gün · ${d.not||""}</div><button class="btn" onclick="state.devamsizlik.splice(${i},1);persist();renderDevam()">Sil</button></article>`).join("");
 }
 function addDevam(){
-  const kisi=document.getElementById("dKisi").value;if(!kisi){toast("Kisi sec");return;}
+  const kisi=document.getElementById("dKisi").value;if(!kisi){toast("Kişi seç");return;}
   state.devamsizlik.push({kisi,gun:num(document.getElementById("dGun").value,1),not:document.getElementById("dNot").value||""});
   persist();renderDevam();
 }
 function renderCeza(){
   fillSel("cKisi");
-  document.getElementById("cezaList").innerHTML=(state.cezalar||[]).map((c,i)=>`<article class="card"><b>${c.kisi}</b><div class="sub">${tl(c.tutar)} TL · ${c.neden||""}</div><button class="btn" onclick="state.cezalar.splice(${i},1);persist();renderCeza()">Sil</button></article>`).join("");
+  document.getElementById("cezaList").innerHTML=(state.cezalar||[]).map((c,i)=>`<article class="card"><b>${c.kisi}</b><div>${tl(c.tutar)} TL · ${c.neden||""}</div><button class="btn" onclick="state.cezalar.splice(${i},1);persist();renderCeza()">Sil</button></article>`).join("");
 }
 function addCeza(){
-  const kisi=document.getElementById("cKisi").value;if(!kisi){toast("Kisi sec");return;}
+  const kisi=document.getElementById("cKisi").value;if(!kisi){toast("Kişi seç");return;}
   state.cezalar.push({kisi,tutar:num(document.getElementById("cTutar").value,0),neden:document.getElementById("cNeden").value||""});
   persist();renderCeza();
 }
 function renderOzet(){
   const all=state.people.map(p=>({p,c:calc(p)})).filter(x=>x.c.toplam>0);
   const sum=all.reduce((a,x)=>a+x.c.toplam,0);
-  document.getElementById("ozetBox").innerHTML=`<h2>Odemesi olanlar</h2><p class="sub">${all.length} kisi · ${tl(sum)} TL</p><table class="sheet"><thead><tr><th>Ad</th><th>Mesai</th><th>HS</th><th>Izin</th><th>Toplam</th></tr></thead><tbody>${all.map(x=>`<tr><td class="name">${x.p.name}</td><td>${dash(x.c.mesai)}</td><td>${dash(x.c.hs)}</td><td>${dash(x.c.izin+x.c.yillik)}</td><td>${tl(x.c.toplam)}</td></tr>`).join("")}</tbody></table>`;
+  document.getElementById("ozetBox").innerHTML=`<h2>Ödemesi olanlar</h2><p>${all.length} kişi · ${tl(sum)} TL</p><table class="sheet"><thead><tr><th>Ad</th><th>Mesai</th><th>HS</th><th>İzin</th><th>Toplam</th></tr></thead><tbody>${all.map(x=>`<tr><td class="name">${x.p.name}</td><td>${dash(x.c.mesai)}</td><td>${dash(x.c.hs)}</td><td>${dash(x.c.izin+x.c.yillik)}</td><td>${tl(x.c.toplam)}</td></tr>`).join("")}</tbody></table>`;
 }
-function renderAll(){renderListe();renderKurye();renderDevam();renderCeza();renderOzet();}
+function renderAll(){renderListe();if(document.getElementById("kuryeList"))renderKurye();if(document.getElementById("devamList"))renderDevam();if(document.getElementById("cezaList"))renderCeza();if(document.getElementById("ozetBox"))renderOzet();}
 function tab(el){
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t===el));
   const id=el.dataset.tab;
-  ["liste","kurye","devam","ceza","ozet"].forEach(s=>document.getElementById("sec-"+s).classList.toggle("hide",s!==id));
+  ["liste","kurye","devam","ceza","ozet"].forEach(s=>{const e=document.getElementById("sec-"+s);if(e)e.classList.toggle("hide",s!==id);});
   if(id==="kurye")renderKurye();
   if(id==="devam")renderDevam();
   if(id==="ceza")renderCeza();
@@ -132,10 +120,10 @@ function tab(el){
 }
 function save(){persist();toast("Kaydedildi");}
 function resetData(){
-  if(!confirm("PDF listesi yuklensin mi? Bu cihazdaki degisiklikler silinir."))return;
+  if(!confirm("PDF listesi yüklensin mi?"))return;
   localStorage.removeItem(KEY);
   state=hydrate(JSON.parse(JSON.stringify(SEED)));
-  persist();renderAll();toast("PDF listesi yuklendi");
+  persist();renderAll();toast("Yüklendi");
 }
 function exportCSV(){
   const head=["No","Ad","Mesai saat","Mesai tutar","HS adet","HS tutar","Prim","Yol","Izin gun","Izin","Yillik","Disiplin","Toplam"];
@@ -150,7 +138,6 @@ async function sharePDF(){
   doc.setFontSize(13);doc.text("Cadde Mesai Listesi",10,12);
   let y=20;
   state.people.forEach((p,i)=>{const c=calc(p);if(y>190){doc.addPage();y=16;}doc.setFontSize(9);doc.text(`${i+1}  ${p.name}  ${Math.round(c.toplam)} TL`,10,y);y+=6;});
-  doc.text("Genel toplam: "+tl(state.people.map(calc).reduce((a,c)=>a+c.toplam,0))+" TL",10,y+6);
   doc.save("cadde-bordro.pdf");
 }
 renderAll();
