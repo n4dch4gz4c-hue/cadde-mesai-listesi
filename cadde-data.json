@@ -1058,6 +1058,16 @@
     }
   ],
   "cezalar": [],
-  "devamsizlik": [],
-  "t": 1789136119394
+  "devamsizlik": [
+    {
+      "kisi": "YUNUS EMRE ÇELİK",
+      "gun": 5,
+      "not": "ücretsiz izin"
+    },
+    {
+      "kisi": "OSMAN CEYLAN",
+      "gun": 2,
+      "not": "ücretsiz izin"
+    }
+  ]
 }
