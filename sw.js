@@ -1,4 +1,4 @@
-const VER="v16";
+const VER="v32";
 self.addEventListener("install",function(e){
   self.skipWaiting();
 });
