@@ -12,7 +12,8 @@ function secretTap(){
 function toggleGhBox(forceOpen){
   var box=document.getElementById("ghBox");
   if(!box)return;
-  if(forceOpen) box.classList.remove("hide");
+  if(forceOpen===true) box.classList.remove("hide");
+  else if(forceOpen===false) box.classList.add("hide");
   else box.classList.toggle("hide");
   ghLoadCfg();
 }
@@ -23,6 +24,7 @@ function ghSaveCfg(){
     path:(document.getElementById("ghPath")||{}).value||GH_DEFAULT_PATH
   }));
   toast("Anahtar kaydedildi");
+  toggleGhBox(false);
 }
 function ghLoadCfg(){
   try{
@@ -50,7 +52,7 @@ async function ghPush(){
   var path=(ghCfg().path||GH_DEFAULT_PATH).trim();
   if(!token){
     toggleGhBox(true);
-    toast("Once senkron anahtarini yaz");
+    toast("Senkron butonundan anahtar yaz");
     return false;
   }
   state.updatedAt=new Date().toISOString();
@@ -78,10 +80,7 @@ async function applyRemote(data,msg){
   return true;
 }
 async function ghPullPublic(){
-  var urls=[
-    GH_RAW+"?t="+Date.now(),
-    "cadde-data.json?t="+Date.now()
-  ];
+  var urls=[GH_RAW+"?t="+Date.now(),"cadde-data.json?t="+Date.now()];
   for(var i=0;i<urls.length;i++){
     try{
       var r=await fetch(urls[i],{cache:"no-store"});
@@ -122,8 +121,6 @@ async function yenileSunucu(){
 }
 document.addEventListener("DOMContentLoaded",function(){
   ghLoadCfg();
-  if(!ghHasToken()){
-    var box=document.getElementById("ghBox");
-    if(box) box.classList.remove("hide");
-  }
+  var box=document.getElementById("ghBox");
+  if(box) box.classList.add("hide");
 });
