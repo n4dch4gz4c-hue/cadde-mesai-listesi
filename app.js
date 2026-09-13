@@ -196,134 +196,158 @@ async function ensurePdfFont(doc){
     return true;
   }catch(e){return false;}
 }
+function pdfDrawChrome(doc,font,W,H,now,payLen,allLen){
+  doc.setFillColor(31,75,143);
+  doc.rect(0,0,W,14,"F");
+  doc.setFillColor(196,92,38);
+  doc.rect(0,14,W,1.4,"F");
+  doc.setTextColor(255,255,255);
+  doc.setFont(font,"normal");
+  doc.setFontSize(12);
+  doc.text("CADDE MESAI LISTESI",10,7);
+  doc.setFontSize(7.5);
+  doc.text(now+"  ·  "+payLen+" odeme / "+allLen+" kayit",10,12);
+  doc.setFillColor(31,75,143);
+  doc.rect(0,H-7,W,7,"F");
+  doc.setFontSize(7);
+  doc.text("Cadde Mesai Listesi  ·  gizli personel belgesi",10,H-2.6);
+}
 async function sharePDF(){
   if(!window.jspdf||!window.jspdf.jsPDF){toast("PDF yok");return;}
+  if(typeof (new window.jspdf.jsPDF()).autoTable!=="function" && typeof window.jspdf.jsPDF.API.autoTable!=="function"){
+    toast("Tablo eklentisi yok, sayfayi yenile");return;
+  }
   toast("PDF hazırlanıyor...");
   const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
-  const hasFont=await ensurePdfFont(doc);
-  const font=hasFont?"DejaVu":"helvetica";
+  compactDevam();
   const pay=state.people.map(p=>({p,c:calc(p)})).filter(x=>x.c.toplam>0);
   const all=state.people.map(p=>({p,c:calc(p)}));
   const add=k=>all.reduce((a,x)=>a+x.c[k],0);
   const now=new Date().toLocaleString("tr-TR",{day:"2-digit",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
-  compactDevam();
-  const W=doc.internal.pageSize.getWidth();
-  const H=doc.internal.pageSize.getHeight();
-  doc.setFillColor(31,75,143);
-  doc.rect(0,0,W,22,"F");
-  doc.setFillColor(196,92,38);
-  doc.rect(0,22,W,2,"F");
-  doc.setTextColor(255,255,255);
-  doc.setFont(font,"normal");
-  doc.setFontSize(16);
-  doc.text("CADDE MESAI LISTESI",14,10);
-  doc.setFontSize(9);
-  doc.text("Personel odeme raporu  ·  "+now,14,17);
-  doc.text(pay.length+" odeme  /  "+state.people.length+" kayit",W-14,17,{align:"right"});
-  doc.setTextColor(31,41,51);
+  const devam=state.devamsizlik||[];
+  const cezalar=state.cezalar||[];
+  const n=pay.length;
+  const fs=n>50?6:n>38?6.5:7;
+  const pad=n>50?0.55:n>38?0.7:0.85;
+  const body=pay.map((x,i)=>[
+    String(i+1),
+    x.p.name+(x.p.kurye?" (K)":""),
+    dash(x.c.mesai),dash(x.c.hs),dash(x.c.prim),dash(x.c.yol),
+    dash(x.c.izin),dash(x.c.yillik),dash(x.c.dis),tl(x.c.toplam)
+  ]);
   const boxes=[
     ["GENEL TOPLAM",tl(add("toplam"))+" TL",31,75,143],
     ["HAFTA SONU",tl(add("hs"))+" TL",15,123,76],
     ["MESAI",tl(add("mesai"))+" TL",196,92,38],
     ["IZIN + YILLIK",tl(add("izin")+add("yillik"))+" TL",90,70,140]
   ];
-  boxes.forEach((b,i)=>{
-    const x=14+i*70;
-    doc.setFillColor(b[2],b[3],b[4]);
-    doc.roundedRect(x,28,66,14,2,2,"F");
-    doc.setTextColor(255,255,255);
-    doc.setFontSize(7);
-    doc.text(b[0],x+4,33);
-    doc.setFontSize(11);
-    doc.text(b[1],x+4,39);
-  });
-  const body=pay.map((x,i)=>[
-    String(i+1),
-    x.p.name+(x.p.kurye?" (K)":""),
-    dash(x.c.mesai),
-    dash(x.c.hs),
-    dash(x.c.prim),
-    dash(x.c.yol),
-    dash(x.c.izin),
-    dash(x.c.yillik),
-    dash(x.c.dis),
-    tl(x.c.toplam)
-  ]);
-  const autoTable=doc.autoTable?doc.autoTable.bind(doc):(window.jspdf&&window.jspdf.autoTable);
-  if(typeof doc.autoTable!=="function"){
-    toast("Tablo eklentisi yok, sayfayi yenile");
-    return;
-  }
-  doc.autoTable({
-    startY:46,
-    head:[["No","Ad Soyad","Mesai","HS","Prim","Yol","Izin","Yillik","Disiplin","Odenecek"]],
-    body,
-    foot:[["","TOPLAM",tl(add("mesai")),tl(add("hs")),tl(add("prim")),tl(add("yol")),tl(add("izin")),tl(add("yillik")),tl(add("dis")),tl(add("toplam"))]],
-    theme:"grid",
-    styles:{font,fontSize:8,cellPadding:1.6,halign:"center",textColor:[31,41,51],lineColor:[232,223,210],lineWidth:0.2},
-    headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontStyle:"normal",halign:"center"},
-    footStyles:{fillColor:[34,34,34],textColor:[255,255,255],fontStyle:"normal"},
-    columnStyles:{1:{halign:"left",cellWidth:62},9:{fillColor:[243,232,210],fontStyle:"normal"}},
-    alternateRowStyles:{fillColor:[250,247,242]},
-    didParseCell:function(data){
-      if(data.section==="body" && data.column.index===9) data.cell.styles.fillColor=[243,232,210];
-    },
-    margin:{left:14,right:14}
-  });
-  let y=doc.lastAutoTable.finalY+8;
-  const devam=state.devamsizlik||[];
-  if(devam.length){
-    if(y>170){doc.addPage();y=16;}
-    doc.setFillColor(196,92,38);
-    doc.rect(14,y,W-28,7,"F");
-    doc.setTextColor(255,255,255);
-    doc.setFontSize(10);
-    doc.text("DEVAMSIZLIK",16,y+5);
-    doc.autoTable({
-      startY:y+8,
-      head:[["Ad Soyad","Gun","Not"]],
-      body:devam.map(d=>[d.kisi,String(d.gun),d.not||"-"]),
-      theme:"grid",
-      styles:{font,fontSize:8,cellPadding:1.8,textColor:[31,41,51],lineColor:[232,223,210]},
-      headStyles:{fillColor:[139,64,24],textColor:[255,255,255]},
-      columnStyles:{0:{cellWidth:70},1:{cellWidth:18,halign:"center"}},
-      margin:{left:14,right:14}
+
+  function build(fontSize,padding){
+    const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
+    return ensurePdfFont(doc).then(hasFont=>{
+      const font=hasFont?"DejaVu":"helvetica";
+      const W=doc.internal.pageSize.getWidth();
+      const H=doc.internal.pageSize.getHeight();
+      pdfDrawChrome(doc,font,W,H,now,pay.length,state.people.length);
+      boxes.forEach((b,i)=>{
+        const x=10+i*72;
+        doc.setFillColor(b[2],b[3],b[4]);
+        doc.roundedRect(x,17.2,69,9,1.2,1.2,"F");
+        doc.setTextColor(255,255,255);
+        doc.setFont(font,"normal");
+        doc.setFontSize(6);
+        doc.text(b[0],x+3,20.4);
+        doc.setFontSize(9);
+        doc.text(b[1],x+3,24.6);
+      });
+      doc.autoTable({
+        startY:28,
+        head:[["No","Ad Soyad","Mesai","HS","Prim","Yol","Izin","Yillik","Disiplin","Odenecek"]],
+        body,
+        foot:[["","TOPLAM",tl(add("mesai")),tl(add("hs")),tl(add("prim")),tl(add("yol")),tl(add("izin")),tl(add("yillik")),tl(add("dis")),tl(add("toplam"))]],
+        theme:"grid",
+        styles:{font,fontSize,cellPadding:padding,halign:"center",textColor:[31,41,51],lineColor:[232,223,210],lineWidth:0.15,overflow:"linebreak",minCellHeight:fontSize*0.55},
+        headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontStyle:"normal",halign:"center",cellPadding:padding},
+        footStyles:{fillColor:[34,34,34],textColor:[255,255,255],fontStyle:"normal",cellPadding:padding},
+        columnStyles:{0:{cellWidth:8},1:{halign:"left",cellWidth:58},9:{fillColor:[243,232,210]}},
+        alternateRowStyles:{fillColor:[250,247,242]},
+        margin:{left:10,right:10,top:16,bottom:10},
+        showHead:"everyPage",
+        pageBreak:"auto",
+        rowPageBreak:"avoid",
+        didDrawPage:function(){pdfDrawChrome(doc,font,W,H,now,pay.length,state.people.length);}
+      });
+      if(doc.getNumberOfPages()===1) doc.addPage();
+      while(doc.getNumberOfPages()>2) doc.deletePage(doc.getNumberOfPages());
+      doc.setPage(2);
+      pdfDrawChrome(doc,font,W,H,now,pay.length,state.people.length);
+      let y=doc.lastAutoTable.finalY||16;
+      if(doc.lastAutoTable.pageNumber===1 || y<18) y=16;
+      if(y>118) y=16;
+      const colW=(W-24)/2;
+      if(devam.length){
+        doc.setFillColor(196,92,38);
+        doc.rect(10,y,colW,5.5,"F");
+        doc.setTextColor(255,255,255);
+        doc.setFontSize(8);
+        doc.text("DEVAMSIZLIK",12,y+3.8);
+        doc.autoTable({
+          startY:y+6.2,
+          head:[["Ad Soyad","Gun","Not"]],
+          body:devam.map(d=>[d.kisi,String(d.gun),d.not||"-"]),
+          theme:"grid",
+          styles:{font,fontSize:6.2,cellPadding:0.6,textColor:[31,41,51],lineColor:[232,223,210],overflow:"linebreak"},
+          headStyles:{fillColor:[139,64,24],textColor:[255,255,255],cellPadding:0.6},
+          columnStyles:{0:{cellWidth:42},1:{cellWidth:12,halign:"center"}},
+          margin:{left:10,right:10+colW+4},
+          tableWidth:colW,
+          pageBreak:"avoid"
+        });
+      }
+      if(cezalar.length){
+        const x0=10+colW+4;
+        doc.setFillColor(120,30,30);
+        doc.rect(x0,y,colW,5.5,"F");
+        doc.setTextColor(255,255,255);
+        doc.setFontSize(8);
+        doc.text("CEZALAR",x0+2,y+3.8);
+        doc.autoTable({
+          startY:y+6.2,
+          head:[["Ad Soyad","Tutar","Neden"]],
+          body:cezalar.map(c=>[c.kisi,tl(c.tutar)+" TL",c.neden||"-"]),
+          theme:"grid",
+          styles:{font,fontSize:6.2,cellPadding:0.6,textColor:[31,41,51],lineColor:[232,223,210],overflow:"linebreak"},
+          headStyles:{fillColor:[120,30,30],textColor:[255,255,255],cellPadding:0.6},
+          columnStyles:{0:{cellWidth:42},1:{cellWidth:22,halign:"right"}},
+          margin:{left:x0,right:10},
+          tableWidth:colW,
+          pageBreak:"avoid"
+        });
+      }
+      while(doc.getNumberOfPages()>2) doc.deletePage(doc.getNumberOfPages());
+      const pages=Math.min(doc.getNumberOfPages(),2);
+      for(let i=1;i<=pages;i++){
+        doc.setPage(i);
+        doc.setTextColor(255,255,255);
+        doc.setFont(font,"normal");
+        doc.setFontSize(7);
+        doc.text(i+" / 2",W-10,H-2.6,{align:"right"});
+      }
+      return doc;
     });
-    y=doc.lastAutoTable.finalY+8;
   }
-  const cezalar=state.cezalar||[];
-  if(cezalar.length){
-    if(y>170){doc.addPage();y=16;}
-    doc.setFillColor(120,30,30);
-    doc.rect(14,y,W-28,7,"F");
-    doc.setTextColor(255,255,255);
-    doc.setFontSize(10);
-    doc.text("CEZALAR",16,y+5);
-    doc.autoTable({
-      startY:y+8,
-      head:[["Ad Soyad","Tutar","Neden"]],
-      body:cezalar.map(c=>[c.kisi,tl(c.tutar)+" TL",c.neden||"-"]),
-      theme:"grid",
-      styles:{font,fontSize:8,cellPadding:1.8,textColor:[31,41,51],lineColor:[232,223,210]},
-      headStyles:{fillColor:[120,30,30],textColor:[255,255,255]},
-      columnStyles:{0:{cellWidth:70},1:{cellWidth:28,halign:"right"}},
-      margin:{left:14,right:14}
-    });
+
+  let size=fs, padding=pad, doc=await build(size,padding);
+  let guard=0;
+  while(doc.getNumberOfPages()>2 && guard<4){
+    size=Math.max(5.2,size-0.6);
+    padding=Math.max(0.4,padding-0.12);
+    doc=await build(size,padding);
+    guard++;
   }
-  const pages=doc.getNumberOfPages();
-  for(let i=1;i<=pages;i++){
-    doc.setPage(i);
-    doc.setFillColor(31,75,143);
-    doc.rect(0,H-8,W,8,"F");
-    doc.setTextColor(255,255,255);
-    doc.setFontSize(8);
-    doc.setFont(font,"normal");
-    doc.text("Cadde Mesai Listesi  ·  gizli personel belgesi",14,H-3);
-    doc.text(i+" / "+pages,W-14,H-3,{align:"right"});
-  }
+  while(doc.getNumberOfPages()>2) doc.deletePage(doc.getNumberOfPages());
   doc.save("cadde-bordro.pdf");
-  toast("PDF indirildi");
+  toast("PDF 2 sayfa indirildi");
 }
 async function bootSync(){
   try{
