@@ -107,7 +107,8 @@ function compactDevam(){
 function renderDevam(){
   fillSel("dKisi");
   compactDevam();
-  document.getElementById("devamList").innerHTML=(state.devamsizlik||[]).map((d,i)=>`<article class="card"><b>${d.kisi}</b><div>${d.gun} gün · ${d.not||""}</div><button class="btn" onclick="state.devamsizlik.splice(${i},1);persist();renderDevam()">Sil</button></article>`).join("");
+  const rows=state.devamsizlik||[];
+  document.getElementById("devamList").innerHTML=`<div class="table-wrap"><table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Gün</th><th>Not</th><th></th></tr></thead><tbody>${rows.length?rows.map((d,i)=>`<tr><td>${i+1}</td><td class="name">${d.kisi}</td><td>${d.gun}</td><td class="name">${d.not||"-"}</td><td><button class="btn" onclick="state.devamsizlik.splice(${i},1);persist();renderDevam()">Sil</button></td></tr>`).join(""):`<tr><td colspan="5">Kayıt yok</td></tr>`}</tbody></table></div>`;
 }
 function addDevam(){
   const kisi=document.getElementById("dKisi").value;if(!kisi){toast("Kişi seç");return;}
@@ -138,9 +139,11 @@ function addCeza(){
   persist();renderCeza();
 }
 function renderOzet(){
-  const all=state.people.map(p=>({p,c:calc(p)})).filter(x=>x.c.toplam>0);
+  const all=state.people.map(p=>({p,c:calc(p)}));
   const sum=all.reduce((a,x)=>a+x.c.toplam,0);
-  document.getElementById("ozetBox").innerHTML=`<h2>Ödemesi olanlar</h2><p>${all.length} kişi · ${tl(sum)} TL</p><table class="sheet"><thead><tr><th>Ad</th><th>Mesai</th><th>HS</th><th>İzin</th><th>Toplam</th></tr></thead><tbody>${all.map(x=>`<tr><td class="name">${x.p.name}</td><td>${dash(x.c.mesai)}</td><td>${dash(x.c.hs)}</td><td>${dash(x.c.izin+x.c.yillik)}</td><td>${tl(x.c.toplam)}</td></tr>`).join("")}</tbody></table>`;
+  const box=document.getElementById("ozetBox");
+  if(!box)return;
+  box.innerHTML=`<h2>Tüm kadro</h2><p>${all.length} kişi · ${tl(sum)} TL</p><table class="sheet"><thead><tr><th>No</th><th>Ad</th><th>Mesai</th><th>HS</th><th>İzin</th><th>Toplam</th></tr></thead><tbody>${all.map((x,i)=>`<tr><td>${i+1}</td><td class="name">${x.p.name}</td><td>${dash(x.c.mesai)}</td><td>${dash(x.c.hs)}</td><td>${dash(x.c.izin+x.c.yillik)}</td><td>${dash(x.c.toplam)}</td></tr>`).join("")}</tbody></table>`;
 }
 function renderAll(){renderListe();if(document.getElementById("kuryeList"))renderKurye();if(document.getElementById("devamList"))renderDevam();if(document.getElementById("cezaList"))renderCeza();if(document.getElementById("ozetBox"))renderOzet();}
 function tab(el){
@@ -214,26 +217,23 @@ function pdfDrawChrome(doc,font,W,H,now,payLen,allLen){
 }
 async function sharePDF(){
   if(!window.jspdf||!window.jspdf.jsPDF){toast("PDF yok");return;}
-  if(typeof (new window.jspdf.jsPDF()).autoTable!=="function" && typeof window.jspdf.jsPDF.API.autoTable!=="function"){
-    toast("Tablo eklentisi yok, sayfayi yenile");return;
-  }
   toast("PDF hazırlanıyor...");
   const {jsPDF}=window.jspdf;
   compactDevam();
-  const pay=state.people.map(p=>({p,c:calc(p)})).filter(x=>x.c.toplam>0);
   const all=state.people.map(p=>({p,c:calc(p)}));
+  const pay=all.filter(x=>x.c.toplam>0);
   const add=k=>all.reduce((a,x)=>a+x.c[k],0);
   const now=new Date().toLocaleString("tr-TR",{day:"2-digit",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
   const devam=state.devamsizlik||[];
   const cezalar=state.cezalar||[];
-  const n=pay.length;
-  const fs=n>50?6:n>38?6.5:7;
-  const pad=n>50?0.55:n>38?0.7:0.85;
-  const body=pay.map((x,i)=>[
+  const n=all.length;
+  const fs=n>55?5.6:n>42?6.2:7;
+  const pad=n>55?0.42:n>42?0.55:0.75;
+  const body=all.map((x,i)=>[
     String(i+1),
     x.p.name+(x.p.kurye?" (K)":""),
     dash(x.c.mesai),dash(x.c.hs),dash(x.c.prim),dash(x.c.yol),
-    dash(x.c.izin),dash(x.c.yillik),dash(x.c.dis),tl(x.c.toplam)
+    dash(x.c.izin),dash(x.c.yillik),dash(x.c.dis),dash(x.c.toplam)
   ]);
   const boxes=[
     ["GENEL TOPLAM",tl(add("toplam"))+" TL",31,75,143],
@@ -241,14 +241,13 @@ async function sharePDF(){
     ["MESAI",tl(add("mesai"))+" TL",196,92,38],
     ["IZIN + YILLIK",tl(add("izin")+add("yillik"))+" TL",90,70,140]
   ];
-
   function build(fontSize,padding){
     const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
     return ensurePdfFont(doc).then(hasFont=>{
       const font=hasFont?"DejaVu":"helvetica";
       const W=doc.internal.pageSize.getWidth();
       const H=doc.internal.pageSize.getHeight();
-      pdfDrawChrome(doc,font,W,H,now,pay.length,state.people.length);
+      pdfDrawChrome(doc,font,W,H,now,pay.length,all.length);
       boxes.forEach((b,i)=>{
         const x=10+i*72;
         doc.setFillColor(b[2],b[3],b[4]);
@@ -266,7 +265,7 @@ async function sharePDF(){
         body,
         foot:[["","TOPLAM",tl(add("mesai")),tl(add("hs")),tl(add("prim")),tl(add("yol")),tl(add("izin")),tl(add("yillik")),tl(add("dis")),tl(add("toplam"))]],
         theme:"grid",
-        styles:{font,fontSize,cellPadding:padding,halign:"center",textColor:[31,41,51],lineColor:[232,223,210],lineWidth:0.15,overflow:"linebreak",minCellHeight:fontSize*0.55},
+        styles:{font,fontSize,cellPadding:padding,halign:"center",textColor:[31,41,51],lineColor:[232,223,210],lineWidth:0.15,overflow:"ellipsize",minCellHeight:fontSize*0.5},
         headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontStyle:"normal",halign:"center",cellPadding:padding},
         footStyles:{fillColor:[34,34,34],textColor:[255,255,255],fontStyle:"normal",cellPadding:padding},
         columnStyles:{0:{cellWidth:8},1:{halign:"left",cellWidth:58},9:{fillColor:[243,232,210]}},
@@ -275,52 +274,48 @@ async function sharePDF(){
         showHead:"everyPage",
         pageBreak:"auto",
         rowPageBreak:"avoid",
-        didDrawPage:function(){pdfDrawChrome(doc,font,W,H,now,pay.length,state.people.length);}
+        didDrawPage:function(){pdfDrawChrome(doc,font,W,H,now,pay.length,all.length);}
       });
       if(doc.getNumberOfPages()===1) doc.addPage();
       while(doc.getNumberOfPages()>2) doc.deletePage(doc.getNumberOfPages());
       doc.setPage(2);
-      pdfDrawChrome(doc,font,W,H,now,pay.length,state.people.length);
+      pdfDrawChrome(doc,font,W,H,now,pay.length,all.length);
       let y=doc.lastAutoTable.finalY||16;
       if(doc.lastAutoTable.pageNumber===1 || y<18) y=16;
-      if(y>118) y=16;
-      const colW=(W-24)/2;
+      if(y>150) y=16;
       if(devam.length){
-        doc.setFillColor(196,92,38);
-        doc.rect(10,y,colW,5.5,"F");
-        doc.setTextColor(255,255,255);
-        doc.setFontSize(8);
-        doc.text("DEVAMSIZLIK",12,y+3.8);
+        doc.setTextColor(31,75,143);
+        doc.setFont(font,"normal");
+        doc.setFontSize(9);
+        doc.text("DEVAMSIZLIK",10,y+4);
         doc.autoTable({
-          startY:y+6.2,
-          head:[["Ad Soyad","Gun","Not"]],
-          body:devam.map(d=>[d.kisi,String(d.gun),d.not||"-"]),
+          startY:y+6,
+          head:[["No","Ad Soyad","Gun","Not"]],
+          body:devam.map((d,i)=>[String(i+1),d.kisi,String(d.gun),d.not||"-"]),
           theme:"grid",
-          styles:{font,fontSize:6.2,cellPadding:0.6,textColor:[31,41,51],lineColor:[232,223,210],overflow:"linebreak"},
-          headStyles:{fillColor:[139,64,24],textColor:[255,255,255],cellPadding:0.6},
-          columnStyles:{0:{cellWidth:42},1:{cellWidth:12,halign:"center"}},
-          margin:{left:10,right:10+colW+4},
-          tableWidth:colW,
+          styles:{font,fontSize:6.4,cellPadding:0.7,textColor:[31,41,51],lineColor:[232,223,210],overflow:"linebreak"},
+          headStyles:{fillColor:[31,75,143],textColor:[255,255,255],cellPadding:0.7},
+          columnStyles:{0:{cellWidth:10,halign:"center"},1:{cellWidth:70,halign:"left"},2:{cellWidth:16,halign:"center"}},
+          margin:{left:10,right:10},
           pageBreak:"avoid"
         });
+        y=doc.lastAutoTable.finalY+4;
       }
       if(cezalar.length){
-        const x0=10+colW+4;
-        doc.setFillColor(120,30,30);
-        doc.rect(x0,y,colW,5.5,"F");
-        doc.setTextColor(255,255,255);
-        doc.setFontSize(8);
-        doc.text("CEZALAR",x0+2,y+3.8);
+        if(y>160) y=16;
+        doc.setTextColor(31,75,143);
+        doc.setFont(font,"normal");
+        doc.setFontSize(9);
+        doc.text("CEZALAR",10,y+4);
         doc.autoTable({
-          startY:y+6.2,
-          head:[["Ad Soyad","Tutar","Neden"]],
-          body:cezalar.map(c=>[c.kisi,tl(c.tutar)+" TL",c.neden||"-"]),
+          startY:y+6,
+          head:[["No","Ad Soyad","Tutar","Neden"]],
+          body:cezalar.map((c,i)=>[String(i+1),c.kisi,tl(c.tutar)+" TL",c.neden||"-"]),
           theme:"grid",
-          styles:{font,fontSize:6.2,cellPadding:0.6,textColor:[31,41,51],lineColor:[232,223,210],overflow:"linebreak"},
-          headStyles:{fillColor:[120,30,30],textColor:[255,255,255],cellPadding:0.6},
-          columnStyles:{0:{cellWidth:42},1:{cellWidth:22,halign:"right"}},
-          margin:{left:x0,right:10},
-          tableWidth:colW,
+          styles:{font,fontSize:6.4,cellPadding:0.7,textColor:[31,41,51],lineColor:[232,223,210],overflow:"linebreak"},
+          headStyles:{fillColor:[31,75,143],textColor:[255,255,255],cellPadding:0.7},
+          columnStyles:{0:{cellWidth:10,halign:"center"},1:{cellWidth:70,halign:"left"},2:{cellWidth:28,halign:"right"}},
+          margin:{left:10,right:10},
           pageBreak:"avoid"
         });
       }
@@ -336,12 +331,11 @@ async function sharePDF(){
       return doc;
     });
   }
-
   let size=fs, padding=pad, doc=await build(size,padding);
   let guard=0;
   while(doc.getNumberOfPages()>2 && guard<4){
-    size=Math.max(5.2,size-0.6);
-    padding=Math.max(0.4,padding-0.12);
+    size=Math.max(5.1,size-0.5);
+    padding=Math.max(0.35,padding-0.1);
     doc=await build(size,padding);
     guard++;
   }

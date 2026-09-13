@@ -78,6 +78,7 @@ function renderRapor(){
   if(!box)return;
   const s=sums();
   const kalem=[["Hafta sonu",s.hs],["Izin",s.izin],["Yillik izin",s.yillik],["Mesai",s.mesai],["Kurye prim",s.prim],["Yol",s.yol],["Disiplin",s.dis]];
+  const devam=state.devamsizlik||[];
   box.innerHTML=`
     <div class="rapor-head">
       <div>
@@ -111,8 +112,8 @@ function renderRapor(){
       <tfoot><tr><td colspan="2">TOPLAM</td><td>${tl(s.mesai)}</td><td>${tl(s.hs)}</td><td>${tl(s.izin+s.yillik)}</td><td>${tl(s.prim+s.yol+s.dis)}</td><td>${tl(s.toplam)}</td></tr></tfoot></table>
     </div>
     <div class="panel">
-      <h3>Devamsizlik notlari</h3>
-      ${(state.devamsizlik||[]).length?`<ul class="notes">${state.devamsizlik.map(d=>`<li><b>${d.kisi}</b> — ${d.gun} gun · ${d.not||""}</li>`).join("")}</ul>`:"<p class='muted'>Kayit yok</p>"}
+      <h3>Devamsizlik</h3>
+      ${devam.length?`<table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Gun</th><th>Not</th></tr></thead><tbody>${devam.map((d,i)=>`<tr><td>${i+1}</td><td class="name">${d.kisi}</td><td>${d.gun}</td><td class="name">${d.not||"-"}</td></tr>`).join("")}</tbody></table>`:"<p class='muted'>Kayit yok</p>"}
     </div>`;
 }
 const _tab=tab;
