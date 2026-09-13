@@ -1,0 +1,15 @@
+{
+  "name": "Cadde Mesai Listesi",
+  "short_name": "Cadde Mesai",
+  "description": "Cadde personel mesai, HS, izin ve prim listesi",
+  "start_url": "./liste.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f1ea",
+  "theme_color": "#1f4b8f",
+  "lang": "tr",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
