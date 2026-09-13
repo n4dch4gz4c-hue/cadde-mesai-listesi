@@ -89,13 +89,43 @@ function renderKurye(){
 }
 function setPrim(id,v){const p=state.people.find(x=>x.id===id);if(!p)return;p.primAdet=num(v,0);persist();renderKurye();renderListe();}
 function fillSel(id){const sel=document.getElementById(id);if(!sel)return;const cur=sel.value;sel.innerHTML='<option value="">Kişi seç</option>'+state.people.map(p=>`<option value="${p.name}">${p.name}</option>`).join("");if(cur)sel.value=cur;}
+function normName(s){return (s||"").toLocaleUpperCase("tr-TR").replace(/\s+/g," ").trim();}
+function compactDevam(){
+  const map={};
+  (state.devamsizlik||[]).forEach(d=>{
+    const k=normName(d.kisi);
+    if(!k)return;
+    if(!map[k]) map[k]={kisi:d.kisi,gun:0,not:""};
+    map[k].gun+=num(d.gun,0);
+    if(d.not){
+      const n=d.not.trim();
+      if(n && map[k].not.indexOf(n)<0) map[k].not=map[k].not?(map[k].not+" · "+n):n;
+    }
+  });
+  state.devamsizlik=Object.values(map);
+}
 function renderDevam(){
   fillSel("dKisi");
+  compactDevam();
   document.getElementById("devamList").innerHTML=(state.devamsizlik||[]).map((d,i)=>`<article class="card"><b>${d.kisi}</b><div>${d.gun} gün · ${d.not||""}</div><button class="btn" onclick="state.devamsizlik.splice(${i},1);persist();renderDevam()">Sil</button></article>`).join("");
 }
 function addDevam(){
   const kisi=document.getElementById("dKisi").value;if(!kisi){toast("Kişi seç");return;}
-  state.devamsizlik.push({kisi,gun:num(document.getElementById("dGun").value,1),not:document.getElementById("dNot").value||""});
+  const gun=num(document.getElementById("dGun").value,1);
+  const not=(document.getElementById("dNot").value||"").trim();
+  if(!state.devamsizlik)state.devamsizlik=[];
+  compactDevam();
+  const ex=state.devamsizlik.find(d=>normName(d.kisi)===normName(kisi));
+  if(ex){
+    ex.gun=num(ex.gun,0)+gun;
+    if(not && (ex.not||"").indexOf(not)<0) ex.not=ex.not?(ex.not+" · "+not):not;
+    toast(kisi+" üzerine eklendi · "+ex.gun+" gün");
+  }else{
+    state.devamsizlik.push({kisi,gun,not});
+    toast(kisi+" eklendi · "+gun+" gün");
+  }
+  document.getElementById("dGun").value="1";
+  document.getElementById("dNot").value="";
   persist();renderDevam();
 }
 function renderCeza(){
@@ -149,13 +179,151 @@ function exportCSV(){
   a.href=URL.createObjectURL(new Blob(["\ufeff"+head.join(";")+"\n"+rows.join("\n")],{type:"text/csv;charset=utf-8"}));
   a.download="cadde-bordro.csv";a.click();
 }
+let _pdfFontB64=null;
+async function ensurePdfFont(doc){
+  try{
+    if(!_pdfFontB64){
+      const r=await fetch("https://cdn.jsdelivr.net/npm/dejavu-fonts-ttf@2.37.3/ttf/DejaVuSans.ttf");
+      if(!r.ok)return false;
+      const buf=await r.arrayBuffer();
+      const bytes=new Uint8Array(buf);
+      let bin="";const step=0x8000;
+      for(let i=0;i<bytes.length;i+=step) bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+step));
+      _pdfFontB64=btoa(bin);
+    }
+    doc.addFileToVFS("DejaVuSans.ttf",_pdfFontB64);
+    doc.addFont("DejaVuSans.ttf","DejaVu","normal");
+    return true;
+  }catch(e){return false;}
+}
 async function sharePDF(){
   if(!window.jspdf||!window.jspdf.jsPDF){toast("PDF yok");return;}
-  const doc=new window.jspdf.jsPDF({orientation:"landscape"});
-  doc.setFontSize(13);doc.text("Cadde Mesai Listesi",10,12);
-  let y=20;
-  state.people.forEach((p,i)=>{const c=calc(p);if(y>190){doc.addPage();y=16;}doc.setFontSize(9);doc.text(`${i+1}  ${p.name}  ${Math.round(c.toplam)} TL`,10,y);y+=6;});
+  toast("PDF hazırlanıyor...");
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
+  const hasFont=await ensurePdfFont(doc);
+  const font=hasFont?"DejaVu":"helvetica";
+  const pay=state.people.map(p=>({p,c:calc(p)})).filter(x=>x.c.toplam>0);
+  const all=state.people.map(p=>({p,c:calc(p)}));
+  const add=k=>all.reduce((a,x)=>a+x.c[k],0);
+  const now=new Date().toLocaleString("tr-TR",{day:"2-digit",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  compactDevam();
+  const W=doc.internal.pageSize.getWidth();
+  const H=doc.internal.pageSize.getHeight();
+  doc.setFillColor(31,75,143);
+  doc.rect(0,0,W,22,"F");
+  doc.setFillColor(196,92,38);
+  doc.rect(0,22,W,2,"F");
+  doc.setTextColor(255,255,255);
+  doc.setFont(font,"normal");
+  doc.setFontSize(16);
+  doc.text("CADDE MESAI LISTESI",14,10);
+  doc.setFontSize(9);
+  doc.text("Personel odeme raporu  ·  "+now,14,17);
+  doc.text(pay.length+" odeme  /  "+state.people.length+" kayit",W-14,17,{align:"right"});
+  doc.setTextColor(31,41,51);
+  const boxes=[
+    ["GENEL TOPLAM",tl(add("toplam"))+" TL",31,75,143],
+    ["HAFTA SONU",tl(add("hs"))+" TL",15,123,76],
+    ["MESAI",tl(add("mesai"))+" TL",196,92,38],
+    ["IZIN + YILLIK",tl(add("izin")+add("yillik"))+" TL",90,70,140]
+  ];
+  boxes.forEach((b,i)=>{
+    const x=14+i*70;
+    doc.setFillColor(b[2],b[3],b[4]);
+    doc.roundedRect(x,28,66,14,2,2,"F");
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(7);
+    doc.text(b[0],x+4,33);
+    doc.setFontSize(11);
+    doc.text(b[1],x+4,39);
+  });
+  const body=pay.map((x,i)=>[
+    String(i+1),
+    x.p.name+(x.p.kurye?" (K)":""),
+    dash(x.c.mesai),
+    dash(x.c.hs),
+    dash(x.c.prim),
+    dash(x.c.yol),
+    dash(x.c.izin),
+    dash(x.c.yillik),
+    dash(x.c.dis),
+    tl(x.c.toplam)
+  ]);
+  const autoTable=doc.autoTable?doc.autoTable.bind(doc):(window.jspdf&&window.jspdf.autoTable);
+  if(typeof doc.autoTable!=="function"){
+    toast("Tablo eklentisi yok, sayfayi yenile");
+    return;
+  }
+  doc.autoTable({
+    startY:46,
+    head:[["No","Ad Soyad","Mesai","HS","Prim","Yol","Izin","Yillik","Disiplin","Odenecek"]],
+    body,
+    foot:[["","TOPLAM",tl(add("mesai")),tl(add("hs")),tl(add("prim")),tl(add("yol")),tl(add("izin")),tl(add("yillik")),tl(add("dis")),tl(add("toplam"))]],
+    theme:"grid",
+    styles:{font,fontSize:8,cellPadding:1.6,halign:"center",textColor:[31,41,51],lineColor:[232,223,210],lineWidth:0.2},
+    headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontStyle:"normal",halign:"center"},
+    footStyles:{fillColor:[34,34,34],textColor:[255,255,255],fontStyle:"normal"},
+    columnStyles:{1:{halign:"left",cellWidth:62},9:{fillColor:[243,232,210],fontStyle:"normal"}},
+    alternateRowStyles:{fillColor:[250,247,242]},
+    didParseCell:function(data){
+      if(data.section==="body" && data.column.index===9) data.cell.styles.fillColor=[243,232,210];
+    },
+    margin:{left:14,right:14}
+  });
+  let y=doc.lastAutoTable.finalY+8;
+  const devam=state.devamsizlik||[];
+  if(devam.length){
+    if(y>170){doc.addPage();y=16;}
+    doc.setFillColor(196,92,38);
+    doc.rect(14,y,W-28,7,"F");
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(10);
+    doc.text("DEVAMSIZLIK",16,y+5);
+    doc.autoTable({
+      startY:y+8,
+      head:[["Ad Soyad","Gun","Not"]],
+      body:devam.map(d=>[d.kisi,String(d.gun),d.not||"-"]),
+      theme:"grid",
+      styles:{font,fontSize:8,cellPadding:1.8,textColor:[31,41,51],lineColor:[232,223,210]},
+      headStyles:{fillColor:[139,64,24],textColor:[255,255,255]},
+      columnStyles:{0:{cellWidth:70},1:{cellWidth:18,halign:"center"}},
+      margin:{left:14,right:14}
+    });
+    y=doc.lastAutoTable.finalY+8;
+  }
+  const cezalar=state.cezalar||[];
+  if(cezalar.length){
+    if(y>170){doc.addPage();y=16;}
+    doc.setFillColor(120,30,30);
+    doc.rect(14,y,W-28,7,"F");
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(10);
+    doc.text("CEZALAR",16,y+5);
+    doc.autoTable({
+      startY:y+8,
+      head:[["Ad Soyad","Tutar","Neden"]],
+      body:cezalar.map(c=>[c.kisi,tl(c.tutar)+" TL",c.neden||"-"]),
+      theme:"grid",
+      styles:{font,fontSize:8,cellPadding:1.8,textColor:[31,41,51],lineColor:[232,223,210]},
+      headStyles:{fillColor:[120,30,30],textColor:[255,255,255]},
+      columnStyles:{0:{cellWidth:70},1:{cellWidth:28,halign:"right"}},
+      margin:{left:14,right:14}
+    });
+  }
+  const pages=doc.getNumberOfPages();
+  for(let i=1;i<=pages;i++){
+    doc.setPage(i);
+    doc.setFillColor(31,75,143);
+    doc.rect(0,H-8,W,8,"F");
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(8);
+    doc.setFont(font,"normal");
+    doc.text("Cadde Mesai Listesi  ·  gizli personel belgesi",14,H-3);
+    doc.text(i+" / "+pages,W-14,H-3,{align:"right"});
+  }
   doc.save("cadde-bordro.pdf");
+  toast("PDF indirildi");
 }
 async function bootSync(){
   try{
