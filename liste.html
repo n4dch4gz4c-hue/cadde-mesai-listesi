@@ -32,6 +32,16 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #q{min-width:140px;flex:1}
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 #mobileList{display:none}
+.mlist{background:#fff;border-top:1px solid #eadfd2}
+.mrow{border-bottom:1px solid #eadfd2}
+.mrow.pay{background:#fffdf8}
+.mhead{width:100%;display:flex;align-items:center;gap:10px;padding:11px 12px;border:0;background:transparent;text-align:left;font:inherit;cursor:pointer}
+.mno{width:28px;color:#8a7d6e;font-size:13px;flex:none}
+.mname{flex:1;font-weight:700;font-size:15px}
+.mtot{font-weight:800;font-size:15px;flex:none}
+.mfields{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 12px 12px}
+.mfields label{font-size:11px;color:#6b6258;display:flex;flex-direction:column;gap:3px}
+.mfields input{width:100%;box-sizing:border-box;font-size:16px;padding:8px 6px}
 #sec-devam .panel h2{font-size:26px;margin:0 0 10px}
 #sec-devam .panel .row{gap:10px}
 #sec-devam #dKisi,#sec-devam #dNot{min-width:220px;font-size:18px;padding:10px 12px}
@@ -43,8 +53,6 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #devamList td{padding:14px 12px;font-size:17px;line-height:1.35}
 #devamList td.name{font-size:18px}
 #devamList tr:nth-child(even){background:#f7f4ee}
-#raporBox .devam-table{min-width:0;font-size:16px}
-#raporBox .devam-table th,#raporBox .devam-table td{padding:10px 12px}
 #asFab{position:fixed;right:18px;bottom:18px;width:58px;height:58px;border-radius:50%;border:0;background:#1f4b8f;color:#fff;font-size:24px;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:9999;cursor:pointer}
 #asPanel{position:fixed;right:18px;bottom:84px;width:min(360px,calc(100vw - 24px));height:min(440px,65vh);background:#fff;border:1px solid #d7cfc3;border-radius:16px;z-index:9999;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.2)}
 #asHead{background:#1f4b8f;color:#fff;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
@@ -54,7 +62,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 .as-me{background:#1f4b8f;color:#fff;margin-left:auto}
 #asForm{display:flex;gap:6px;padding:8px;border-top:1px solid #eadfd2}
 #asIn{flex:1;min-width:0}
-@media(max-width:800px){.table-wrap{display:none}#mobileList{display:block;padding-bottom:80px}.stats{grid-template-columns:1fr 1fr}#sec-devam .table-wrap,#sec-rapor .table-wrap,#sec-ozet .table-wrap{display:block}#sec-devam #dKisi,#sec-devam #dNot{min-width:0;width:100%}}
+@media(max-width:800px){.table-wrap{display:none}#mobileList{display:block;padding-bottom:88px}.stats{grid-template-columns:1fr 1fr}#sec-liste .panel{margin:8px 12px}#sec-devam .table-wrap,#sec-rapor .table-wrap,#sec-ozet .table-wrap{display:block}#sec-devam #dKisi,#sec-devam #dNot{min-width:0;width:100%}}
 @media print{header,nav,#asFab,#asPanel,#ghBox,#pcGate{display:none!important}}
 </style></head>
 <body>
@@ -119,12 +127,12 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   <div id="asMsgs"><div class="as-bot">Ekle, sil, HS, mesai, yol, kaydet, cek</div></div>
   <form id="asForm"><input id="asIn" placeholder="Ne yapayim?" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
 </div>
-<script src="lock.js?v=30"></script>
+<script src="lock.js?v=31"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=30"></script>
-<script src="app.js?v=30"></script>
-<script src="gh.js?v=30"></script>
-<script src="plus.js?v=30"></script>
-<script src="assistant.js?v=30"></script>
+<script src="seed.js?v=31"></script>
+<script src="app.js?v=31"></script>
+<script src="gh.js?v=31"></script>
+<script src="plus.js?v=31"></script>
+<script src="assistant.js?v=31"></script>
 </body></html>
