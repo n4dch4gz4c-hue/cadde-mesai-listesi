@@ -29,6 +29,75 @@ function sums(){
   const add=k=>all.reduce((a,x)=>a+x.c[k],0);
   return {all,pay,add,toplam:add("toplam"),mesai:add("mesai"),hs:add("hs"),prim:add("prim"),yol:add("yol"),izin:add("izin"),yillik:add("yillik"),dis:add("dis")};
 }
+async function outPdf(doc,name){
+  const blob=doc.output("blob");
+  const file=new File([blob],name,{type:"application/pdf"});
+  try{
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:name});
+      toast("Paylasildi");
+      return;
+    }
+  }catch(e){ if(e&&e.name==="AbortError") return; }
+  doc.save(name);
+  toast("PDF indirildi");
+}
+async function shareOzetPDF(mode){
+  if(!window.jspdf||!window.jspdf.jsPDF){toast("PDF yok");return;}
+  toast("Ozet PDF hazirlaniyor...");
+  const {jsPDF}=window.jspdf;
+  const s=sums();
+  const now=new Date().toLocaleString("tr-TR",{day:"2-digit",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  const land=mode!=="kisa";
+  const doc=new jsPDF({orientation:land?"landscape":"portrait",unit:"mm",format:"a4"});
+  const hasFont=await ensurePdfFont(doc);
+  const font=hasFont?"DejaVu":"helvetica";
+  const W=doc.internal.pageSize.getWidth();
+  const H=doc.internal.pageSize.getHeight();
+  const title=mode==="kisa"?"KISA OZET":"AYRINTILI OZET";
+  pdfDrawChrome(doc,font,W,H,now,s.pay.length,s.all.length);
+  doc.setPage(1);
+  doc.setTextColor(31,75,143);
+  doc.setFont(font,"normal");
+  doc.setFontSize(11);
+  doc.text(title,10,20);
+  doc.setFontSize(8);
+  doc.setTextColor(70,70,70);
+  doc.text(s.all.length+" kisi  ·  "+s.pay.length+" odeme  ·  "+tl(s.toplam)+" TL",10,25);
+  if(mode==="kisa"){
+    doc.autoTable({
+      startY:28,
+      head:[["No","Ad Soyad","Odenecek"]],
+      body:s.all.map((x,i)=>[String(i+1),x.p.name+(x.p.kurye?" (K)":""),dash(x.c.toplam)]),
+      foot:[["","TOPLAM",tl(s.toplam)]],
+      theme:"grid",
+      styles:{font,fontSize:8,cellPadding:1.1,textColor:[31,41,51],lineColor:[232,223,210]},
+      headStyles:{fillColor:[31,75,143],textColor:[255,255,255]},
+      footStyles:{fillColor:[34,34,34],textColor:[255,255,255]},
+      columnStyles:{0:{cellWidth:14,halign:"center"},1:{halign:"left"},2:{halign:"right",cellWidth:36,fillColor:[243,232,210]}},
+      alternateRowStyles:{fillColor:[250,247,242]},
+      margin:{left:10,right:10,top:16,bottom:10},
+      didDrawPage:function(){pdfDrawChrome(doc,font,W,H,now,s.pay.length,s.all.length);}
+    });
+    await outPdf(doc,"cadde-kisa-ozet.pdf");
+  }else{
+    doc.autoTable({
+      startY:28,
+      head:[["No","Ad Soyad","Mesai","HS","Prim","Yol","Izin","Yillik","Odenecek"]],
+      body:s.all.map((x,i)=>[String(i+1),x.p.name+(x.p.kurye?" (K)":""),dash(x.c.mesai),dash(x.c.hs),dash(x.c.prim),dash(x.c.yol),dash(x.c.izin),dash(x.c.yillik),dash(x.c.toplam)]),
+      foot:[["","TOPLAM",tl(s.mesai),tl(s.hs),tl(s.prim),tl(s.yol),tl(s.izin),tl(s.yillik),tl(s.toplam)]],
+      theme:"grid",
+      styles:{font,fontSize:7,cellPadding:0.8,halign:"center",textColor:[31,41,51],lineColor:[232,223,210]},
+      headStyles:{fillColor:[31,75,143],textColor:[255,255,255]},
+      footStyles:{fillColor:[34,34,34],textColor:[255,255,255]},
+      columnStyles:{0:{cellWidth:10},1:{halign:"left",cellWidth:58},8:{fillColor:[243,232,210]}},
+      alternateRowStyles:{fillColor:[250,247,242]},
+      margin:{left:10,right:10,top:16,bottom:10},
+      didDrawPage:function(){pdfDrawChrome(doc,font,W,H,now,s.pay.length,s.all.length);}
+    });
+    await outPdf(doc,"cadde-ayrintili-ozet.pdf");
+  }
+}
 let openMob=null;
 function toggleMob(id,ev){
   if(ev&&ev.target&&ev.target.tagName==="INPUT")return;
@@ -68,11 +137,13 @@ renderOzet=function(){
   const kisa=document.getElementById("ozetKisa");
   const ayr=document.getElementById("ozetAyrinti");
   if(!kisa||!ayr){ _renderOzet(); return; }
-  kisa.innerHTML=`<h2>Kisa ozet</h2><p>${s.all.length} kisi · ${s.pay.length} odeme · <b>${tl(s.toplam)} TL</b></p>
+  kisa.innerHTML=`<div class="row" style="justify-content:space-between;padding:0 0 10px"><h2 style="margin:0">Kisa ozet</h2><button class="btn primary" onclick="shareOzetPDF('kisa')">PDF paylas</button></div>
+    <p>${s.all.length} kisi · ${s.pay.length} odeme · <b>${tl(s.toplam)} TL</b></p>
     <table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Toplam</th></tr></thead>
     <tbody>${s.all.map((x,i)=>`<tr class="${x.c.toplam>0?"pay":"zero"}"><td>${i+1}</td><td class="name">${x.p.name}</td><td class="tot">${dash(x.c.toplam)}</td></tr>`).join("")}</tbody>
     <tfoot><tr><td></td><td>TOPLAM</td><td>${tl(s.toplam)}</td></tr></tfoot></table>`;
-  ayr.innerHTML=`<h2>Ayrintili ozet</h2><p>${s.all.length} kisi · ${s.pay.length} odeme · ${tl(s.toplam)} TL</p>
+  ayr.innerHTML=`<div class="row" style="justify-content:space-between;padding:0 0 10px"><h2 style="margin:0">Ayrintili ozet</h2><button class="btn primary" onclick="shareOzetPDF('ayrinti')">PDF paylas</button></div>
+    <p>${s.all.length} kisi · ${s.pay.length} odeme · ${tl(s.toplam)} TL</p>
     <table class="sheet slim"><thead><tr><th>No</th><th>Ad</th><th>Mesai</th><th>HS</th><th>Prim</th><th>Yol</th><th>Izin</th><th>Yillik</th><th>Toplam</th></tr></thead>
     <tbody>${s.all.map((x,i)=>`<tr class="${x.c.toplam>0?"pay":"zero"}">
       <td>${i+1}</td><td class="name">${x.p.name}</td><td>${dash(x.c.mesai)}</td><td>${dash(x.c.hs)}</td>
