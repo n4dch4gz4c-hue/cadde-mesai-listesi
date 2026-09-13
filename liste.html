@@ -5,16 +5,12 @@
 <meta http-equiv="Cache-Control" content="no-store"/>
 <meta name="theme-color" content="#1f4b8f"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-title" content="Cadde Mesai"/>
 <link rel="manifest" href="manifest.webmanifest"/>
-<link rel="icon" href="icon.svg" type="image/svg+xml"/>
 <title>Cadde Mesai Listesi</title>
 <style>
 html,body{margin:0;font-family:system-ui,sans-serif;background:#f4f1ea;color:#1f2933}
 .bar,.tabs,.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 16px}
 h1{margin:0;font-size:22px}
-h2{margin:0 0 8px}
-h3{margin:0 0 10px;color:#1f4b8f}
 .btn,.tab{border:1px solid #d7cfc3;background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer}
 .tab.on,.btn.primary{background:#1f4b8f;color:#fff;border-color:#1f4b8f}
 .btn.sync{background:#0f7b4c;color:#fff;border-color:#0f7b4c}
@@ -23,7 +19,6 @@ table.slim{min-width:0}
 th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0}
 td{border:1px solid #eadfd2;padding:3px 4px;text-align:center}
 td.name{text-align:left;font-weight:700}
-tr.zero td.tot,.pcard.zero .ptot{background:#f8d7da}
 tr.pay td.tot,.pcard.pay .ptot{background:#f3e8d2;font-weight:700}
 tfoot td{background:#222;color:#fff}
 input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16px}
@@ -32,33 +27,31 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 .panel,.card,.pcard{background:#fff;border:1px solid #d7cfc3;border-radius:12px;padding:12px;margin:12px 16px}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px}
 .stat{background:#fff;border:1px solid #d7cfc3;border-radius:10px;padding:10px}
-.stat span{display:block;font-size:12px;color:#667}
-.stat b{font-size:18px}
-.table-wrap{overflow:auto;padding:0 16px 24px;max-height:70vh;-webkit-overflow-scrolling:touch}
+.table-wrap{overflow:auto;padding:0 16px 24px;max-height:70vh}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;padding:0 16px 24px}
 #toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none;z-index:9}
 #q{min-width:140px;flex:1}
-.pcard .phd{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}
-.ptot{padding:4px 8px;border-radius:8px;font-weight:700;white-space:nowrap}
+.pcard .phd{display:flex;justify-content:space-between;gap:8px;align-items:center}
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.pgrid label{display:flex;flex-direction:column;font-size:12px;color:#555}
-.pgrid input{width:100%;box-sizing:border-box}
-.pline{margin-top:8px;font-size:12px;color:#555}
 .muted{color:#667;font-size:13px}
-.rapor-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:12px 16px}
 #mobileList{display:none}
+#asFab{position:fixed;right:18px;bottom:18px;width:58px;height:58px;border-radius:50%;border:0;background:#1f4b8f;color:#fff;font-size:24px;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:9999;cursor:pointer}
+#asPanel{position:fixed;right:18px;bottom:84px;width:min(360px,calc(100vw - 24px));height:min(440px,65vh);background:#fff;border:1px solid #d7cfc3;border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.2);z-index:9999;display:flex;flex-direction:column;overflow:hidden}
+#asHead{background:#1f4b8f;color:#fff;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
+#asMsgs{flex:1;overflow:auto;padding:10px;background:#f7f4ee}
+.as-bot,.as-me{padding:8px 10px;border-radius:12px;margin:6px 0;max-width:92%;font-size:14px}
+.as-bot{background:#fff;border:1px solid #eadfd2}
+.as-me{background:#1f4b8f;color:#fff;margin-left:auto}
+#asForm{display:flex;gap:6px;padding:8px;border-top:1px solid #eadfd2}
+#asIn{flex:1;min-width:0}
 @media(max-width:800px){
   h1{font-size:18px}
-  .bar,.tabs,.row{padding:8px}
   .stats{grid-template-columns:1fr 1fr;padding:0 8px}
-  .panel,.card,.pcard{margin:8px}
   .table-wrap{display:none}
-  #mobileList{display:block;padding-bottom:24px}
-  table.slim{min-width:0;font-size:12px}
+  #mobileList{display:block;padding-bottom:80px}
 }
-@media print{header,.tabs,#ghBox,#toast,nav,.btn{display:none!important}body{background:#fff}}
-</style>
-</head>
+@media print{header,.tabs,#ghBox,#toast,nav,#asFab,#asPanel{display:none!important}}
+</style></head>
 <body>
 <header class="bar">
   <div><h1 onclick="secretTap()">Cadde Mesai Listesi</h1><p id="pageSub"></p></div>
@@ -73,9 +66,9 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 </header>
 <div id="ghBox" class="panel">
   <b>Senkron anahtari</b>
-  <p class="muted">Telefon ve PC ayni anahtari bir kez yazar. Sonra Sunucuya kaydet / Sunucudan cek yeter.</p>
+  <p class="muted">Telefon ve PC ayni anahtari bir kez yazar.</p>
   <div class="row">
-    <input id="ghToken" type="password" placeholder="GitHub token (Contents yazma)"/>
+    <input id="ghToken" type="password" placeholder="GitHub token"/>
     <input id="ghRepo" placeholder="n4dch4gz4c-hue/cadde-mesai-listesi"/>
     <input id="ghPath" placeholder="cadde-data.json"/>
     <button class="btn" onclick="ghSaveCfg()">Anahtari kaydet</button>
@@ -96,7 +89,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
     <div class="row">
       <input id="nAd" placeholder="Ad soyad"/>
       <input id="nBirim" type="number" value="300" style="width:90px"/>
-      <label style="display:flex;gap:6px;align-items:center"><input id="nKurye" type="checkbox"/> Kurye</label>
+      <label><input id="nKurye" type="checkbox"/> Kurye</label>
       <button class="btn primary" onclick="addKisi()">Ekle</button>
     </div>
   </div>
@@ -116,22 +109,22 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 </section>
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
+<button id="asFab" type="button" onclick="toggleAs()">+</button>
+<div id="asPanel" class="hide">
+  <div id="asHead"><b>Cadde Asistan</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
+  <div id="asMsgs"><div class="as-bot">Aydin HS 2 &middot; Hakan mesai 7 &middot; kaydet &middot; cek &middot; toplam</div></div>
+  <form id="asForm"><input id="asIn" placeholder="Komut yaz" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
-<script src="seed.js?v=19"></script>
-<script src="app.js?v=19"></script>
-<script src="gh.js?v=19"></script>
-<script src="plus.js?v=19"></script>
-<script src="assistant.js?v=19"></script>
+<script src="seed.js?v=20"></script>
+<script src="app.js?v=20"></script>
+<script src="gh.js?v=20"></script>
+<script src="plus.js?v=20"></script>
+<script src="assistant.js?v=20"></script>
 <script>
-if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js?v=19");}
-let _deferredPrompt=null;
-window.addEventListener("beforeinstallprompt",function(e){
-  e.preventDefault();_deferredPrompt=e;
-  var b=document.getElementById("btnInstall");if(b)b.classList.remove("hide");
-});
-async function installApp(){
-  if(_deferredPrompt){_deferredPrompt.prompt();await _deferredPrompt.userChoice;_deferredPrompt=null;return;}
-  alert("Chrome veya Edge menusunden uygulamayi yukle");
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});
 }
+function installApp(){alert("Tarayici menusunden yukle");}
 </script>
 </body></html>
