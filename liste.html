@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta http-equiv="Cache-Control" content="no-store"/><title>Cadde Mesai Listesi</title>
-<style>html,body{margin:0;font-family:system-ui,sans-serif;background:#f4f1ea;color:#1f2933} .bar,.tabs,.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 16px} h1{margin:0} .btn,.tab{border:1px solid #d7cfc3;background:#fff;border-radius:8px;padding:8px 12px} .tab.on,.btn.primary{background:#1f4b8f;color:#fff;border-color:#1f4b8f} table{border-collapse:collapse;width:100%;min-width:1100px;background:#fff;font-size:13px} th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0} td{border:1px solid #eadfd2;padding:3px 4px;text-align:center} td.name{text-align:left;font-weight:700} tr.zero td.tot{background:#f8d7da} tr.pay td.tot{background:#f3e8d2;font-weight:700} tfoot td{background:#222;color:#fff} input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px} .sheet input{width:64px;text-align:center} .wide{width:84px} .hide{display:none!important} .panel,.card{background:#fff;border:1px solid #d7cfc3;border-radius:12px;padding:12px;margin:12px 16px} .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px} .stat{background:#fff;border:1px solid #d7cfc3;border-radius:10px;padding:10px} .table-wrap{overflow:auto;padding:0 16px 24px;max-height:70vh} .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;padding:0 16px 24px} #toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none;z-index:9} #ghBox input{min-width:180px}</style></head>
+<html lang="tr"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta http-equiv="Cache-Control" content="no-store"/><meta name="theme-color" content="#1f4b8f"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-title" content="Cadde Mesai"/><link rel="manifest" href="manifest.webmanifest"/><link rel="icon" href="icon.svg" type="image/svg+xml"/><title>Cadde Mesai Listesi</title>
+<style>html,body{margin:0;font-family:system-ui,sans-serif;background:#f4f1ea;color:#1f2933} .bar,.tabs,.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 16px} h1{margin:0} .btn,.tab{border:1px solid #d7cfc3;background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer} .tab.on,.btn.primary{background:#1f4b8f;color:#fff;border-color:#1f4b8f} table{border-collapse:collapse;width:100%;min-width:1100px;background:#fff;font-size:13px} th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0} td{border:1px solid #eadfd2;padding:3px 4px;text-align:center} td.name{text-align:left;font-weight:700} tr.zero td.tot{background:#f8d7da} tr.pay td.tot{background:#f3e8d2;font-weight:700} tfoot td{background:#222;color:#fff} input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px} .sheet input{width:64px;text-align:center} .wide{width:84px} .hide{display:none!important} .panel,.card{background:#fff;border:1px solid #d7cfc3;border-radius:12px;padding:12px;margin:12px 16px} .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px} .stat{background:#fff;border:1px solid #d7cfc3;border-radius:10px;padding:10px} .table-wrap{overflow:auto;padding:0 16px 24px;max-height:70vh} .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;padding:0 16px 24px} #toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none;z-index:9} #ghBox input{min-width:180px}</style></head>
 <body>
 <header class="bar"><div><h1 onclick="secretTap()">Cadde Mesai Listesi</h1><p id="pageSub"></p></div>
-<div class="row"><input id="q" placeholder="İsim ara..." oninput="renderAll()"/><button class="btn" onclick="yenileSunucu()">Yenile</button><button class="btn" onclick="exportCSV()">CSV</button><button class="btn" onclick="sharePDF()">PDF</button><button class="btn primary" onclick="save()">Kaydet</button></div></header>
+<div class="row"><input id="q" placeholder="İsim ara..." oninput="renderAll()"/><button class="btn" onclick="yenileSunucu()">Yenile</button><button id="btnInstall" class="btn hide" onclick="installApp()">Uygulama yap</button><button class="btn" onclick="exportCSV()">CSV</button><button class="btn" onclick="sharePDF()">PDF</button><button class="btn primary" onclick="save()">Kaydet</button></div></header>
 <div id="ghBox" class="panel hide">
   <b>GitHub senkron</b>
   <div class="row">
@@ -33,4 +33,25 @@
 <script src="seed.js?v=16"></script>
 <script src="app.js?v=16"></script>
 <script src="gh.js?v=16"></script>
+<script>
+if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js?v=16");}
+let _deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",function(e){
+  e.preventDefault();
+  _deferredPrompt=e;
+  var b=document.getElementById("btnInstall");
+  if(b)b.classList.remove("hide");
+});
+async function installApp(){
+  if(_deferredPrompt){
+    _deferredPrompt.prompt();
+    await _deferredPrompt.userChoice;
+    _deferredPrompt=null;
+    var b=document.getElementById("btnInstall");
+    if(b)b.classList.add("hide");
+    return;
+  }
+  alert("Chrome veya Edge: adres cubugunun sagindaki yukleme ikonu, veya Menu > Cadde Mesai Listesi'ni yukle");
+}
+</script>
 </body></html>
