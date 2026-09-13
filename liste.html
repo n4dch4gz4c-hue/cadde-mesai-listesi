@@ -28,7 +28,6 @@ tr.pay td.tot,.pcard.pay .ptot{background:#f3e8d2;font-weight:700}
 tfoot td{background:#222;color:#fff}
 input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16px}
 .sheet input{width:64px;text-align:center;font-size:14px}
-.wide{width:84px}
 .hide{display:none!important}
 .panel,.card,.pcard{background:#fff;border:1px solid #d7cfc3;border-radius:12px;padding:12px;margin:12px 16px}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px}
@@ -46,7 +45,6 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 .pgrid input{width:100%;box-sizing:border-box}
 .pline{margin-top:8px;font-size:12px;color:#555}
 .muted{color:#667;font-size:13px}
-.notes{margin:0;padding-left:18px}
 .rapor-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:12px 16px}
 #mobileList{display:none}
 @media(max-width:800px){
@@ -58,10 +56,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   #mobileList{display:block;padding-bottom:24px}
   table.slim{min-width:0;font-size:12px}
 }
-@media print{
-  header,.tabs,#ghBox,#toast,nav,.btn{display:none!important}
-  body{background:#fff}
-}
+@media print{header,.tabs,#ghBox,#toast,nav,.btn{display:none!important}body{background:#fff}}
 </style>
 </head>
 <body>
@@ -100,7 +95,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
     <b>Kisi ekle</b>
     <div class="row">
       <input id="nAd" placeholder="Ad soyad"/>
-      <input id="nBirim" type="number" value="300" style="width:90px" title="Mesai saat ucreti"/>
+      <input id="nBirim" type="number" value="300" style="width:90px"/>
       <label style="display:flex;gap:6px;align-items:center"><input id="nKurye" type="checkbox"/> Kurye</label>
       <button class="btn primary" onclick="addKisi()">Ekle</button>
     </div>
@@ -122,12 +117,13 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
-<script src="seed.js?v=18"></script>
-<script src="app.js?v=18"></script>
-<script src="gh.js?v=18"></script>
-<script src="plus.js?v=18"></script>
+<script src="seed.js?v=19"></script>
+<script src="app.js?v=19"></script>
+<script src="gh.js?v=19"></script>
+<script src="plus.js?v=19"></script>
+<script src="assistant.js?v=19"></script>
 <script>
-if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js?v=18");}
+if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js?v=19");}
 let _deferredPrompt=null;
 window.addEventListener("beforeinstallprompt",function(e){
   e.preventDefault();_deferredPrompt=e;
