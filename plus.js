@@ -29,27 +29,38 @@ function sums(){
   const add=k=>all.reduce((a,x)=>a+x.c[k],0);
   return {all,pay,add,toplam:add("toplam"),mesai:add("mesai"),hs:add("hs"),prim:add("prim"),yol:add("yol"),izin:add("izin"),yillik:add("yillik"),dis:add("dis")};
 }
+let openMob=null;
+function toggleMob(id,ev){
+  if(ev&&ev.target&&ev.target.tagName==="INPUT")return;
+  openMob=openMob===id?null:id;
+  renderListe();
+}
 const _renderListe=renderListe;
 renderListe=function(){
   _renderListe();
   const box=document.getElementById("mobileList");
   if(!box)return;
   const rows=visible();
-  box.innerHTML=rows.map(p=>{
+  box.innerHTML=`<div class="mlist">`+rows.map(p=>{
     const c=calc(p);
-    return `<article class="pcard ${c.toplam>0?"pay":"zero"}">
-      <div class="phd"><b>${p.name}</b>${p.kurye?" <small>KURYE</small>":""}<span class="ptot">${dash(c.toplam)} TL</span></div>
-      <div class="pgrid">
-        <label>Mesai saat<input type="number" step="0.5" value="${p.mesaiSaat||""}" onchange="setVal(${p.id},'mesaiSaat',this.value)"></label>
-        <label>HS adet<input type="number" step="0.5" value="${p.hsSaat||""}" onchange="setVal(${p.id},'hsSaat',this.value)"></label>
+    const no=state.people.findIndex(x=>x.id===p.id)+1;
+    const on=openMob===p.id;
+    return `<div class="mrow ${c.toplam>0?"pay":""} ${on?"on":""}">
+      <button type="button" class="mhead" onclick="toggleMob(${p.id},event)">
+        <span class="mno">${no}</span>
+        <span class="mname">${p.name}${p.kurye?" <small>K</small>":""}</span>
+        <span class="mtot">${dash(c.toplam)}</span>
+      </button>
+      ${on?`<div class="mfields">
+        <label>Mesai<input type="number" step="0.5" value="${p.mesaiSaat||""}" onchange="setVal(${p.id},'mesaiSaat',this.value)"></label>
+        <label>HS<input type="number" step="0.5" value="${p.hsSaat||""}" onchange="setVal(${p.id},'hsSaat',this.value)"></label>
         <label>Yol<input type="number" value="${p.yolTutar||""}" onchange="setVal(${p.id},'yolTutar',this.value)"></label>
-        <label>Izin gun<input type="number" step="0.5" value="${p.izinGun||""}" onchange="setVal(${p.id},'izinGun',this.value)"></label>
-        <label>Izin tutar<input type="number" value="${p.izinTutar||""}" onchange="setVal(${p.id},'izinTutar',this.value)"></label>
+        <label>Izin g<input type="number" step="0.5" value="${p.izinGun||""}" onchange="setVal(${p.id},'izinGun',this.value)"></label>
+        <label>Izin TL<input type="number" value="${p.izinTutar||""}" onchange="setVal(${p.id},'izinTutar',this.value)"></label>
         <label>Yillik<input type="number" value="${p.yillikTutar||""}" onchange="setVal(${p.id},'yillikTutar',this.value)"></label>
-      </div>
-      <div class="pline">Mesai ${dash(c.mesai)} · HS ${dash(c.hs)} · Izin ${dash(c.izin+c.yillik)}</div>
-    </article>`;
-  }).join("");
+      </div>`:""}
+    </div>`;
+  }).join("")+`</div>`;
 };
 const _renderOzet=renderOzet;
 renderOzet=function(){
