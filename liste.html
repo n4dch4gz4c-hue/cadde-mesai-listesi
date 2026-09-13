@@ -31,7 +31,6 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none;z-index:9}
 #q{min-width:140px;flex:1}
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.muted{color:#667;font-size:13px}
 #mobileList{display:none}
 #asFab{position:fixed;right:18px;bottom:18px;width:58px;height:58px;border-radius:50%;border:0;background:#1f4b8f;color:#fff;font-size:24px;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:9999;cursor:pointer}
 #asPanel{position:fixed;right:18px;bottom:84px;width:min(360px,calc(100vw - 24px));height:min(440px,65vh);background:#fff;border:1px solid #d7cfc3;border-radius:16px;z-index:9999;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.2)}
@@ -43,7 +42,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #asForm{display:flex;gap:6px;padding:8px;border-top:1px solid #eadfd2}
 #asIn{flex:1;min-width:0}
 @media(max-width:800px){.table-wrap{display:none}#mobileList{display:block;padding-bottom:80px}.stats{grid-template-columns:1fr 1fr}}
-@media print{header,nav,#asFab,#asPanel,#ghBox{display:none!important}}
+@media print{header,nav,#asFab,#asPanel,#ghBox,#semihBot{display:none!important}}
 </style></head>
 <body>
 <header class="bar">
@@ -53,6 +52,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
     <button class="btn sync" onclick="yenileSunucu()">Cek</button>
     <button class="btn primary" onclick="save()">Kaydet</button>
     <button class="btn" onclick="toggleGhBox()">Senkron</button>
+    <button class="btn" onclick="startSemihSim()">Semih</button>
     <button class="btn" onclick="exportCSV()">CSV</button>
     <button class="btn" onclick="sharePDF()">PDF</button>
   </div>
@@ -104,13 +104,14 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 <button id="asFab" type="button" onclick="toggleAs()">+</button>
 <div id="asPanel" class="hide">
   <div id="asHead"><b>Cadde Asistan</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
-  <div id="asMsgs"><div class="as-bot">Ekle, sil, HS, mesai, yol, kaydet, cek &mdash; yaz yeter</div></div>
+  <div id="asMsgs"><div class="as-bot">Ekle, sil, HS, mesai, yol, kaydet, cek</div></div>
   <form id="asForm"><input id="asIn" placeholder="Ne yapayim?" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
-<script src="seed.js?v=22"></script>
-<script src="app.js?v=22"></script>
-<script src="gh.js?v=22"></script>
-<script src="plus.js?v=22"></script>
-<script src="assistant.js?v=22"></script>
+<script src="seed.js?v=23"></script>
+<script src="app.js?v=23"></script>
+<script src="gh.js?v=23"></script>
+<script src="plus.js?v=23"></script>
+<script src="assistant.js?v=23"></script>
+<script src="sim.js?v=23"></script>
 </body></html>
