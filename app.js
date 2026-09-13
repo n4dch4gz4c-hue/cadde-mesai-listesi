@@ -25,18 +25,22 @@ function hydratePerson(p){
 }
 function hydrate(s){
   s=s||{};
-  return {people:Array.isArray(s.people)?s.people.map(hydratePerson):[],cezalar:Array.isArray(s.cezalar)?s.cezalar:[],devamsizlik:Array.isArray(s.devamsizlik)?s.devamsizlik:[]};
+  return {
+    people:Array.isArray(s.people)?s.people.map(hydratePerson):[],
+    cezalar:Array.isArray(s.cezalar)?s.cezalar:[],
+    devamsizlik:Array.isArray(s.devamsizlik)?s.devamsizlik:[],
+    updatedAt:s.updatedAt||""
+  };
 }
-function load(){
+function loadLocal(){
   try{
     const raw=localStorage.getItem(KEY);
     if(raw){const s=hydrate(JSON.parse(raw));if(s.people.length)return s;}
   }catch(e){}
-  return hydrate(JSON.parse(JSON.stringify(SEED)));
+  return hydrate(JSON.parse(JSON.stringify(typeof SEED!=="undefined"?SEED:{})));
 }
-let state=load();
+let state=loadLocal();
 function persist(){localStorage.setItem(KEY,JSON.stringify(state));}
-persist();
 function calc(p){
   p=hydratePerson(p);
   const mesai=p.mesaiSaat*p.mesaiBirim;
@@ -48,7 +52,7 @@ function calc(p){
 }
 function tl(n){n=Math.round(n)||0;return n.toLocaleString("tr-TR");}
 function dash(n){return (Math.round(n)||0)===0?"-":tl(n);}
-function toast(t){const el=document.getElementById("toast");if(!el)return;el.textContent=t;el.style.display="block";setTimeout(()=>el.style.display="none",1400);}
+function toast(t){const el=document.getElementById("toast");if(!el)return;el.textContent=t;el.style.display="block";setTimeout(()=>el.style.display="none",1800);}
 function qv(){return (document.getElementById("q")?.value||"").toLocaleLowerCase("tr-TR");}
 function visible(){const q=qv();return state.people.filter(p=>!q||(p.name||"").toLocaleLowerCase("tr-TR").includes(q));}
 function setVal(id,field,val){
@@ -118,7 +122,20 @@ function tab(el){
   if(id==="ceza")renderCeza();
   if(id==="ozet")renderOzet();
 }
-function save(){persist();toast("Kaydedildi");}
+async function save(){
+  state.updatedAt=new Date().toISOString();
+  persist();
+  if(typeof ghHasToken==="function" && ghHasToken()){
+    toast("Kaydedildi, GitHub'a yazılıyor...");
+    await ghPush();
+  }else{
+    toast("Bu cihazda kaydedildi. Telefona gitmesi için başlığa 3 kez basıp token gir.");
+  }
+}
+async function yenileSunucu(){
+  toast("Sunucu kontrol ediliyor...");
+  if(typeof ghPullPublic==="function") await ghPullPublic();
+}
 function resetData(){
   if(!confirm("PDF listesi yüklensin mi?"))return;
   localStorage.removeItem(KEY);
@@ -140,4 +157,21 @@ async function sharePDF(){
   state.people.forEach((p,i)=>{const c=calc(p);if(y>190){doc.addPage();y=16;}doc.setFontSize(9);doc.text(`${i+1}  ${p.name}  ${Math.round(c.toplam)} TL`,10,y);y+=6;});
   doc.save("cadde-bordro.pdf");
 }
-renderAll();
+async function bootSync(){
+  try{
+    const r=await fetch("cadde-data.json?t="+Date.now(),{cache:"no-store"});
+    if(!r.ok){renderAll();return;}
+    const remote=await r.json();
+    if(!remote||!remote.people||remote.people.length<10){renderAll();return;}
+    const rt=remote.updatedAt?Date.parse(remote.updatedAt):0;
+    const lt=state.updatedAt?Date.parse(state.updatedAt):0;
+    const localSum=state.people.reduce((a,p)=>a+Math.abs(num(p.hsSaat)+num(p.mesaiSaat)+num(p.izinTutar)+num(p.yillikTutar)),0);
+    if(!lt || rt>=lt || localSum===0){
+      state=hydrate(remote);
+      persist();
+      toast("Sunucudan alındı");
+    }
+  }catch(e){}
+  renderAll();
+}
+bootSync();
