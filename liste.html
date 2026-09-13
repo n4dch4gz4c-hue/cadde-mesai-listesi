@@ -1,57 +1,141 @@
 <!DOCTYPE html>
-<html lang="tr"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta http-equiv="Cache-Control" content="no-store"/><meta name="theme-color" content="#1f4b8f"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-title" content="Cadde Mesai"/><link rel="manifest" href="manifest.webmanifest"/><link rel="icon" href="icon.svg" type="image/svg+xml"/><title>Cadde Mesai Listesi</title>
-<style>html,body{margin:0;font-family:system-ui,sans-serif;background:#f4f1ea;color:#1f2933} .bar,.tabs,.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 16px} h1{margin:0} .btn,.tab{border:1px solid #d7cfc3;background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer} .tab.on,.btn.primary{background:#1f4b8f;color:#fff;border-color:#1f4b8f} table{border-collapse:collapse;width:100%;min-width:1100px;background:#fff;font-size:13px} th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0} td{border:1px solid #eadfd2;padding:3px 4px;text-align:center} td.name{text-align:left;font-weight:700} tr.zero td.tot{background:#f8d7da} tr.pay td.tot{background:#f3e8d2;font-weight:700} tfoot td{background:#222;color:#fff} input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px} .sheet input{width:64px;text-align:center} .wide{width:84px} .hide{display:none!important} .panel,.card{background:#fff;border:1px solid #d7cfc3;border-radius:12px;padding:12px;margin:12px 16px} .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px} .stat{background:#fff;border:1px solid #d7cfc3;border-radius:10px;padding:10px} .table-wrap{overflow:auto;padding:0 16px 24px;max-height:70vh} .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;padding:0 16px 24px} #toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none;z-index:9} #ghBox input{min-width:180px}</style></head>
+<html lang="tr"><head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta http-equiv="Cache-Control" content="no-store"/>
+<meta name="theme-color" content="#1f4b8f"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="Cadde Mesai"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="icon" href="icon.svg" type="image/svg+xml"/>
+<title>Cadde Mesai Listesi</title>
+<style>
+html,body{margin:0;font-family:system-ui,sans-serif;background:#f4f1ea;color:#1f2933}
+.bar,.tabs,.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 16px}
+h1{margin:0;font-size:22px}
+h2{margin:0 0 8px}
+h3{margin:0 0 10px;color:#1f4b8f}
+.btn,.tab{border:1px solid #d7cfc3;background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer}
+.tab.on,.btn.primary{background:#1f4b8f;color:#fff;border-color:#1f4b8f}
+table{border-collapse:collapse;width:100%;min-width:1100px;background:#fff;font-size:13px}
+table.slim{min-width:0}
+th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0}
+td{border:1px solid #eadfd2;padding:3px 4px;text-align:center}
+td.name{text-align:left;font-weight:700}
+tr.zero td.tot,.pcard.zero .ptot{background:#f8d7da}
+tr.pay td.tot,.pcard.pay .ptot{background:#f3e8d2;font-weight:700}
+tfoot td{background:#222;color:#fff}
+input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16px}
+.sheet input{width:64px;text-align:center;font-size:14px}
+.wide{width:84px}
+.hide{display:none!important}
+.panel,.card,.pcard{background:#fff;border:1px solid #d7cfc3;border-radius:12px;padding:12px;margin:12px 16px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px}
+.stat{background:#fff;border:1px solid #d7cfc3;border-radius:10px;padding:10px}
+.stat span{display:block;font-size:12px;color:#667}
+.stat b{font-size:18px}
+.table-wrap{overflow:auto;padding:0 16px 24px;max-height:70vh;-webkit-overflow-scrolling:touch}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;padding:0 16px 24px}
+#toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none;z-index:9}
+#q{min-width:140px;flex:1}
+.pcard .phd{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}
+.ptot{padding:4px 8px;border-radius:8px;font-weight:700;white-space:nowrap}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pgrid label{display:flex;flex-direction:column;font-size:12px;color:#555}
+.pgrid input{width:100%;box-sizing:border-box}
+.pline{margin-top:8px;font-size:12px;color:#555}
+.muted{color:#667;font-size:13px}
+.notes{margin:0;padding-left:18px}
+.rapor-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:12px 16px}
+#mobileList{display:none}
+@media(max-width:800px){
+  h1{font-size:18px}
+  .bar,.tabs,.row{padding:8px}
+  .stats{grid-template-columns:1fr 1fr;padding:0 8px}
+  .panel,.card,.pcard{margin:8px}
+  .table-wrap{display:none}
+  #mobileList{display:block;padding-bottom:24px}
+  table.slim{min-width:0;font-size:12px}
+}
+@media print{
+  header,.tabs,#ghBox,#toast,nav,.btn{display:none!important}
+  body{background:#fff}
+}
+</style>
+</head>
 <body>
-<header class="bar"><div><h1 onclick="secretTap()">Cadde Mesai Listesi</h1><p id="pageSub"></p></div>
-<div class="row"><input id="q" placeholder="İsim ara..." oninput="renderAll()"/><button class="btn" onclick="yenileSunucu()">Yenile</button><button id="btnInstall" class="btn hide" onclick="installApp()">Uygulama yap</button><button class="btn" onclick="exportCSV()">CSV</button><button class="btn" onclick="sharePDF()">PDF</button><button class="btn primary" onclick="save()">Kaydet</button></div></header>
+<header class="bar">
+  <div><h1 onclick="secretTap()">Cadde Mesai Listesi</h1><p id="pageSub"></p></div>
+  <div class="row">
+    <input id="q" placeholder="Isim ara..." oninput="renderAll()"/>
+    <button class="btn" onclick="yenileSunucu()">Yenile</button>
+    <button id="btnInstall" class="btn hide" onclick="installApp()">Uygulama yap</button>
+    <button class="btn" onclick="exportCSV()">CSV</button>
+    <button class="btn" onclick="sharePDF()">PDF</button>
+    <button class="btn primary" onclick="save()">Kaydet</button>
+  </div>
+</header>
 <div id="ghBox" class="panel hide">
   <b>GitHub senkron</b>
   <div class="row">
-    <input id="ghToken" type="password" placeholder="GitHub token (sadece bilgisayarda)"/>
+    <input id="ghToken" type="password" placeholder="GitHub token"/>
     <input id="ghRepo" placeholder="n4dch4gz4c-hue/cadde-mesai-listesi"/>
     <input id="ghPath" placeholder="cadde-data.json"/>
     <button class="btn" onclick="ghSaveCfg()">Token kaydet</button>
     <button class="btn primary" onclick="ghPush()">GitHub'a yaz</button>
-    <button class="btn" onclick="ghPull()">GitHub'dan çek</button>
+    <button class="btn" onclick="ghPull()">GitHub'dan cek</button>
   </div>
-  <p>Token yalnızca bu tarayıcıda durur. Telefonda token gerekmez: Yenile yeter.</p>
 </div>
 <nav class="tabs">
-<button class="tab on" data-tab="liste" onclick="tab(this)">Liste / Giriş</button>
-<button class="tab" data-tab="kurye" onclick="tab(this)">Kurye prim</button>
-<button class="tab" data-tab="devam" onclick="tab(this)">Devamsızlık</button>
-<button class="tab" data-tab="ceza" onclick="tab(this)">Cezalar</button>
-<button class="tab" data-tab="ozet" onclick="tab(this)">Özet</button>
+  <button class="tab on" data-tab="liste" onclick="tab(this)">Liste</button>
+  <button class="tab" data-tab="kurye" onclick="tab(this)">Kurye</button>
+  <button class="tab" data-tab="devam" onclick="tab(this)">Devamsizlik</button>
+  <button class="tab" data-tab="ceza" onclick="tab(this)">Ceza</button>
+  <button class="tab" data-tab="ozet" onclick="tab(this)">Ozet</button>
+  <button class="tab" data-tab="rapor" onclick="tab(this)">Aylik rapor</button>
 </nav>
-<section id="sec-liste"><div class="stats" id="stats"></div><div class="table-wrap"><table class="sheet"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai tutar</th><th>HS adet</th><th>HS tutar</th><th>Prim</th><th>Yol</th><th>İzin gün</th><th>İzin tutar</th><th>Yıllık</th><th>Disiplin</th><th>Toplam</th></tr></thead><tbody id="tbody"></tbody><tfoot id="tfoot"></tfoot></table></div></section>
+<section id="sec-liste">
+  <div class="stats" id="stats"></div>
+  <div class="panel">
+    <b>Kisi ekle</b>
+    <div class="row">
+      <input id="nAd" placeholder="Ad soyad"/>
+      <input id="nBirim" type="number" value="300" style="width:90px" title="Mesai saat ucreti"/>
+      <label style="display:flex;gap:6px;align-items:center"><input id="nKurye" type="checkbox"/> Kurye</label>
+      <button class="btn primary" onclick="addKisi()">Ekle</button>
+    </div>
+  </div>
+  <div class="table-wrap"><table class="sheet"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai tutar</th><th>HS adet</th><th>HS tutar</th><th>Prim</th><th>Yol</th><th>Izin gun</th><th>Izin tutar</th><th>Yillik</th><th>Disiplin</th><th>Toplam</th></tr></thead><tbody id="tbody"></tbody><tfoot id="tfoot"></tfoot></table></div>
+  <div id="mobileList"></div>
+</section>
 <section id="sec-kurye" class="hide"><div class="panel"><h2>Kurye primleri</h2></div><div id="kuryeList" class="cards"></div></section>
-<section id="sec-devam" class="hide"><div class="panel"><h2>Devamsızlık</h2><div class="row"><select id="dKisi"></select><input id="dGun" type="number" value="1"/><input id="dNot" placeholder="Not"/><button class="btn primary" onclick="addDevam()">Ekle</button></div></div><div id="devamList" class="cards"></div></section>
+<section id="sec-devam" class="hide"><div class="panel"><h2>Devamsizlik</h2><div class="row"><select id="dKisi"></select><input id="dGun" type="number" value="1"/><input id="dNot" placeholder="Not"/><button class="btn primary" onclick="addDevam()">Ekle</button></div></div><div id="devamList" class="cards"></div></section>
 <section id="sec-ceza" class="hide"><div class="panel"><h2>Cezalar</h2><div class="row"><select id="cKisi"></select><input id="cTutar" type="number" value="1000"/><input id="cNeden" placeholder="Neden"/><button class="btn primary" onclick="addCeza()">Ekle</button></div></div><div id="cezaList" class="cards"></div></section>
-<section id="sec-ozet" class="hide"><div class="panel" id="ozetBox"></div></section>
+<section id="sec-ozet" class="hide">
+  <div class="row">
+    <button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button>
+    <button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button>
+  </div>
+  <div class="panel" id="ozetKisa"></div>
+  <div class="panel hide" id="ozetAyrinti"></div>
+</section>
+<section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
-<script src="seed.js?v=16"></script>
-<script src="app.js?v=16"></script>
-<script src="gh.js?v=16"></script>
+<script src="seed.js?v=17"></script>
+<script src="app.js?v=17"></script>
+<script src="gh.js?v=17"></script>
+<script src="plus.js?v=17"></script>
 <script>
-if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js?v=16");}
+if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js?v=17");}
 let _deferredPrompt=null;
 window.addEventListener("beforeinstallprompt",function(e){
-  e.preventDefault();
-  _deferredPrompt=e;
-  var b=document.getElementById("btnInstall");
-  if(b)b.classList.remove("hide");
+  e.preventDefault();_deferredPrompt=e;
+  var b=document.getElementById("btnInstall");if(b)b.classList.remove("hide");
 });
 async function installApp(){
-  if(_deferredPrompt){
-    _deferredPrompt.prompt();
-    await _deferredPrompt.userChoice;
-    _deferredPrompt=null;
-    var b=document.getElementById("btnInstall");
-    if(b)b.classList.add("hide");
-    return;
-  }
-  alert("Chrome veya Edge: adres cubugunun sagindaki yukleme ikonu, veya Menu > Cadde Mesai Listesi'ni yukle");
+  if(_deferredPrompt){_deferredPrompt.prompt();await _deferredPrompt.userChoice;_deferredPrompt=null;return;}
+  alert("Chrome veya Edge menusunden uygulamayi yukle");
 }
 </script>
 </body></html>
