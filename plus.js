@@ -57,17 +57,17 @@ renderOzet=function(){
   const kisa=document.getElementById("ozetKisa");
   const ayr=document.getElementById("ozetAyrinti");
   if(!kisa||!ayr){ _renderOzet(); return; }
-  kisa.innerHTML=`<h2>Kisa ozet</h2><p>${s.pay.length} kisi odeme · <b>${tl(s.toplam)} TL</b></p>
-    <table class="sheet slim"><thead><tr><th>Ad Soyad</th><th>Toplam</th></tr></thead>
-    <tbody>${s.pay.map(x=>`<tr><td class="name">${x.p.name}</td><td class="tot">${tl(x.c.toplam)}</td></tr>`).join("")}</tbody>
-    <tfoot><tr><td>TOPLAM</td><td>${tl(s.toplam)}</td></tr></tfoot></table>`;
-  ayr.innerHTML=`<h2>Ayrintili ozet</h2><p>${s.pay.length} / ${s.all.length} kisi · ${tl(s.toplam)} TL</p>
-    <table class="sheet slim"><thead><tr><th>Ad</th><th>Mesai</th><th>HS</th><th>Prim</th><th>Yol</th><th>Izin</th><th>Yillik</th><th>Toplam</th></tr></thead>
-    <tbody>${s.pay.map(x=>`<tr>
-      <td class="name">${x.p.name}</td><td>${dash(x.c.mesai)}</td><td>${dash(x.c.hs)}</td>
+  kisa.innerHTML=`<h2>Kisa ozet</h2><p>${s.all.length} kisi · ${s.pay.length} odeme · <b>${tl(s.toplam)} TL</b></p>
+    <table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Toplam</th></tr></thead>
+    <tbody>${s.all.map((x,i)=>`<tr class="${x.c.toplam>0?"pay":"zero"}"><td>${i+1}</td><td class="name">${x.p.name}</td><td class="tot">${dash(x.c.toplam)}</td></tr>`).join("")}</tbody>
+    <tfoot><tr><td></td><td>TOPLAM</td><td>${tl(s.toplam)}</td></tr></tfoot></table>`;
+  ayr.innerHTML=`<h2>Ayrintili ozet</h2><p>${s.all.length} kisi · ${s.pay.length} odeme · ${tl(s.toplam)} TL</p>
+    <table class="sheet slim"><thead><tr><th>No</th><th>Ad</th><th>Mesai</th><th>HS</th><th>Prim</th><th>Yol</th><th>Izin</th><th>Yillik</th><th>Toplam</th></tr></thead>
+    <tbody>${s.all.map((x,i)=>`<tr class="${x.c.toplam>0?"pay":"zero"}">
+      <td>${i+1}</td><td class="name">${x.p.name}</td><td>${dash(x.c.mesai)}</td><td>${dash(x.c.hs)}</td>
       <td>${dash(x.c.prim)}</td><td>${dash(x.c.yol)}</td><td>${dash(x.c.izin)}</td>
-      <td>${dash(x.c.yillik)}</td><td>${tl(x.c.toplam)}</td></tr>`).join("")}</tbody>
-    <tfoot><tr><td>TOPLAM</td><td>${tl(s.mesai)}</td><td>${tl(s.hs)}</td><td>${tl(s.prim)}</td><td>${tl(s.yol)}</td><td>${tl(s.izin)}</td><td>${tl(s.yillik)}</td><td>${tl(s.toplam)}</td></tr></tfoot></table>`;
+      <td>${dash(x.c.yillik)}</td><td>${dash(x.c.toplam)}</td></tr>`).join("")}</tbody>
+    <tfoot><tr><td></td><td>TOPLAM</td><td>${tl(s.mesai)}</td><td>${tl(s.hs)}</td><td>${tl(s.prim)}</td><td>${tl(s.yol)}</td><td>${tl(s.izin)}</td><td>${tl(s.yillik)}</td><td>${tl(s.toplam)}</td></tr></tfoot></table>`;
 };
 function periodLabel(){
   const d=new Date();
@@ -89,7 +89,7 @@ function renderRapor(){
     </div>
     <div class="stats rapor-stats">
       <div class="stat"><span>Odenecek toplam</span><b>${tl(s.toplam)} TL</b></div>
-      <div class="stat"><span>Odemesi olan</span><b>${s.pay.length} kisi</b></div>
+      <div class="stat"><span>Odemesi olan</span><b>${s.pay.length} / ${s.all.length}</b></div>
       <div class="stat"><span>Hafta sonu</span><b>${tl(s.hs)} TL</b></div>
       <div class="stat"><span>Mesai + izin</span><b>${tl(s.mesai+s.izin+s.yillik)} TL</b></div>
     </div>
@@ -102,12 +102,12 @@ function renderRapor(){
     <div class="panel">
       <h3>Kisi kisi odeme listesi</h3>
       <table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai</th><th>HS</th><th>Izin+Yillik</th><th>Diger</th><th>Odenecek</th></tr></thead>
-      <tbody>${s.pay.map((x,i)=>`<tr>
+      <tbody>${s.all.map((x,i)=>`<tr class="${x.c.toplam>0?"pay":"zero"}">
         <td>${i+1}</td><td class="name">${x.p.name}${x.p.kurye?" <small>KURYE</small>":""}</td>
         <td>${dash(x.c.mesai)}</td><td>${dash(x.c.hs)}</td>
         <td>${dash(x.c.izin+x.c.yillik)}</td>
         <td>${dash(x.c.prim+x.c.yol+x.c.dis)}</td>
-        <td class="tot">${tl(x.c.toplam)}</td></tr>`).join("")}</tbody>
+        <td class="tot">${dash(x.c.toplam)}</td></tr>`).join("")}</tbody>
       <tfoot><tr><td colspan="2">TOPLAM</td><td>${tl(s.mesai)}</td><td>${tl(s.hs)}</td><td>${tl(s.izin+s.yillik)}</td><td>${tl(s.prim+s.yol+s.dis)}</td><td>${tl(s.toplam)}</td></tr></tfoot></table>
     </div>
     <div class="panel">
