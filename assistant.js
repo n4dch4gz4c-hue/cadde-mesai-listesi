@@ -1,5 +1,5 @@
 (function(){
-var STOP=/^(ve|ile|icin|olan|kisi|kurye|adet|saat|gun|tl|lira|tutar|yaz|yap|et|ver|ko[yY]|ata|guncelle|degistir|ayarla|ne|kadar|kac|kim|bana|onu|bunu|su|da|de|bu|adam|kadin)$/;
+var STOP=/^(ve|ile|icin|olan|kisi|kurye|adet|saat|gun|tl|lira|tutar|yaz|yap|et|ver|ko[yY]|ata|guncelle|degistir|ayarla|ne|kadar|kac|kim|kimler|bana|onu|bunu|su|da|de|bu|ay|adam|kadin|para|parasi|alacak|aliyor|alan|cok|en|hangi|hangisi)$/;
 var ACT=/^(sil|ekle|kaydet|cek|yenile|toplam|ozet|rapor|liste|kurye|yardim|hs|hafta|mesai|yol|izin|yillik|prim|devam|ceza|pdf|csv|temizle|sifirla)$/;
 var lastPerson=null;
 var pendingDel=null;
@@ -8,7 +8,7 @@ function norm(s){
 }
 function stem(w){
   w=norm(w);
-  w=w.replace(/(?:ndan|nden|dan|den|nun|n[u\u00fc]n|nin|n[i\u0131]n|lar|ler)$/,"");
+  w=w.replace(/(?:ndan|nden|dan|den|nun|n[u\u00fc]n|nin|n[i\u0131]n|lar|ler|leri|lari)$/,"");
   w=w.replace(/(?:ya|ye|na|ne|[eEaA])$/,"");
   return w;
 }
@@ -104,6 +104,13 @@ function topPay(n){
 function zeroPay(){
   return getSums().all.filter(function(x){return !x.c.toplam;}).map(function(x){return x.p;});
 }
+function listBy(fn){
+  return getSums().all.filter(fn).sort(function(a,b){return b.c.toplam-a.c.toplam;});
+}
+function fmtList(arr, mapFn, empty){
+  if(!arr.length){ reply(empty||"Kayit yok."); return; }
+  reply(arr.map(mapFn).join("<br>"));
+}
 function resetPerson(p){
   ["mesaiSaat","hsSaat","yolTutar","izinGun","izinTutar","yillikTutar","primAdet","disiplinDk"].forEach(function(f){
     if(f==="primAdet"){p.primAdet=0;} else setVal(p.id,f,0);
@@ -114,8 +121,7 @@ function parseFields(t,nlist){
   var out=[];
   function takeNear(re, defSmall){
     var m=t.match(re); if(!m) return null;
-    var chunk=m[0];
-    var local=nums(chunk);
+    var local=nums(m[0]);
     if(local.length) return local[local.length-1];
     return defSmall;
   }
@@ -135,17 +141,7 @@ function parseFields(t,nlist){
   return out;
 }
 function help(){
-  reply(
-    "<b>Cadde Asistan</b> \u00b7 ucretsiz, cevrimdisi<br>"+
-    "\u2022 Aydin HS 2 mesai 3<br>"+
-    "\u2022 Semih yol 0<br>"+
-    "\u2022 Hasan izin 2 gun 5800<br>"+
-    "\u2022 Ali Veli kurye ekle<br>"+
-    "\u2022 Ahmet sifirla<br>"+
-    "\u2022 Mehmet devam 1 gecikti<br>"+
-    "\u2022 toplam / dagilim / kim alacak / odeme yok<br>"+
-    "\u2022 kaydet / cek / pdf"
-  );
+  reply("<b>Cadde Asistan</b> · komut + soru<br>• Aydin HS 2 mesai 3<br>• bu ay kim cok alacak<br>• kimler izin parasi aliyor<br>• hs kimde / kurye kim / odeme yok<br>• toplam / dagilim / kaydet / cek");
 }
 function applyField(p, field, n){
   if(n==null) n=(field.indexOf("Tutar")>=0||field==="primAdet"||field==="disiplinDk")?0:1;
@@ -156,18 +152,81 @@ function applyField(p, field, n){
 function splitCmds(raw){
   return String(raw).split(/\s*(?:;| ve sonra | sonra ,)\s+/i).map(function(s){return s.trim();}).filter(Boolean);
 }
+function peelQuestion(raw){
+  var t=String(raw||"");
+  var m=t.match(/(?:soru|sorum)\s*[:\-]\s*(.+)$/i);
+  if(m) return m[1].trim();
+  return t;
+}
+function isAsk(t){
+  return /\?|kim|kimler|hangi|kac|ne kadar|en cok|alacak|aliyor|listele|goster|soyle/.test(t);
+}
+function handleAsk(t){
+  var s=getSums();
+  if(/izin/.test(t) && /para|tutar|alan|aliyor|alacak|kim|kimler|kimde|olan/.test(t)){
+    fmtList(listBy(function(x){return (x.c.izin||0)>0 || (x.p.izinGun||0)>0;}), function(x){return x.p.name+" · "+(x.p.izinGun||0)+"g · <b>"+tl(x.c.izin)+"</b>";}, "Bu ay izin parasi yazilan yok.");
+    return true;
+  }
+  if(/yillik/.test(t) && /para|alan|aliyor|kim|kimler|olan/.test(t)){
+    fmtList(listBy(function(x){return (x.c.yillik||0)>0;}), function(x){return x.p.name+" · <b>"+tl(x.c.yillik)+"</b>";}, "Yillik yazilan yok.");
+    return true;
+  }
+  if(/\bhs\b|hafta\s*son/.test(t) && /kim|kimler|kimde|alan|olan|liste/.test(t)){
+    fmtList(listBy(function(x){return (x.p.hsSaat||0)>0;}), function(x){return x.p.name+" · HS "+(x.p.hsSaat||0)+" · "+tl(x.c.hs);}, "HS yazilan yok.");
+    return true;
+  }
+  if(/mesai/.test(t) && /kim|kimler|kimde|alan|olan/.test(t)){
+    fmtList(listBy(function(x){return (x.p.mesaiSaat||0)>0;}), function(x){return x.p.name+" · "+(x.p.mesaiSaat||0)+"s · "+tl(x.c.mesai);}, "Mesai yazilan yok.");
+    return true;
+  }
+  if(/yol/.test(t) && /kim|kimler|kimde|alan|olan/.test(t)){
+    fmtList(listBy(function(x){return (x.c.yol||0)>0;}), function(x){return x.p.name+" · "+tl(x.c.yol);}, "Yol yazilan yok.");
+    return true;
+  }
+  if(/prim/.test(t) && /kim|kimler|kimde|alan|olan/.test(t)){
+    fmtList(listBy(function(x){return (x.c.prim||0)>0 || (x.p.primAdet||0)>0;}), function(x){return x.p.name+" · "+(x.p.primAdet||0)+" adet · "+tl(x.c.prim);}, "Prim yazilan yok.");
+    return true;
+  }
+  if(/kurye/.test(t) && /kim|liste|kimler/.test(t)){
+    var list=(state.people||[]).filter(function(p){return p.kurye;});
+    reply(list.length? (list.length+" kurye<br>"+list.map(function(p){return p.name;}).join("<br>")) : "Kurye yok.");
+    return true;
+  }
+  if(/kim alacak|kim cok|cok alacak|en cok|en yuksek|bu ay kim|odeme list|odemesi olan|kimler alacak/.test(t)){
+    var n=/ilk\s*(\d+)/.test(t)?RegExp.$1: (/en cok|cok alacak|en yuksek/.test(t)?8:20);
+    var top=topPay(Number(n)||8);
+    if(!top.length){reply("Odemesi olan yok.");return true;}
+    reply("<b>Bu ay en cok alanlar</b><br>"+top.map(function(x,i){return (i+1)+". "+x.p.name+" · <b>"+tl(x.c.toplam)+"</b>";}).join("<br>"));
+    return true;
+  }
+  if(/odeme yok|sifir olan|bos kayit|hic almayan/.test(t)){
+    var z=zeroPay();
+    reply(z.length? (z.length+" kiside odeme yok:<br>"+z.slice(0,25).map(function(p){return p.name;}).join(", ")) : "Hepsinin odemesi var.");
+    return true;
+  }
+  if(/dagilim|kalem/.test(t) || (/toplam/.test(t)&&/ayrinti|detay/.test(t))){
+    reply(s.pay.length+" kisi odeme · <b>"+tl(s.toplam)+" TL</b><br>HS "+tl(s.hs)+" · mesai "+tl(s.mesai)+" · yol "+tl(s.yol)+"<br>izin "+tl(s.izin)+" · yillik "+tl(s.yillik)+" · prim "+tl(s.prim)); return true;
+  }
+  if(/^toplam|kasa|genel toplam|ne kadar odenecek|kac para|bu ay toplam/.test(t)){
+    reply(s.pay.length+" kisi odeme alacak · <b>"+tl(s.toplam)+" TL</b>"); return true;
+  }
+  if(/kac kisi|kadrosu|personel say/.test(t)){
+    reply(state.people.length+" kisi kayitli · "+s.pay.length+" odeme var."); return true;
+  }
+  return false;
+}
 function runOne(raw){
+  raw=peelQuestion(raw);
   var t=norm(raw);
   var tokens=t.split(" ").filter(Boolean);
   var nlist=nums(t);
   var n=nlist.length?nlist[nlist.length-1]:null;
-
   if(pendingDel){
     if(/^(evet|sil|ok|tamam|onay)$/.test(t)){ var pd=pendingDel; pendingDel=null; doDel(pd); return; }
     if(/^(hayir|iptal|vazgec)$/.test(t)){ pendingDel=null; reply("Silinmedi."); return; }
     pendingDel=null;
   }
-  if(/yardim|ne yap|komut|nasil/.test(t)){ help(); return; }
+  if(/yardim|ne yap|komut|nasil kullan/.test(t)){ help(); return; }
   if(/^(kaydet|sunucuya kaydet|yaz)$/.test(t)||(/kaydet/.test(t)&&!/anahtar|sil/.test(t))){
     if(typeof save==="function") save(); reply("Kaydediyorum."); return;
   }
@@ -176,35 +235,7 @@ function runOne(raw){
   }
   if(/\bpdf\b/.test(t)){ if(typeof sharePDF==="function") sharePDF(); reply("PDF hazirlaniyor."); return; }
   if(/\bcsv\b/.test(t)){ if(typeof exportCSV==="function") exportCSV(); reply("CSV indirildi."); return; }
-
-  if(/dagilim|kalem/.test(t) || (/toplam/.test(t)&&/ayrinti|detay/.test(t))){
-    var s=getSums();
-    reply(
-      s.pay.length+" kisi odeme \u00b7 <b>"+tl(s.toplam)+" TL</b><br>"+
-      "HS "+tl(s.hs)+" \u00b7 mesai "+tl(s.mesai)+" \u00b7 yol "+tl(s.yol)+"<br>"+
-      "izin "+tl(s.izin)+" \u00b7 yillik "+tl(s.yillik)+" \u00b7 prim "+tl(s.prim)
-    ); return;
-  }
-  if(/^toplam|kasa|genel toplam|ne kadar odenecek|kac para/.test(t)){
-    var s=getSums();
-    reply(s.pay.length+" kisi odeme alacak \u00b7 <b>"+tl(s.toplam)+" TL</b>"); return;
-  }
-  if(/kac kisi|kadrosu|personel say/.test(t)){
-    reply(state.people.length+" kisi kayitli \u00b7 "+getSums().pay.length+" odeme var."); return;
-  }
-  if(/kim alacak|odeme list|odemesi olan/.test(t)){
-    var top=topPay(20);
-    if(!top.length){reply("Odemesi olan yok.");return;}
-    reply(top.map(function(x){return x.p.name+" \u00b7 <b>"+tl(x.c.toplam)+"</b>";}).join("<br>")); return;
-  }
-  if(/odeme yok|sifir olan|bos kayit/.test(t)){
-    var z=zeroPay();
-    reply(z.length? (z.length+" kiside odeme yok:<br>"+z.slice(0,25).map(function(p){return p.name;}).join(", ")) : "Hepsinin odemesi var."); return;
-  }
-  if(/en cok|sirala|ilk 5/.test(t)){
-    var top=topPay(5);
-    reply("En yuksek 5<br>"+top.map(function(x,i){return (i+1)+". "+x.p.name+" \u00b7 "+tl(x.c.toplam);}).join("<br>")); return;
-  }
+  if(handleAsk(t)) return;
   if(/\bozet\b/.test(t)){goTab("ozet");reply("Ozet acildi.");return;}
   if(/rapor/.test(t)){goTab("rapor"); if(typeof renderRapor==="function") renderRapor(); reply("Rapor acildi.");return;}
   if(/\bliste\b/.test(t)&&!/odeme/.test(t)){goTab("liste");reply("Liste.");return;}
@@ -212,64 +243,43 @@ function runOne(raw){
   if(/temizle|cop sil|hatali/.test(t)&&!pick(tokens,t)){
     var k=cleanJunk(); reply(k?k+" hatali kayit silindi.":"Hatali kayit yok."); return;
   }
-
   var wantDel=/\bsil\b|kaldir|cikar/.test(t);
   var wantAdd=/\bekle\b/.test(t);
   var p=pick(tokens,t) || (/\bonu\b|\bbunu\b|aynisi|ayni kisi|bu adam/.test(t)?lastPerson:null);
-
-  if(wantDel){
-    if(!p && /adet|yol|semih e/.test(t)){
-      var junk=state.people.filter(function(x){return /ADET|SEM[I\u0130]H E /.test((x.name||"").toLocaleUpperCase("tr"));});
-      if(junk.length){junk.forEach(doDel);return;}
-    }
-    delPerson(p); return;
-  }
+  if(wantDel){ delPerson(p); return; }
   if(wantAdd && !/devam|ceza|hs|mesai|yol|izin|prim/.test(t)){
-    var name=tokens.filter(function(w){
-      w=stem(w); return w.length>1 && !STOP.test(w) && !ACT.test(w) && !/^\d/.test(w);
-    }).join(" ").toLocaleUpperCase("tr");
+    var name=tokens.filter(function(w){ w=stem(w); return w.length>1 && !STOP.test(w) && !ACT.test(w) && !/^\d/.test(w); }).join(" ").toLocaleUpperCase("tr");
     if(name.length<3){reply("Isim eksik. Ornek: Can Yildiz ekle");return;}
     if(state.people.some(function(x){return norm(x.name)===norm(name);})){ reply(name+" zaten var."); return; }
     var np=hydratePerson({id:nid(),name:name,kurye:/kurye/.test(t),mesaiBirim:300});
     state.people.push(np); persistAll(); lastPerson=np;
-    reply(name+" eklendi."+(/kurye/.test(t)?" Kurye.":"")); return;
+    reply(name+" eklendi."); return;
   }
-  if(/devam/.test(t)){
+  if(/devam/.test(t) && !isAsk(t)){
     if(!p){reply("Kimin devamsizligi?");return;}
     var gun=nlist[0]||1;
-    var note=tokens.filter(function(w){ return !STOP.test(stem(w)) && !ACT.test(stem(w)) && !/^\d/.test(w) && norm(p.name).indexOf(stem(w))<0; }).join(" ");
     if(!state.devamsizlik) state.devamsizlik=[];
     if(typeof compactDevam==="function") compactDevam();
     var ex=(state.devamsizlik||[]).find(function(d){return norm(d.kisi)===norm(p.name);});
-    if(ex){ex.gun=(ex.gun||0)+gun; if(note) ex.not=ex.not?(ex.not+" \u00b7 "+note):note;}
-    else state.devamsizlik.push({kisi:p.name,gun:gun,not:note||""});
-    persistAll(); lastPerson=p; goTab("devam");
-    reply(p.name+" \u00b7 devam +"+gun+(note?" \u00b7 "+note:"")); return;
+    if(ex){ex.gun=(ex.gun||0)+gun;} else state.devamsizlik.push({kisi:p.name,gun:gun,not:""});
+    persistAll(); lastPerson=p; goTab("devam"); reply(p.name+" · devam +"+gun); return;
   }
-  if(/ceza/.test(t)){
+  if(/ceza/.test(t) && !isAsk(t)){
     if(!p){reply("Kime ceza?");return;}
     var tutar=nlist.filter(function(x){return x>=50;})[0]||n||1000;
-    var neden=tokens.filter(function(w){ return !STOP.test(stem(w)) && !ACT.test(stem(w)) && !/^\d/.test(w) && norm(p.name).indexOf(stem(w))<0; }).join(" ");
     if(!state.cezalar) state.cezalar=[];
-    state.cezalar.push({kisi:p.name,tutar:tutar,neden:neden||""}); persistAll(); lastPerson=p; goTab("ceza");
-    reply(p.name+" \u00b7 ceza "+tl(tutar)+" TL"+(neden?" \u00b7 "+neden:"")); return;
+    state.cezalar.push({kisi:p.name,tutar:tutar,neden:""}); persistAll(); lastPerson=p; goTab("ceza"); reply(p.name+" · ceza "+tl(tutar)+" TL"); return;
   }
-  if(p && /sifirla|sifir et|hepsini sil/.test(t)){
-    resetPerson(p); reply(p.name+" kalemleri sifirlandi.<br>"+line(p)); return;
-  }
+  if(p && /sifirla|sifir et|hepsini sil/.test(t)){ resetPerson(p); reply(p.name+" kalemleri sifirlandi.<br>"+line(p)); return; }
   if(p){
     var fields=parseFields(t,nlist);
-    if(fields.length){
-      fields.forEach(function(f){ applyField(p,f[0],f[1]); });
-      reply(line(p)); return;
-    }
+    if(fields.length && nlist.length){ fields.forEach(function(f){ applyField(p,f[0],f[1]); }); reply(line(p)); return; }
     lastPerson=p; reply(line(p)); return;
   }
-  if(lastPerson && n!=null){
-    reply("Kimi? Son kisi: <b>"+lastPerson.name+"</b><br>Ornek: "+lastPerson.name.split(" ")[0]+" HS "+n);
-    return;
+  if(lastPerson && n!=null && !isAsk(t)){
+    reply("Kimi? Son kisi: <b>"+lastPerson.name+"</b>"); return;
   }
-  reply("Anlamadim. Isim + islem yaz.<br>Aydin HS 2 mesai 3 \u00b7 toplam \u00b7 yardim");
+  reply("Anlamadim. Ornek:<br>bu ay kim cok alacak · kimler izin parasi aliyor<br>Aydin HS 2 mesai 3 · toplam · yardim");
 }
 function runAssist(raw){
   var parts=splitCmds(raw);
