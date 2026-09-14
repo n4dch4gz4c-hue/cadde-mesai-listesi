@@ -48,18 +48,19 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #devamList table{min-width:0!important;width:100%;font-size:18px}
 #devamList th{background:#1f4b8f;padding:14px 12px;font-size:15px}
 #devamList td{padding:14px 12px;font-size:17px}
-#asFab{position:fixed;right:8px;bottom:8px;width:84px;height:96px;padding:0;border:0;background:transparent;z-index:9999;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
-#asFab .siri{position:relative;width:72px;height:72px;border-radius:0;overflow:visible;background:transparent;box-shadow:none}
-#asFab .siri:after{content:"";position:absolute;inset:-8px;border-radius:46% 54% 48% 52%/52% 46% 54% 48%;background:conic-gradient(#7dd3fc,#a78bfa,#f472b6,#fb923c,#34d399,#7dd3fc);animation:siriSpin 5s linear infinite;filter:blur(16px);opacity:.28}
-#asFab .siri i,#asFab .siri b{position:absolute;inset:4px;border-radius:58% 42% 52% 48%/46% 54% 42% 58%;filter:blur(14px);mix-blend-mode:multiply}
-#asFab .siri i{background:conic-gradient(from 40deg,#67e8f9,#e879f9,#fda4af,#fde68a,#67e8f9);animation:siriSpin 6s linear infinite;opacity:.32}
-#asFab .siri b{background:conic-gradient(from 200deg,#86efac,#93c5fd,#f0abfc,#fecaca,#86efac);animation:siriSpin 7.5s linear infinite reverse;opacity:.26}
-#asFab .siri u{position:absolute;inset:18px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22) 0%,rgba(255,255,255,.06) 55%,transparent 72%);filter:blur(6px);animation:siriPulse 2.4s ease-in-out infinite;box-shadow:none}
-#asFab .siri:before{display:none}
-#asFab .siri-lab{font-size:11px;font-weight:800;color:#1f4b8f;text-shadow:0 1px 0 #fff;opacity:.9}
-#asFab.busy .siri:after,#asFab.busy .siri i,#asFab.busy .siri b{opacity:.4;animation-duration:1.1s}
+#asFab{position:fixed;right:10px;bottom:10px;width:78px;height:96px;padding:0;border:0;background:transparent;z-index:9999;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+#asFab .siri{position:relative;width:64px;height:64px;background:transparent}
+#asFab .siri .g{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.18),rgba(40,20,60,.08) 62%,rgba(20,10,40,.12) 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22),0 6px 16px rgba(0,0,0,.12)}
+#asFab .siri .p{position:absolute;left:50%;top:50%;width:42px;height:18px;margin:-9px 0 0 -21px;border-radius:50%;filter:blur(1.2px);mix-blend-mode:screen;opacity:.72;transform-origin:center}
+#asFab .siri .p1{background:radial-gradient(ellipse,rgba(255,120,140,.85) 0%,rgba(180,40,70,.15) 70%,transparent 78%);transform:rotate(-38deg) translateX(-2px)}
+#asFab .siri .p2{background:radial-gradient(ellipse,rgba(120,220,255,.9) 0%,rgba(40,90,200,.18) 70%,transparent 78%);transform:rotate(28deg) translateX(3px)}
+#asFab .siri .p3{background:radial-gradient(ellipse,rgba(180,255,170,.75) 0%,rgba(40,160,90,.12) 70%,transparent 78%);transform:rotate(78deg)}
+#asFab .siri .c{position:absolute;left:50%;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.95),rgba(200,230,255,.35) 55%,transparent 70%);filter:blur(.4px)}
+#asFab .siri .spin{position:absolute;inset:6px;animation:siriSpin 7s linear infinite}
+#asFab .siri-lab{font-size:11px;font-weight:800;color:#1f4b8f;text-shadow:0 1px 0 #fff}
+#asFab.busy .spin{animation-duration:1.4s}
+#asFab.busy .c{box-shadow:0 0 12px rgba(180,220,255,.7)}
 @keyframes siriSpin{to{transform:rotate(360deg)}}
-@keyframes siriPulse{0%,100%{transform:scale(.9);opacity:.5}50%{transform:scale(1.08);opacity:.85}}
 #asPanel{position:fixed;right:18px;bottom:122px;width:min(380px,calc(100vw - 24px));height:min(520px,72vh);background:#fff;border:1px solid #d7cfc3;border-radius:16px;z-index:9999;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.2)}
 #asHead{background:#1f4b8f;color:#fff;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
 #asMsgs{flex:1;overflow:auto;padding:10px;background:#f7f4ee}
@@ -114,7 +115,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 <section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
-<button id="asFab" type="button" onclick="toggleAs()" title="Asistan"><span class="siri"><i></i><b></b><u></u></span><span class="siri-lab">Asistan</span></button>
+<button id="asFab" type="button" onclick="toggleAs()" title="Asistan"><span class="siri"><span class="g"></span><span class="spin"><span class="p p1"></span><span class="p p2"></span><span class="p p3"></span></span><span class="c"></span></span><span class="siri-lab">Asistan</span></button>
 <div id="asPanel" class="hide">
   <div id="asHead"><b>Cadde Asistan</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
   <div id="asMsgs"><div class="as-bot">Giris yok. Komut: Aydin HS 2. Soru: bu ay kim cok alacak?</div></div>
@@ -129,15 +130,15 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   </div>
   <form id="asForm"><input id="asIn" placeholder="Sor veya komut yaz" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
 </div>
-<script src="lock.js?v=43"></script>
+<script src="lock.js?v=44"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=43"></script>
-<script src="app.js?v=43"></script>
-<script src="gh.js?v=43"></script>
-<script src="plus.js?v=43"></script>
-<script src="assistant.js?v=43"></script>
-<script src="puter-ai.js?v=43"></script>
+<script src="seed.js?v=44"></script>
+<script src="app.js?v=44"></script>
+<script src="gh.js?v=44"></script>
+<script src="plus.js?v=44"></script>
+<script src="assistant.js?v=44"></script>
+<script src="puter-ai.js?v=44"></script>
 <script>
 (function(){
   function esc(t){return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\n/g,"<br>");}
