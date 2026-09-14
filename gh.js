@@ -2,6 +2,7 @@ const GH_KEY="cadde_gh_cfg";
 const GH_DEFAULT_REPO="n4dch4gz4c-hue/cadde-mesai-listesi";
 const GH_DEFAULT_PATH="cadde-data.json";
 const GH_RAW="https://raw.githubusercontent.com/n4dch4gz4c-hue/cadde-mesai-listesi/main/cadde-data.json";
+const XAI_KEY="cadde_xai_key";
 let _taps=0,_tapT=null;
 function secretTap(){
   _taps++;
@@ -23,6 +24,9 @@ function ghSaveCfg(){
     repo:(document.getElementById("ghRepo")||{}).value||GH_DEFAULT_REPO,
     path:(document.getElementById("ghPath")||{}).value||GH_DEFAULT_PATH
   }));
+  var x=(document.getElementById("xaiKey")||{}).value||"";
+  if(x) localStorage.setItem(XAI_KEY,x.trim());
+  if(typeof xaiSave==="function") xaiSave(x);
   toast("Anahtar kaydedildi");
   toggleGhBox(false);
 }
@@ -32,9 +36,11 @@ function ghLoadCfg(){
     var tok=document.getElementById("ghToken");
     var repo=document.getElementById("ghRepo");
     var path=document.getElementById("ghPath");
+    var xai=document.getElementById("xaiKey");
     if(tok)tok.value=c.token||"";
     if(repo)repo.value=c.repo||GH_DEFAULT_REPO;
     if(path)path.value=c.path||GH_DEFAULT_PATH;
+    if(xai)xai.value=localStorage.getItem(XAI_KEY)||"";
   }catch(e){}
 }
 function ghCfg(){
