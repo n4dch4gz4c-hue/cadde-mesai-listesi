@@ -8,50 +8,54 @@
 <link rel="manifest" href="mola-manifest.webmanifest"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Mola Takip"/>
 <link rel="apple-touch-icon" href="mola-icon.svg"/>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 <style>
-:root{--navy:#152238;--blue:#1d4ed8;--red:#dc2626;--green:#0f9f7a;--pink:#f3b4b0;--bg:#eef3fb;--card:#fff;--ink:#1f2937;--mut:#6b7280;--line:#e5eaf2;--out:#ea580c}
+:root{--navy:#152238;--blue:#1d4ed8;--red:#dc2626;--green:#0f9f7a;--bg:#eef3fb;--ink:#1f2937;--mut:#6b7280;--line:#e5eaf2}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif;padding-bottom:84px}
 header{background:var(--navy);color:#fff;padding:12px 14px 14px}
-.brand{display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;letter-spacing:.4px}
-.logo{width:22px;height:22px;border-radius:6px;background:#f97316;display:grid;place-items:center;font-size:12px}
-.meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:13px;opacity:.95}
-.wrap{padding:12px 12px 8px}
-.search{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin-bottom:12px;display:flex;gap:8px;align-items:center}
-.search input{flex:1;border:0;outline:0;font:inherit;text-align:center;padding:8px}
-.search .ekle{border:0;background:var(--blue);color:#fff;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer}
-.sec{font-size:14px;margin:8px 2px 10px}
-.card{background:var(--card);border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:0 1px 0 rgba(15,23,42,.04)}
-.grid{display:grid;grid-template-columns:72px 1fr 56px;gap:8px;align-items:start}
+.brand{display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800}
+.logo{width:22px;height:22px;border-radius:6px;background:#f97316;display:grid;place-items:center}
+.meta{display:flex;justify-content:space-between;margin-top:10px;font-size:13px}
+.wrap{padding:12px}
+.search{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin-bottom:12px;display:flex;gap:8px}
+.search input{flex:1;border:0;outline:0;font:inherit;text-align:center}
+.search .ekle{border:0;background:var(--blue);color:#fff;border-radius:10px;padding:10px 12px;font-weight:700}
+.sec{font-size:14px;margin:8px 2px 10px;font-weight:700}
+.card{border-radius:16px;padding:12px;margin-bottom:10px}
+.card.iceri{background:#dcfce7;border:1px solid #86efac}
+.card.disari{background:#fecaca;border:1px solid #f87171}
+.grid{display:grid;grid-template-columns:72px 1fr 56px;gap:8px}
 .btns{display:flex;flex-direction:column;gap:8px}
-.btns button{border:0;border-radius:10px;padding:10px 0;color:#fff;font-weight:700;cursor:pointer}
-.out{background:var(--green)}
-.in{background:var(--red)}
-.in[disabled]{background:var(--pink);color:#7f1d1d}
-.mid{text-align:center;padding-top:2px}
-.name{font-weight:800;font-size:15px}
-.sub{color:var(--mut);font-size:12px;margin-top:4px}
-.badge{display:inline-block;margin-top:6px;font-size:11px;font-weight:800;letter-spacing:.3px}
-.badge.out{color:var(--out)}
-.badge.in{color:#64748b}
-.right{text-align:right;font-size:12px;color:#334155}
-.right b{display:block;font-size:18px;margin-bottom:4px}
-.right button{display:block;width:100%;border:0;background:none;color:#334155;padding:3px 0;cursor:pointer;text-align:right}
-.hist{margin-top:8px;font-size:12px;color:#475569;line-height:1.45}
-.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 64px 1fr;gap:10px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));}
-.bar button{border:0;border-radius:12px;padding:14px 0;color:#fff;font-weight:800;cursor:pointer}
+.btns button{border:0;border-radius:10px;padding:10px 0;color:#fff;font-weight:700}
+.bout{background:#16a34a}
+.bin{background:#dc2626}
+.bin[disabled]{background:#86efac;color:#14532d}
+.mid{text-align:center}
+.name{font-weight:800}
+.sub{color:#334155;font-size:12px;margin-top:4px}
+.badge{display:inline-block;margin-top:6px;font-size:11px;font-weight:800}
+.card.iceri .badge{color:#166534}
+.card.disari .badge{color:#991b1b}
+.right{text-align:right;font-size:12px}
+.right b{display:block;font-size:18px}
+.right button{display:block;width:100%;border:0;background:none;padding:3px 0;text-align:right}
+.hist{margin-top:8px;font-size:12px;color:#334155}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 64px 1fr;gap:10px;padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
+.bar button{border:0;border-radius:12px;padding:14px 0;color:#fff;font-weight:800}
 .rapor{background:var(--blue)}
 .sifir{background:#1e3a8a}
-.mic{width:56px;height:56px;border-radius:50%;background:var(--red);margin:auto;display:grid;place-items:center;font-size:22px;cursor:pointer}
-.mic.listen{background:#16a34a;animation:pulse 1s infinite}
-@keyframes pulse{50%{transform:scale(1.06)}}
+.mic{width:56px;height:56px;border-radius:50%;background:var(--red);margin:auto;display:grid;place-items:center;font-size:22px}
+.mic.listen{background:#16a34a}
 .modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:flex-end;z-index:20}
 .modal.on{display:flex}
-.sheet{background:#fff;width:100%;max-height:80vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px}
-.sheet h2{margin:0 0 8px;font-size:18px}
+.sheet{background:#fff;width:100%;max-height:82vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px}
+.tabs{display:flex;gap:8px;margin:8px 0 12px}
+.tabs button{flex:1;border:1px solid var(--line);background:#f8fafc;border-radius:10px;padding:10px;font-weight:700}
+.tabs button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
 .row{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
 #toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none;z-index:30}
 </style>
@@ -68,24 +72,23 @@ header{background:var(--navy);color:#fff;padding:12px 14px 14px}
   </div>
   <div class="sec" id="outTitle">Şu an dışarıda (0)</div>
   <div id="outList"></div>
+  <div class="sec">İçeride</div>
   <div id="inList"></div>
 </div>
 <div class="bar">
-  <button class="rapor" onclick="openRapor()">Rapor</button>
+  <button class="rapor" onclick="openRapor('gun')">Rapor</button>
   <div class="mic" id="mic" onclick="dinle()">🎙️</div>
   <button class="sifir" onclick="sifirla()">Sıfırla</button>
 </div>
-<div class="modal" id="modal" onclick="if(event.target.id==='modal')closeModal()">
-  <div class="sheet" id="sheet"></div>
-</div>
+<div class="modal" id="modal" onclick="if(event.target.id==='modal')closeModal()"><div class="sheet" id="sheet"></div></div>
 <div id="toast"></div>
 <script>
-const KEY="kizilkayalar_mola_v2";
-const HAK=45, ASIM=7;
+const KEY="kizilkayalar_mola_v2",HAK=45,ASIM=7,PIN="1902";
 const CIKAR=["UĞUR GÖKER","ALİ AKKOCA","MURAT TORUN","SEYFİ ÇELİK","FEVZİ DOLAK","HAKAN ATMACA","CİHAN GENÇ","ABDURRAHMAN KAPAN","SAYİM GÜMÜŞ","BAYRAM YETER","RAMAZAN YAVUZ","MUSTAFA AYDIN","OSMAN CEYLAN","CEMAL ÇELİK","HÜSAMETTİN KÖRPE","BURHAN BAYAKIR","HİKMET ERDOĞDU","MEHMET EMİN MÜDERRİSOĞLU","FERHAT AVCI","ERHAN SOFUOĞLU","MUHAMMED CAN SARICI","MUHAMMED HASAN KOÇALAN","HASAN İPEK","EMRE POLAT","AZAT MYRADOV","CİHAN AVCI"];
 const SEED=["ABDULLAH AVCI","CUMHUR YİĞİT","SALİH USTA","ERDAL ÇAVDAR","SELİM ORTAHİSAR","KÖKSAL SOYKAN","HASAN ALİ GERZ","BİLAL SÜRÜKLİ","BEDRETTİN AVCI","SELAHATTİN AVCI","CANER AVCI","MEHMET ÇELİK","YILMAZ AVCI","RAMAZAN BAYAKIR","ONUR AVCI","M. MUHAMMED MUSTAFA BAYAKIR","YASİR FURKAN KAVAK","SEPİDEH MENNATİ","MUHAMMET EREN ÇELİK","MURAT DAĞIDIR","MUHAMMET SOFUOĞLU","AYDIN AVCI","ABDULLAH DENERİ","HAMİT AKPINAR","ADİL DEMİR ÇELİK","MUHİTTİN ÖZÇELİK","YUNUS EMRE ÇELİK","ZEYNEP SOFUOĞLU","KAAN ATASOY","ABDURRAHMAN GÜRKAN","VAHDETTİN AVCI","ERCAN ALTUN","SEMİH SOFUOĞLU","ABDURRAHMAN ÖZKAN","FIRAT AVCI","MENDERES SOFUOĞLU","HİCABİ AKYILDIZ","ABDURRAHMAN BULUT","MUHAMMED MÜMİN ILGAR"];
 function gizle(name){const n=(name||"").toLocaleUpperCase("tr-TR");return CIKAR.some(k=>k.toLocaleUpperCase("tr-TR")===n);}
 function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function monthKey(){return today().slice(0,7);}
 function hhmm(ts){const d=new Date(ts);return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
 function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.people&&s.people.length){s.days=s.days||{};s.people=s.people.filter(p=>!gizle(p.name));return s;}}catch(e){}return {people:SEED.map((name,i)=>({id:i+1,name,hak:HAK})),days:{}};}
 function save(){localStorage.setItem(KEY,JSON.stringify(state));}
@@ -93,25 +96,31 @@ let state=load();save();
 function dayObj(d){d=d||today();if(!state.days[d])state.days[d]={sessions:{}};return state.days[d];}
 function sessions(id,d){const o=dayObj(d);if(!o.sessions[id])o.sessions[id]=[];return o.sessions[id];}
 function toast(t){const e=document.getElementById("toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",1800);}
-function usedMin(id){const now=Date.now();return sessions(id).reduce((a,s)=>a+Math.max(0,Math.round(((s.end||now)-s.start)/60000)),0);}
+function minsOf(list){const now=Date.now();return list.reduce((a,s)=>a+Math.max(0,Math.round(((s.end||now)-s.start)/60000)),0);}
+function usedMin(id,d){return minsOf(sessions(id,d));}
+function monthUsed(id){const m=monthKey();let t=0;Object.keys(state.days).forEach(d=>{if(d.slice(0,7)===m)t+=minsOf((state.days[d].sessions||{})[id]||[]);});return t;}
 function openSes(id){return sessions(id).find(s=>!s.end);}
 function cikti(id){if(openSes(id)){toast("Zaten dışarıda");return;}sessions(id).push({start:Date.now(),end:null});save();render();}
 function dondu(id){const s=openSes(id);if(!s){toast("Dışarıda değil");return;}s.end=Date.now();save();render();}
 function plusDk(id){const n=prompt("Kaç dakika eklensin?","5");if(n==null)return;const p=state.people.find(x=>x.id===id);p.hak=(p.hak||HAK)+Number(n||0);save();render();}
 function setHak(id){const p=state.people.find(x=>x.id===id);const n=prompt("Hak (dk)",String(p.hak||HAK));if(n==null)return;p.hak=Number(n||HAK);save();render();}
 function sil(id){const p=state.people.find(x=>x.id===id);if(!p||!confirm(p.name+" silinsin mi?"))return;state.people=state.people.filter(x=>x.id!==id);save();render();}
-function addOrFilter(){const q=(document.getElementById("q").value||"").trim();if(!q){render();return;}if(gizle(q)){toast("Bu kişi listede yok");render();return;}const hit=state.people.some(p=>p.name.toLocaleLowerCase("tr-TR")===q.toLocaleLowerCase("tr-TR"));if(!hit&&confirm(q.toLocaleUpperCase("tr-TR")+" eklensin mi?")){state.people.push({id:state.people.reduce((m,p)=>Math.max(m,p.id),0)+1,name:q.toLocaleUpperCase("tr-TR"),hak:HAK});document.getElementById("q").value="";save();}render();}
-function sifirla(){if(!confirm("Bugünün molaları silinsin mi? Kadro ve eski günler durur."))return;dayObj().sessions={};save();render();toast("Bugün sıfırlandı");}
+function addOrFilter(){const q=(document.getElementById("q").value||"").trim();if(!q){render();return;}if(gizle(q)){toast("Bu kişi listede yok");return;}const hit=state.people.some(p=>p.name.toLocaleLowerCase("tr-TR")===q.toLocaleLowerCase("tr-TR"));if(!hit&&confirm(q.toLocaleUpperCase("tr-TR")+" eklensin mi?")){state.people.push({id:state.people.reduce((m,p)=>Math.max(m,p.id),0)+1,name:q.toLocaleUpperCase("tr-TR"),hak:HAK});document.getElementById("q").value="";save();}render();}
+function sifirla(){const pin=prompt("Sıfırlama şifresi");if(pin!==PIN){toast("Şifre yanlış");return;}if(!confirm("Bugünün molaları silinsin mi?"))return;dayObj().sessions={};save();render();toast("Bugün sıfırlandı");}
 function norm(s){return (s||"").toLocaleLowerCase("tr-TR").replace(/[^a-z0-9çğıöşü ]/g," ").replace(/\s+/g," ").trim();}
 function findPerson(text){const t=norm(text);let best=null,score=0;state.people.forEach(p=>{const n=norm(p.name);let s=0;if(t.includes(n))s=100;else n.split(" ").forEach(w=>{if(w.length>2&&t.includes(w))s+=w.length;});if(s>score){score=s;best=p;}});return score>=4?best:null;}
-function applyVoice(raw){const t=norm(raw);toast(raw);if(!t)return;if(t.startsWith("ekle ")){document.getElementById("q").value=raw.replace(/ekle/i,"").trim();addOrFilter();return;}const out=/(cikti|cikt[iı]|cikardi|disari|mola)/.test(t.replace(/[ıi]/g,"i"));const inn=/(dondu|geldi|iceride|icerde|geri)/.test(t.replace(/[ıi]/g,"i"));const p=findPerson(t);if(!p){toast("Kişi bulunamadı: "+raw);return;}if(inn&&!out){dondu(p.id);toast(p.name+" döndü");return;}if(out){cikti(p.id);toast(p.name+" çıktı");return;}if(openSes(p.id)){dondu(p.id);toast(p.name+" döndü");}else{cikti(p.id);toast(p.name+" çıktı");}}
+function applyVoice(raw){const t=norm(raw);if(!t)return;if(t.startsWith("ekle ")){document.getElementById("q").value=raw.replace(/ekle/i,"").trim();addOrFilter();return;}const out=/(cikti|cikt|disari|mola)/.test(t.replace(/[ıi]/g,"i"));const inn=/(dondu|geldi|iceride|icerde|geri)/.test(t.replace(/[ıi]/g,"i"));const p=findPerson(t);if(!p){toast("Kişi bulunamadı");return;}if(inn&&!out){dondu(p.id);toast(p.name+" döndü");return;}if(out){cikti(p.id);toast(p.name+" çıktı");return;}if(openSes(p.id)){dondu(p.id);toast(p.name+" döndü");}else{cikti(p.id);toast(p.name+" çıktı");}}
 let rec=null,listening=false;
-function dinle(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){toast("Bu tarayıcı sesi desteklemiyor. Safari veya Chrome kullan.");return;}if(listening&&rec){rec.stop();return;}rec=new SR();rec.lang="tr-TR";rec.interimResults=false;rec.maxAlternatives=3;rec.onstart=()=>{listening=true;document.getElementById("mic").classList.add("listen");toast("Dinliyorum...");};rec.onend=()=>{listening=false;document.getElementById("mic").classList.remove("listen");};rec.onerror=()=>{listening=false;document.getElementById("mic").classList.remove("listen");toast("Mikrofon açılamadı");};rec.onresult=(e)=>{applyVoice(e.results[0][0].transcript);};rec.start();}
-function personCard(p){const open=openSes(p.id);const used=usedMin(p.id);const left=Math.max(0,(p.hak||HAK)-used);const hist=sessions(p.id);const lines=hist.map((s,i)=>{const end=s.end||Date.now();const dk=Math.max(0,Math.round((end-s.start)/60000));return s.end?(i+1)+". "+hhmm(s.start)+" – "+hhmm(s.end)+" · "+dk+" dk":("Şu an dışarıda · "+hhmm(s.start));});return `<article class="card"><div class="grid"><div class="btns"><button class="out" onclick="cikti(${p.id})">Çıktı</button><button class="in" ${open?"":"disabled"} onclick="dondu(${p.id})">Döndü</button></div><div class="mid"><div class="name">${p.name}</div><div class="sub">${open?("Çıkış "+hhmm(open.start)):("Hak "+(p.hak||HAK)+" dk · butonla çıkar")}</div><div class="badge ${open?"out":"in"}">${open?"DISARIDA":"İÇERİDE"}</div></div><div class="right">${open?"":"<b>"+left+" dk</b>"}<button onclick="plusDk(${p.id})">+dk</button><button onclick="setHak(${p.id})">Hak</button><button onclick="sil(${p.id})">Sil</button></div></div><div class="hist">${lines.join("<br>")||"Henüz mola yok"}</div></article>`;}
+function dinle(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){toast("Ses desteklenmiyor");return;}if(listening&&rec){rec.stop();return;}rec=new SR();rec.lang="tr-TR";rec.onstart=()=>{listening=true;document.getElementById("mic").classList.add("listen");toast("Dinliyorum...");};rec.onend=()=>{listening=false;document.getElementById("mic").classList.remove("listen");};rec.onerror=()=>{listening=false;document.getElementById("mic").classList.remove("listen");toast("Mikrofon yok");};rec.onresult=e=>applyVoice(e.results[0][0].transcript);rec.start();}
+function personCard(p){const open=openSes(p.id);const used=usedMin(p.id);const left=Math.max(0,(p.hak||HAK)-used);const hist=sessions(p.id);const lines=hist.map((s,i)=>{const end=s.end||Date.now();const dk=Math.max(0,Math.round((end-s.start)/60000));return s.end?(i+1)+". "+hhmm(s.start)+" – "+hhmm(s.end)+" · "+dk+" dk":("Şu an dışarıda · "+hhmm(s.start));});return `<article class="card ${open?"disari":"iceri"}"><div class="grid"><div class="btns"><button class="bout" onclick="cikti(${p.id})">Çıktı</button><button class="bin" ${open?"":"disabled"} onclick="dondu(${p.id})">Döndü</button></div><div class="mid"><div class="name">${p.name}</div><div class="sub">${open?("Çıkış "+hhmm(open.start)):("Hak "+(p.hak||HAK)+" dk")}</div><div class="badge">${open?"DISARIDA":"İÇERİDE"}</div></div><div class="right">${open?"":"<b>"+left+" dk</b>"}<button onclick="plusDk(${p.id})">+dk</button><button onclick="setHak(${p.id})">Hak</button><button onclick="sil(${p.id})">Sil</button></div></div><div class="hist">${lines.join("<br>")||"Henüz mola yok"}</div></article>`;}
 function render(){const q=(document.getElementById("q").value||"").toLocaleLowerCase("tr-TR");const list=state.people.filter(p=>!q||p.name.toLocaleLowerCase("tr-TR").includes(q));const out=list.filter(p=>openSes(p.id));const inn=list.filter(p=>!openSes(p.id));document.getElementById("outTitle").textContent="Şu an dışarıda ("+out.length+")";document.getElementById("outList").innerHTML=out.map(personCard).join("");document.getElementById("inList").innerHTML=inn.map(personCard).join("");document.getElementById("saat").textContent=new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});}
-function openRapor(){const d=today();const rows=state.people.map(p=>{const used=usedMin(p.id);const asim=Math.max(0,used-(p.hak||HAK));return {p,used,asim,tutar:asim*ASIM};}).filter(x=>x.used>0||openSes(x.p.id));const tot=rows.reduce((a,x)=>a+x.tutar,0);document.getElementById("sheet").innerHTML=`<h2>Rapor · ${d}</h2><p style="color:#6b7280;font-size:13px">Eski günler silinmedi.</p>${rows.map(x=>`<div class="row"><span>${x.p.name}</span><b>${x.used} dk${x.asim?(" · aşım "+x.asim+" dk · "+x.tutar+" ₺"):""}</b></div>`).join("")||"<p>Bugün mola yok</p>"}<div class="row"><span>Aşım tutarı</span><b>${tot} ₺</b></div><p style="margin-top:12px"><button class="rapor" style="width:100%;border:0;border-radius:12px;padding:12px;color:#fff;font-weight:800" onclick="closeModal()">Kapat</button></p>`;document.getElementById("modal").classList.add("on");}
+function gunRows(){return state.people.map(p=>{const used=usedMin(p.id);const asim=Math.max(0,used-(p.hak||HAK));return {ad:p.name,used,asim,tutar:asim*ASIM,open:!!openSes(p.id)};}).filter(x=>x.used>0||x.open);}
+function ayRows(){return state.people.map(p=>{const used=monthUsed(p.id);const gun=Object.keys(state.days).filter(d=>d.slice(0,7)===monthKey()).length||1;const hak=gun*(p.hak||HAK);const asim=Math.max(0,used-hak);return {ad:p.name,used,asim,tutar:asim*ASIM};}).filter(x=>x.used>0);}
+let raporMod="gun";
+function openRapor(mod){raporMod=mod||"gun";const gun=raporMod==="gun";const rows=gun?gunRows():ayRows();const tot=rows.reduce((a,x)=>a+x.tutar,0);const bas=gun?("Günlük · "+today()):("Aylık · "+monthKey());document.getElementById("sheet").innerHTML=`<h2 style="margin:0">Rapor</h2><div class="tabs"><button class="${gun?"on":""}" onclick="openRapor('gun')">Günlük</button><button class="${!gun?"on":""}" onclick="openRapor('ay')">Aylık</button></div><p style="color:#6b7280;font-size:13px">${bas}</p>${rows.map(x=>`<div class="row"><span>${x.ad}${x.open?" · dışarıda":""}</span><b>${x.used} dk${x.asim?(" · aşım "+x.asim+" · "+x.tutar+" ₺"):""}</b></div>`).join("")||"<p>Kayıt yok</p>"}<div class="row"><span>Aşım tutarı</span><b>${tot} ₺</b></div><p style="margin-top:12px;display:flex;gap:8px"><button class="rapor" style="flex:1;border:0;border-radius:12px;padding:12px;color:#fff" onclick="sharePDF()">PDF paylaş</button><button style="flex:1;border:0;border-radius:12px;padding:12px;background:#e5e7eb" onclick="closeModal()">Kapat</button></p>`;document.getElementById("modal").classList.add("on");}
+async function sharePDF(){if(!window.jspdf||!window.jspdf.jsPDF){toast("PDF yüklenemedi");return;}const {jsPDF}=window.jspdf;const gun=raporMod==="gun";const rows=gun?gunRows():ayRows();const tot=rows.reduce((a,x)=>a+x.tutar,0);const doc=new jsPDF({unit:"mm",format:"a4"});const title=gun?"Gunluk Mola Raporu":"Aylik Mola Raporu";const sub=gun?today():monthKey();doc.setFontSize(14);doc.text("Kizilkayalar "+title,14,16);doc.setFontSize(10);doc.text(sub+"  |  asim 7 TL/dk",14,22);doc.autoTable({startY:28,head:[["Ad Soyad","Mola dk","Asim dk","Tutar"]],body:rows.map(x=>[x.ad,String(x.used),String(x.asim),x.tutar+" TL"]),foot:[["TOPLAM","","",tot+" TL"]],theme:"grid",headStyles:{fillColor:[21,34,56]},styles:{fontSize:9}});const name="mola-"+(gun?"gunluk-"+today():"aylik-"+monthKey())+".pdf";const blob=doc.output("blob");const file=new File([blob],name,{type:"application/pdf"});try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:title});toast("Paylaşıldı");return;}}catch(e){if(e&&e.name==="AbortError")return;}doc.save(name);toast("PDF indirildi");}
 function closeModal(){document.getElementById("modal").classList.remove("on");}
-if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js");}
+if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js");
 setInterval(render,30000);
 render();
 </script>
