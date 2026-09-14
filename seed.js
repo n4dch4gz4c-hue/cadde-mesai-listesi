@@ -57,7 +57,7 @@ const SEED={period:"PERSONEL LISTESI CADDE guncel",people:[
 {id:56,name:"VAHDETTİN AVCI",mesaiBirim:270,hsSaat:2,izinGun:1,izinTutar:2400},
 {id:57,name:"ERCAN ALTUN",mesaiBirim:270,hsSaat:2},
 {id:58,name:"OSMAN CEYLAN",mesaiBirim:270,kurye:true,hsSaat:1},
-{id:59,name:"SEMİH SOFUOĞLU",mesaiBirim:270,hsSaat:1},
+{id:59,name:"SEMİH SOFUOĞLU",mesaiBirim:320,izinBirim:2900,hsSaat:1},
 {id:60,name:"ABDURRAHMAN ÖZKAN",mesaiBirim:270,hsSaat:2},
 {id:61,name:"FIRAT AVCI",mesaiBirim:320},
 {id:62,name:"MENDERES SOFUOĞLU",mesaiBirim:320,mesaiSaat:2,hsSaat:1},
