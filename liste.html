@@ -48,18 +48,22 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #devamList table{min-width:0!important;width:100%;font-size:18px}
 #devamList th{background:#1f4b8f;padding:14px 12px;font-size:15px}
 #devamList td{padding:14px 12px;font-size:17px}
-#asFab{position:fixed;right:14px;bottom:14px;width:72px;height:88px;padding:0;border:0;background:transparent;z-index:9999;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
-#asFab .siri{position:relative;width:56px;height:56px;border-radius:50%;overflow:hidden;box-shadow:0 8px 28px rgba(80,40,180,.45)}
-#asFab .siri i,#asFab .siri b,#asFab .siri u{position:absolute;inset:-18%;border-radius:42% 58% 48% 52%/52% 42% 58% 48%;filter:blur(8px);animation:siriSpin 4.6s linear infinite}
-#asFab .siri i{background:conic-gradient(from 0deg,#5b8cff,#c084fc,#ff6ad5,#ff9f43,#5b8cff)}
-#asFab .siri b{background:conic-gradient(from 90deg,#7dd3fc,#a78bfa,#fb7185,#34d399,#7dd3fc);opacity:.85;animation-duration:6.2s;animation-direction:reverse}
-#asFab .siri u{inset:18%;background:radial-gradient(circle at 35% 30%,#fff 0%,#dbeafe 28%,#93c5fd 55%,#1e3a8a 100%);filter:blur(1px);animation:siriPulse 1.8s ease-in-out infinite;opacity:.92}
-#asFab .siri-lab{font-size:11px;font-weight:800;color:#1f4b8f;text-shadow:0 1px 0 #fff}
-#asFab.busy .siri i,#asFab.busy .siri b{animation-duration:.7s}
-#asFab.busy .siri u{animation-duration:.45s}
-@keyframes siriSpin{to{transform:rotate(360deg) scale(1.05)}}
-@keyframes siriPulse{0%,100%{transform:scale(.92);opacity:.8}50%{transform:scale(1.05);opacity:1}}
-#asPanel{position:fixed;right:18px;bottom:110px;width:min(380px,calc(100vw - 24px));height:min(520px,72vh);background:#fff;border:1px solid #d7cfc3;border-radius:16px;z-index:9999;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.2)}
+#asFab{position:fixed;right:10px;bottom:10px;width:86px;height:102px;padding:0;border:0;background:transparent;z-index:9999;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;filter:drop-shadow(0 0 18px rgba(255,80,220,.55))}
+#asFab .siri{position:relative;width:68px;height:68px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 2px rgba(255,255,255,.7),0 0 28px #ff4fd8,0 10px 32px rgba(80,20,180,.55)}
+#asFab .siri:after{content:"";position:absolute;inset:-40%;background:conic-gradient(#7dd3fc,#a78bfa,#f472b6,#fb923c,#facc15,#34d399,#7dd3fc);animation:siriSpin 2.8s linear infinite;filter:blur(10px);opacity:.95}
+#asFab .siri i,#asFab .siri b{position:absolute;inset:-22%;border-radius:42% 58% 48% 52%/52% 42% 58% 48%;filter:blur(7px);mix-blend-mode:screen}
+#asFab .siri i{background:conic-gradient(from 0deg,#22d3ee,#c026d3,#fb7185,#f59e0b,#22d3ee);animation:siriSpin 3.2s linear infinite}
+#asFab .siri b{background:conic-gradient(from 180deg,#4ade80,#38bdf8,#e879f9,#f43f5e,#4ade80);animation:siriSpin 4.4s linear infinite reverse;opacity:.9}
+#asFab .siri u{position:absolute;inset:16%;border-radius:50%;background:radial-gradient(circle at 32% 28%,#fff 0 16%,#e0f2fe 34%,#93c5fd 58%,#1d4ed8 100%);box-shadow:inset 0 0 16px rgba(255,255,255,.8);animation:siriPulse 1.15s ease-in-out infinite}
+#asFab .siri:before{content:"";position:absolute;left:-30%;top:-20%;width:55%;height:140%;background:linear-gradient(90deg,transparent,#fff,transparent);opacity:.55;transform:rotate(25deg);animation:siriShine 1.8s ease-in-out infinite;z-index:2;pointer-events:none}
+#asFab .siri-lab{font-size:11px;font-weight:900;color:#6d28d9;text-shadow:0 0 8px #f0abfc,0 1px 0 #fff}
+#asFab.busy{filter:drop-shadow(0 0 26px #fb7185) drop-shadow(0 0 18px #38bdf8)}
+#asFab.busy .siri:after,#asFab.busy .siri i,#asFab.busy .siri b{animation-duration:.45s}
+#asFab.busy .siri u{animation-duration:.35s}
+@keyframes siriSpin{to{transform:rotate(360deg) scale(1.08)}}
+@keyframes siriPulse{0%,100%{transform:scale(.88);opacity:.85}50%{transform:scale(1.08);opacity:1}}
+@keyframes siriShine{0%{transform:translateX(-40%) rotate(25deg)}100%{transform:translateX(220%) rotate(25deg)}}
+#asPanel{position:fixed;right:18px;bottom:122px;width:min(380px,calc(100vw - 24px));height:min(520px,72vh);background:#fff;border:1px solid #d7cfc3;border-radius:16px;z-index:9999;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.2)}
 #asHead{background:#1f4b8f;color:#fff;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
 #asMsgs{flex:1;overflow:auto;padding:10px;background:#f7f4ee}
 .as-bot,.as-me{padding:8px 10px;border-radius:12px;margin:6px 0;max-width:92%;font-size:14px}
@@ -128,15 +132,15 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   </div>
   <form id="asForm"><input id="asIn" placeholder="Sor veya komut yaz" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
 </div>
-<script src="lock.js?v=40"></script>
+<script src="lock.js?v=41"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=40"></script>
-<script src="app.js?v=40"></script>
-<script src="gh.js?v=40"></script>
-<script src="plus.js?v=40"></script>
-<script src="assistant.js?v=40"></script>
-<script src="puter-ai.js?v=40"></script>
+<script src="seed.js?v=41"></script>
+<script src="app.js?v=41"></script>
+<script src="gh.js?v=41"></script>
+<script src="plus.js?v=41"></script>
+<script src="assistant.js?v=41"></script>
+<script src="puter-ai.js?v=41"></script>
 <script>
 (function(){
   function esc(t){return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\n/g,"<br>");}
