@@ -105,8 +105,8 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 <div id="toast"></div>
 <button id="asFab" type="button" onclick="toggleAs()">+</button>
 <div id="asPanel" class="hide">
-  <div id="asHead"><b>Cadde Asistan AI</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
-  <div id="asMsgs"><div class="as-bot">Ucretsiz AI. Komut: Aydin HS 2. Soru: bu ay kim cok alacak?</div></div>
+  <div id="asHead"><b>Cadde Asistan</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
+  <div id="asMsgs"><div class="as-bot">Giris yok. Komut: Aydin HS 2. Soru: bu ay kim cok alacak?</div></div>
   <div id="asChips">
     <button type="button" data-cmd="toplam">Toplam</button>
     <button type="button" data-cmd="kim alacak">Kim alacak</button>
@@ -118,16 +118,15 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   </div>
   <form id="asForm"><input id="asIn" placeholder="Sor veya komut yaz" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
 </div>
-<script src="https://js.puter.com/v2/"></script>
-<script src="lock.js?v=37"></script>
+<script src="lock.js?v=38"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=37"></script>
-<script src="app.js?v=37"></script>
-<script src="gh.js?v=37"></script>
-<script src="plus.js?v=37"></script>
-<script src="assistant.js?v=37"></script>
-<script src="puter-ai.js?v=37"></script>
+<script src="seed.js?v=38"></script>
+<script src="app.js?v=38"></script>
+<script src="gh.js?v=38"></script>
+<script src="plus.js?v=38"></script>
+<script src="assistant.js?v=38"></script>
+<script src="puter-ai.js?v=38"></script>
 <script>
 (function(){
   function esc(t){return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\n/g,"<br>");}
@@ -141,7 +140,6 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   },true);
   var chips=document.getElementById("asChips");
   if(chips) chips.onclick=function(ev){ var b=ev.target.closest("[data-cmd]"); if(!b)return; window.sendAssist(b.getAttribute("data-cmd")); };
-  var _local=window.sendAssist;
   window.sendAssist=function(preset){
     var inp=document.getElementById("asIn");
     var t=(preset!=null?preset:(inp&&inp.value||"")).trim();
@@ -166,7 +164,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
     }).catch(function(e){
       var bots=box.querySelectorAll(".as-bot"); var last=bots[bots.length-1];
       if(last && last.querySelector("i")) last.remove();
-      bot("AI su an yok, yerel komut: "+esc(e.message||e));
+      bot("AI yogun, yerel komut: "+esc(e.message||e));
       try{ runAssist(t); }catch(ex){}
     });
   };
