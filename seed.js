@@ -52,7 +52,7 @@ const SEED={period:"PERSONEL LISTESI CADDE guncel",people:[
 {id:51,name:"ZEYNEP SOFUOĞLU",mesaiBirim:270},
 {id:52,name:"MUSTAFA AYDIN",mesaiBirim:270,kurye:true,mesaiSaat:3},
 {id:53,name:"HASAN İPEK",mesaiBirim:320,hsSaat:1,izinGun:2,izinTutar:5800},
-{id:54,name:"KAAN ATASOY",mesaiBirim:220,izinGun:2,izinTutar:4800},
+{id:54,name:"KAAN ATASOY",mesaiBirim:220,izinBirim:1900,izinGun:2,izinTutar:3800},
 {id:55,name:"ABDURRAHMAN GÜRKAN",mesaiBirim:320,mesaiSaat:2},
 {id:56,name:"VAHDETTİN AVCI",mesaiBirim:270,hsSaat:2,izinGun:1,izinTutar:2400},
 {id:57,name:"ERCAN ALTUN",mesaiBirim:270,hsSaat:2},
@@ -62,7 +62,8 @@ const SEED={period:"PERSONEL LISTESI CADDE guncel",people:[
 {id:61,name:"FIRAT AVCI",mesaiBirim:320},
 {id:62,name:"MENDERES SOFUOĞLU",mesaiBirim:320,mesaiSaat:2,hsSaat:1},
 {id:63,name:"HİCABİ AKYILDIZ",mesaiBirim:300},
-{id:64,name:"ABDURRAHMAN BULUT",mesaiBirim:220}
+{id:64,name:"ABDURRAHMAN BULUT",mesaiBirim:220,izinBirim:1900},
+{id:65,name:"MUHAMMED MÜMİN ILGAR",mesaiBirim:220,izinBirim:1900}
 ],cezalar:[],devamsizlik:[
 {kisi:"HAKAN ATMACA",gun:2,not:"İzin dönüşü işe gelmedi"},
 {kisi:"MUHAMMED HASAN KOÇALAN",gun:1,not:"2 gün raporlu, 1 gün yazılacak"},
