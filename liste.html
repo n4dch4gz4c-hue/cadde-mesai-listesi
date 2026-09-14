@@ -80,10 +80,8 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
     <input id="ghToken" type="password" placeholder="GitHub token"/>
     <input id="ghRepo" placeholder="n4dch4gz4c-hue/cadde-mesai-listesi"/>
     <input id="ghPath" placeholder="cadde-data.json"/>
-    <input id="xaiKey" type="password" placeholder="xAI API key (Grok)"/>
     <button class="btn" onclick="ghSaveCfg()">Anahtari kaydet</button>
   </div>
-  <p style="margin:8px 0 0;font-size:13px;color:#6b6258">Grok icin console.x.ai key. Anahtar sadece bu cihazda saklanir.</p>
 </div>
 <nav class="tabs">
   <button class="tab on" data-tab="liste" onclick="tab(this)">Liste</button>
@@ -107,60 +105,27 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 <div id="toast"></div>
 <button id="asFab" type="button" onclick="toggleAs()">+</button>
 <div id="asPanel" class="hide">
-  <div id="asHead"><b>Cadde Asistan · Grok 4.6</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
-  <div id="asMsgs"><div class="as-bot">xAI key girince Grok 4.6 cevaplar. Yoksa yerel asistan calisir.</div></div>
+  <div id="asHead"><b>Cadde Asistan</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
+  <div id="asMsgs"><div class="as-bot">Ucretsiz asistan. Ornek: Aydin HS 2 mesai 3 · toplam · kaydet</div></div>
   <div id="asChips">
     <button type="button" data-cmd="toplam">Toplam</button>
     <button type="button" data-cmd="kim alacak">Kim alacak</button>
     <button type="button" data-cmd="cek">Cek</button>
     <button type="button" data-cmd="kaydet">Kaydet</button>
+    <button type="button" data-cmd="dagilim">Dagilim</button>
     <button type="button" data-cmd="ozet">Ozet</button>
     <button type="button" data-cmd="yardim">Yardim</button>
   </div>
   <form id="asForm"><input id="asIn" placeholder="Ne yapayim?" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
 </div>
-<script src="lock.js?v=35"></script>
+<script src="lock.js?v=36"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=35"></script>
-<script src="app.js?v=35"></script>
-<script src="gh.js?v=35"></script>
-<script src="plus.js?v=35"></script>
-<script src="grok.js?v=35"></script>
-<script src="assistant.js?v=35"></script>
-<script>
-(function(){
-  function esc(t){return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\n/g,"<br>");}
-  document.addEventListener("submit",function(e){
-    if(e.target && e.target.id==="asForm"){ e.preventDefault(); e.stopImmediatePropagation(); window.sendAssist(); }
-  },true);
-  var chips=document.getElementById("asChips");
-  if(chips) chips.onclick=function(e){ var b=e.target.closest("[data-cmd]"); if(!b)return; e.preventDefault(); window.sendAssist(b.getAttribute("data-cmd")); };
-  window.sendAssist=function(preset){
-    var inp=document.getElementById("asIn");
-    var t=(preset!=null?preset:(inp&&inp.value||"")).trim();
-    if(!t)return;
-    if(inp)inp.value="";
-    var box=document.getElementById("asMsgs");
-    if(box){var me=document.createElement("div");me.className="as-me";me.textContent=t;box.appendChild(me);}
-    var use=typeof grokChat==="function" && typeof xaiHas==="function" && xaiHas();
-    function bot(html){if(!box)return;var d=document.createElement("div");d.className="as-bot";d.innerHTML=html;box.appendChild(d);box.scrollTop=box.scrollHeight;}
-    if(!use){ try{ if(typeof runAssist==="function") runAssist(t);}catch(e){bot("Hata: "+e.message);} return; }
-    bot("<i>Grok 4.6...</i>");
-    grokChat(t).then(function(text){
-      var bots=box.querySelectorAll(".as-bot"); var last=bots[bots.length-1];
-      if(last && /Grok 4\.6/.test(last.innerHTML) && last.querySelector("i")) last.remove();
-      bot(esc(text));
-    }).catch(function(e){
-      var bots=box.querySelectorAll(".as-bot"); var last=bots[bots.length-1];
-      if(last && last.querySelector("i")) last.remove();
-      bot("Grok baglanamadi: "+esc(e.message||e)+"<br>Yerel asistan devrede.");
-      try{ if(typeof runAssist==="function") runAssist(t);}catch(ex){}
-      if(String(e.message)==="NO_KEY" && typeof toggleGhBox==="function") toggleGhBox(true);
-    });
-  };
-})();
-</script>
+<script src="seed.js?v=36"></script>
+<script src="app.js?v=36"></script>
+<script src="gh.js?v=36"></script>
+<script src="plus.js?v=36"></script>
+<script src="assistant.js?v=36"></script>
 <script>
 if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}
 window.openMob=window.openMob||null;
