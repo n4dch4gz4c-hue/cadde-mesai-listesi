@@ -106,27 +106,28 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 <button id="asFab" type="button" onclick="toggleAs()">+</button>
 <div id="asPanel" class="hide">
   <div id="asHead"><b>Cadde Asistan</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
-  <div id="asMsgs"><div class="as-bot">Giris yok. Komut: Aydin HS 2. Soru: bu ay kim cok alacak?</div></div>
+  <div id="asMsgs"><div class="as-bot">Komut veya soru yaz. Ornek: bu ay kim cok alacak?</div></div>
   <div id="asChips">
     <button type="button" data-cmd="toplam">Toplam</button>
-    <button type="button" data-cmd="kim alacak">Kim alacak</button>
+    <button type="button" data-cmd="bu ay kim cok alacak">Kim cok alacak</button>
+    <button type="button" data-cmd="kimler izin parasi aliyor">Izin parasi</button>
     <button type="button" data-cmd="cek">Cek</button>
     <button type="button" data-cmd="kaydet">Kaydet</button>
     <button type="button" data-cmd="dagilim">Dagilim</button>
-    <button type="button" data-cmd="bu ay kisa ozetle">AI ozet</button>
+    <button type="button" data-cmd="hs kimde">HS kimde</button>
     <button type="button" data-cmd="yardim">Yardim</button>
   </div>
   <form id="asForm"><input id="asIn" placeholder="Sor veya komut yaz" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
 </div>
-<script src="lock.js?v=47"></script>
+<script src="lock.js?v=48"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=47"></script>
-<script src="app.js?v=47"></script>
-<script src="gh.js?v=47"></script>
-<script src="plus.js?v=47"></script>
-<script src="assistant.js?v=47"></script>
-<script src="puter-ai.js?v=47"></script>
+<script src="seed.js?v=48"></script>
+<script src="app.js?v=48"></script>
+<script src="gh.js?v=48"></script>
+<script src="plus.js?v=48"></script>
+<script src="assistant.js?v=48"></script>
+<script src="puter-ai.js?v=48"></script>
 <script>
 (function(){
   function esc(t){return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\n/g,"<br>");}
@@ -147,15 +148,11 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
     if(inp)inp.value="";
     var box=document.getElementById("asMsgs");
     if(box){ var me=document.createElement("div"); me.className="as-me"; me.textContent=t; box.appendChild(me); }
-    var cmd=typeof looksCommand==="function"?looksCommand(t):false;
-    if(cmd && typeof runAssist==="function"){
+    if(typeof runAssist==="function"){
       try{ runAssist(t); }catch(e){ bot("Hata: "+e.message); }
       return;
     }
-    if(typeof freeAI!=="function"){
-      try{ runAssist(t); }catch(e){ bot("Hata"); }
-      return;
-    }
+    if(typeof freeAI!=="function"){ bot("Asistan yuklenmedi"); return; }
     var fab=document.getElementById("asFab"); if(fab)fab.classList.add("busy"); bot("<i>AI dusunuyor...</i>");
     freeAI(t).then(function(text){
       var bots=box.querySelectorAll(".as-bot"); var last=bots[bots.length-1];
@@ -164,8 +161,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
     }).catch(function(e){
       var bots=box.querySelectorAll(".as-bot"); var last=bots[bots.length-1];
       if(last && last.querySelector("i")) last.remove();
-      if(fab)fab.classList.remove("busy"); bot("AI yogun, yerel komut: "+esc(e.message||e));
-      try{ runAssist(t); }catch(ex){}
+      if(fab)fab.classList.remove("busy"); bot("AI yogun: "+esc(e.message||e));
     });
   };
 })();
