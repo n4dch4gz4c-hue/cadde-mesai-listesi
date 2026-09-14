@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Cadde Personel Takip</title>
+<style>
+:root{--bg:#f4efe6;--ink:#1f2933;--mut:#6b7280;--line:#e4d8c6;--card:#fffaf3;--blue:#1f4b8f;--warn:#b45309}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:var(--blue);color:#fff;padding:14px 16px}
+h1{margin:0;font-size:18px}
+.sub{opacity:.85;font-size:12px;margin-top:4px}
+.wrap{padding:12px 14px 80px;max-width:920px;margin:0 auto}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px}
+.stat span{display:block;font-size:11px;color:var(--mut)}
+.stat b{font-size:18px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+input,select,button{font:inherit;border-radius:10px;border:1px solid var(--line);padding:9px 10px;background:#fff}
+button{background:var(--blue);color:#fff;border-color:var(--blue);cursor:pointer}
+button.ghost{background:#fff;color:var(--ink)}
+button.warn{background:var(--warn);border-color:var(--warn);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:8px}
+.person{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.name{font-weight:650}
+.tag{font-size:11px;background:#eef2ff;color:#1f4b8f;border-radius:99px;padding:2px 7px;margin-left:6px}
+.fields{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.fields label{font-size:11px;color:var(--mut);display:flex;flex-direction:column;gap:4px}
+#toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none}
+@media(max-width:700px){.stats,.fields{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Cadde Personel Takip</h1>
+  <div class="sub" id="sub">Gece yarısı sıfırlanmaz</div>
+</header>
+<div class="wrap">
+  <div class="toolbar">
+    <input type="date" id="gun" onchange="render()"/>
+    <button onclick="goToday()">Bugün</button>
+    <input id="q" placeholder="İsim ara" oninput="render()" style="flex:1;min-width:140px"/>
+    <button class="ghost" onclick="addKisi()">Kişi ekle</button>
+    <button class="ghost" onclick="exportJSON()">Yedek al</button>
+    <button class="warn" onclick="resetDay()">Bu günü temizle</button>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div id="list"></div>
+</div>
+<div id="toast"></div>
+<script>
+const KEY="cadde_personel_takip_v1";
+const SEED=[
+[1,"CEMAL ÇELİK",0],[2,"ABDULLAH AVCI",0],[3,"CUMHUR YİĞİT",0],[4,"HÜSAMETTİN KÖRPE",0],[5,"SALİH USTA",0],
+[6,"BURHAN BAYAKIR",0],[7,"ERDAL ÇAVDAR",0],[8,"HİKMET ERDOĞDU",0],[9,"SELİM ORTAHİSAR",0],[10,"MEHMET EMİN MÜDERRİSOĞLU",0],
+[11,"KÖKSAL SOYKAN",0],[12,"FERHAT AVCI",0],[13,"ERHAN SOFUOĞLU",0],[14,"HASAN ALİ GERZ",0],[15,"MUHAMMED CAN SARICI",0],
+[16,"BİLAL SÜRÜKLİ",0],[17,"MUHAMMED HASAN KOÇALAN",0],[18,"UĞUR GÖKER",1],[19,"BEDRETTİN AVCI",0],[20,"EMRE POLAT",0],
+[21,"SELAHATTİN AVCI",0],[22,"CANER AVCI",0],[23,"ALİ AKKOCA",1],[24,"AZAT MYRADOV",0],[25,"MURAT TORUN",1],
+[26,"MEHMET ÇELİK",0],[27,"YILMAZ AVCI",0],[28,"RAMAZAN BAYAKIR",0],[29,"ONUR AVCI",0],[30,"M. MUHAMMED MUSTAFA BAYAKIR",0],
+[31,"CİHAN AVCI",0],[32,"YASİR FURKAN KAVAK",0],[33,"SEPİDEH MENNATİ",0],[34,"MUHAMMET EREN ÇELİK",0],[35,"MURAT DAĞIDIR",0],
+[36,"SEYFİ ÇELİK",1],[37,"FEVZİ DOLAK",1],[38,"MUHAMMET SOFUOĞLU",0],[39,"AYDIN AVCI",0],[40,"HAKAN ATMACA",1],
+[41,"CİHAN GENÇ",1],[42,"ABDULLAH DENERİ",0],[43,"HAMİT AKPINAR",0],[44,"ADİL DEMİR ÇELİK",0],[45,"ABDURRAHMAN KAPAN",1],
+[46,"SAYİM GÜMÜŞ",1],[47,"MUHİTTİN ÖZÇELİK",0],[48,"BAYRAM YETER",1],[49,"YUNUS EMRE ÇELİK",0],[50,"RAMAZAN YAVUZ",1],
+[51,"ZEYNEP SOFUOĞLU",0],[52,"MUSTAFA AYDIN",1],[53,"HASAN İPEK",0],[54,"KAAN ATASOY",0],[55,"ABDURRAHMAN GÜRKAN",0],
+[56,"VAHDETTİN AVCI",0],[57,"ERCAN ALTUN",0],[58,"OSMAN CEYLAN",1],[59,"SEMİH SOFUOĞLU",0],[60,"ABDURRAHMAN ÖZKAN",0],
+[61,"FIRAT AVCI",0],[62,"MENDERES SOFUOĞLU",0],[63,"HİCABİ AKYILDIZ",0],[64,"ABDURRAHMAN BULUT",0],[65,"MUHAMMED MÜMİN ILGAR",0]
+].map(([id,name,k])=>({id,name,kurye:!!k}));
+function todayLocal(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function empty(){return {durum:"belirsiz",giris:"",cikis:"",mola:0,not:""};}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.people&&s.people.length){s.days=s.days||{};return s;}}catch(e){}return {people:JSON.parse(JSON.stringify(SEED)),days:{}} ;}
+function persist(){state.updatedAt=new Date().toISOString();localStorage.setItem(KEY,JSON.stringify(state));}
+let state=load();
+function day(){return document.getElementById("gun").value||todayLocal();}
+function row(id){const d=day();if(!state.days[d])state.days[d]={};if(!state.days[d][id])state.days[d][id]=empty();return state.days[d][id];}
+function toast(t){const e=document.getElementById("toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",1500);}
+function setField(id,f,v){const r=row(id);if(f==="mola")r.mola=Number(v||0);else r[f]=v;persist();stats();}
+function goToday(){document.getElementById("gun").value=todayLocal();render();}
+function addKisi(){const n=prompt("Ad soyad");if(!n||!n.trim())return;state.people.push({id:state.people.reduce((m,p)=>Math.max(m,p.id),0)+1,name:n.trim().toLocaleUpperCase("tr-TR"),kurye:false});persist();render();}
+function resetDay(){if(!confirm(day()+" silinsin mi? Diğer günler durur."))return;state.days[day()]={};persist();render();}
+function exportJSON(){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:"application/json"}));a.download="personel-takip.json";a.click();}
+function stats(){const rows=state.people.map(p=>row(p.id));const n=k=>rows.filter(r=>r.durum===k).length;document.getElementById("stats").innerHTML=`<div class="stat"><span>Geldi</span><b>${n("geldi")}</b></div><div class="stat"><span>İzin/rapor</span><b>${n("izin")+n("rapor")}</b></div><div class="stat"><span>Gelmedi</span><b>${n("gelmedi")}</b></div><div class="stat"><span>Mola</span><b>${rows.reduce((a,r)=>a+(+r.mola||0),0)}</b></div>`;document.getElementById("sub").textContent=day()+" · "+state.people.length+" kişi · kayıtlı gün "+Object.keys(state.days).length;}
+function render(){const q=(document.getElementById("q").value||"").toLocaleLowerCase("tr-TR");document.getElementById("list").innerHTML=state.people.filter(p=>!q||p.name.toLocaleLowerCase("tr-TR").includes(q)).map(p=>{const r=row(p.id);return `<article class="card"><div class="person"><div class="name">${p.name}${p.kurye?'<span class="tag">KURYE</span>':""}</div><select onchange="setField(${p.id},'durum',this.value)"><option value="belirsiz"${r.durum==="belirsiz"?" selected":""}>—</option><option value="geldi"${r.durum==="geldi"?" selected":""}>Geldi</option><option value="izin"${r.durum==="izin"?" selected":""}>İzin</option><option value="rapor"${r.durum==="rapor"?" selected":""}>Rapor</option><option value="gelmedi"${r.durum==="gelmedi"?" selected":""}>Gelmedi</option></select></div><div class="fields"><label>Giriş<input type="time" value="${r.giris||""}" onchange="setField(${p.id},'giris',this.value)"></label><label>Çıkış<input type="time" value="${r.cikis||""}" onchange="setField(${p.id},'cikis',this.value)"></label><label>Mola<input type="number" min="0" value="${r.mola||0}" onchange="setField(${p.id},'mola',this.value)"></label><label>Not<input value="${(r.not||"").replace(/"/g,'&quot;')}" onchange="setField(${p.id},'not',this.value)"></label></div></article>`;}).join("");stats();}
+document.getElementById("gun").value=todayLocal();render();
+</script>
+</body>
+</html>
