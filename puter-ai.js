@@ -61,7 +61,7 @@ function extract(t){
 }
 function splitJson(text){
   var raw=String(text||"");
-  var i=raw.lastIndexOf('{"actions"');
+  var i=raw.lastIndexOf('{\"actions\"');
   var talk=raw, acts=[];
   if(i>=0){
     talk=raw.slice(0,i).trim();
@@ -103,7 +103,11 @@ async function freeAI(userText){
 }
 function looksCommand(t){
   t=(t||"").toLocaleLowerCase("tr");
-  return /\b(hs|hafta|mesai|yol|izin|yillik|prim|kaydet|cek|pdf|csv|ekle|sil|toplam|ozet|rapor|devam|ceza|dagilim|yardim|sifirla)\b/.test(t);
+  var ask=/\?|kim|kimler|hangi|ne kadar|en cok|alacak|aliyor|listele|goster/.test(t);
+  var write=/\b(kaydet|cek|pdf|csv|ekle|sil|sifirla)\b/.test(t);
+  var personField=/\b(hs|hafta|mesai|yol|izin|yillik|prim)\b/.test(t) && /\d/.test(t) && !ask;
+  var simple=/^(toplam|ozet|rapor|dagilim|yardim)$/.test(t.trim());
+  return write || personField || simple;
 }
 window.freeAI=freeAI;
 window.looksCommand=looksCommand;
