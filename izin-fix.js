@@ -1,7 +1,15 @@
 (function(){
+  function isSemih(n){
+    n=String(n||"").toLocaleUpperCase("tr-TR");
+    return n.indexOf("SEMİH SOFUOĞLU")>=0 || n.indexOf("SEMIH SOFUOGLU")>=0;
+  }
+  function isD(n){
+    n=String(n||"").toLocaleUpperCase("tr-TR");
+    return n.indexOf("KAAN ATASOY")>=0 || n.indexOf("MÜMİN")>=0 || n.indexOf("MUMIN")>=0;
+  }
   function mapIzin(mesaiBirim,name){
-    var n=String(name||"").toLocaleUpperCase("tr-TR");
-    if(n.indexOf("KAAN ATASOY")>=0 || n.indexOf("MÜMİN")>=0 || n.indexOf("MUMIN")>=0) return 1900;
+    if(isSemih(name)) return 2900;
+    if(isD(name)) return 1900;
     var m=num(mesaiBirim,300);
     if(m>=320) return 2900;
     if(m>=300) return 2700;
@@ -10,8 +18,10 @@
   }
   function patchPerson(p){
     if(!p) return p;
-    var n=String(p.name||"").toLocaleUpperCase("tr-TR");
-    if(n.indexOf("KAAN ATASOY")>=0 || n.indexOf("MÜMİN")>=0 || n.indexOf("MUMIN")>=0){
+    if(isSemih(p.name)){
+      p.mesaiBirim=320;
+      p.izinBirim=2900;
+    }else if(isD(p.name)){
       p.mesaiBirim=220;
       p.izinBirim=1900;
     }else if(!num(p.izinBirim,0)){
@@ -58,7 +68,6 @@
       if(tds.length<10) return;
       var inp=tds[9].querySelector("input");
       if(inp){
-        inp.disabled=true;
         var idInp=tds[8].querySelector("input");
         var gun=idInp?num(idInp.value,0):0;
         var name=(tds[1].textContent||"");
