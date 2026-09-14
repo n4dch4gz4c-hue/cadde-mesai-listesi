@@ -1,1 +1,9 @@
-placeholder
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 140">
+  <rect width="640" height="140" rx="16" fill="#ffffff"/>
+  <ellipse cx="58" cy="52" rx="46" ry="28" fill="#e8590c"/>
+  <rect x="14" y="62" width="88" height="14" rx="4" fill="#9a3412"/>
+  <path d="M20 76 Q58 96 96 76" fill="#c2410c"/>
+  <ellipse cx="58" cy="88" rx="46" ry="18" fill="#ea580c"/>
+  <text x="122" y="68" font-family="Arial Black, Arial, sans-serif" font-size="42" font-weight="800" fill="#ea580c">KIZILKAYALAR</text>
+  <text x="318" y="108" font-family="Arial, sans-serif" font-size="26" font-weight="800" fill="#6b2a1f">HAMBURGER</text>
+</svg>
