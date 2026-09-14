@@ -31,7 +31,6 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;padding:0 16px 24px}
 #toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none;z-index:9}
 #q{min-width:140px;flex:1}
-.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 #mobileList{display:none}
 .mlist{background:#fff;border-top:1px solid #eadfd2}
 .mrow{border-bottom:1px solid #eadfd2}
@@ -60,14 +59,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #asChips button{border:1px solid #d7cfc3;background:#fff;border-radius:999px;padding:5px 10px;font-size:12px;cursor:pointer}
 #asForm{display:flex;gap:6px;padding:8px;border-top:1px solid #eadfd2}
 #asIn{flex:1;min-width:0}
-@media(max-width:800px){
-  .table-wrap{display:none}
-  #mobileList{display:block;padding-bottom:88px}
-  .pcard{display:none!important}
-  .stats{grid-template-columns:1fr 1fr}
-  #sec-liste .panel{margin:8px 12px}
-  #sec-devam .table-wrap,#sec-rapor .table-wrap,#sec-ozet .table-wrap{display:block}
-}
+@media(max-width:800px){.table-wrap{display:none}#mobileList{display:block;padding-bottom:88px}.stats{grid-template-columns:1fr 1fr}#sec-liste .panel{margin:8px 12px}#sec-devam .table-wrap,#sec-rapor .table-wrap,#sec-ozet .table-wrap{display:block}}
 @media print{header,nav,#asFab,#asPanel,#ghBox,#pcGate{display:none!important}}
 </style></head>
 <body>
@@ -88,8 +80,10 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
     <input id="ghToken" type="password" placeholder="GitHub token"/>
     <input id="ghRepo" placeholder="n4dch4gz4c-hue/cadde-mesai-listesi"/>
     <input id="ghPath" placeholder="cadde-data.json"/>
+    <input id="xaiKey" type="password" placeholder="xAI API key (Grok)"/>
     <button class="btn" onclick="ghSaveCfg()">Anahtari kaydet</button>
   </div>
+  <p style="margin:8px 0 0;font-size:13px;color:#6b6258">Grok icin console.x.ai key. Anahtar sadece bu cihazda saklanir.</p>
 </div>
 <nav class="tabs">
   <button class="tab on" data-tab="liste" onclick="tab(this)">Liste</button>
@@ -101,35 +95,20 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 </nav>
 <section id="sec-liste">
   <div class="stats" id="stats"></div>
-  <div class="panel">
-    <b>Kisi ekle</b>
-    <div class="row">
-      <input id="nAd" placeholder="Ad soyad"/>
-      <input id="nBirim" type="number" value="300" style="width:90px"/>
-      <label><input id="nKurye" type="checkbox"/> Kurye</label>
-      <button class="btn primary" onclick="addKisi()">Ekle</button>
-    </div>
-  </div>
+  <div class="panel"><b>Kisi ekle</b><div class="row"><input id="nAd" placeholder="Ad soyad"/><input id="nBirim" type="number" value="300" style="width:90px"/><label><input id="nKurye" type="checkbox"/> Kurye</label><button class="btn primary" onclick="addKisi()">Ekle</button></div></div>
   <div class="table-wrap"><table class="sheet"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai tutar</th><th>HS adet</th><th>HS tutar</th><th>Prim</th><th>Yol</th><th>Izin gun</th><th>Izin tutar</th><th>Yillik</th><th>Disiplin</th><th>Toplam</th></tr></thead><tbody id="tbody"></tbody><tfoot id="tfoot"></tfoot></table></div>
   <div id="mobileList"></div>
 </section>
 <section id="sec-kurye" class="hide"><div class="panel"><h2>Kurye primleri</h2></div><div id="kuryeList" class="cards"></div></section>
 <section id="sec-devam" class="hide"><div class="panel"><h2>Devamsizlik</h2><div class="row"><select id="dKisi"></select><input id="dGun" type="number" value="1"/><input id="dNot" placeholder="Not"/><button class="btn primary" onclick="addDevam()">Ekle</button></div></div><div id="devamList"></div></section>
 <section id="sec-ceza" class="hide"><div class="panel"><h2>Cezalar</h2><div class="row"><select id="cKisi"></select><input id="cTutar" type="number" value="1000"/><input id="cNeden" placeholder="Neden"/><button class="btn primary" onclick="addCeza()">Ekle</button></div></div><div id="cezaList" class="cards"></div></section>
-<section id="sec-ozet" class="hide">
-  <div class="row">
-    <button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button>
-    <button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button>
-  </div>
-  <div class="panel" id="ozetKisa"></div>
-  <div class="panel hide" id="ozetAyrinti"></div>
-</section>
+<section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
 <button id="asFab" type="button" onclick="toggleAs()">+</button>
 <div id="asPanel" class="hide">
-  <div id="asHead"><b>Cadde Asistan v2</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
-  <div id="asMsgs"><div class="as-bot">Isim + islem yaz. Ornek: Aydin HS 2 · Semih yol 0 · kaydet</div></div>
+  <div id="asHead"><b>Cadde Asistan · Grok 4.6</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
+  <div id="asMsgs"><div class="as-bot">xAI key girince Grok 4.6 cevaplar. Yoksa yerel asistan calisir.</div></div>
   <div id="asChips">
     <button type="button" data-cmd="toplam">Toplam</button>
     <button type="button" data-cmd="kim alacak">Kim alacak</button>
@@ -140,58 +119,63 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   </div>
   <form id="asForm"><input id="asIn" placeholder="Ne yapayim?" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
 </div>
-<script src="lock.js?v=34"></script>
+<script src="lock.js?v=35"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=34"></script>
-<script src="app.js?v=34"></script>
-<script src="gh.js?v=34"></script>
-<script src="plus.js?v=34"></script>
-<script src="assistant.js?v=34"></script>
+<script src="seed.js?v=35"></script>
+<script src="app.js?v=35"></script>
+<script src="gh.js?v=35"></script>
+<script src="plus.js?v=35"></script>
+<script src="grok.js?v=35"></script>
+<script src="assistant.js?v=35"></script>
 <script>
-if(navigator.serviceWorker){
-  navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});
-}
+(function(){
+  function esc(t){return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\n/g,"<br>");}
+  document.addEventListener("submit",function(e){
+    if(e.target && e.target.id==="asForm"){ e.preventDefault(); e.stopImmediatePropagation(); window.sendAssist(); }
+  },true);
+  var chips=document.getElementById("asChips");
+  if(chips) chips.onclick=function(e){ var b=e.target.closest("[data-cmd]"); if(!b)return; e.preventDefault(); window.sendAssist(b.getAttribute("data-cmd")); };
+  window.sendAssist=function(preset){
+    var inp=document.getElementById("asIn");
+    var t=(preset!=null?preset:(inp&&inp.value||"")).trim();
+    if(!t)return;
+    if(inp)inp.value="";
+    var box=document.getElementById("asMsgs");
+    if(box){var me=document.createElement("div");me.className="as-me";me.textContent=t;box.appendChild(me);}
+    var use=typeof grokChat==="function" && typeof xaiHas==="function" && xaiHas();
+    function bot(html){if(!box)return;var d=document.createElement("div");d.className="as-bot";d.innerHTML=html;box.appendChild(d);box.scrollTop=box.scrollHeight;}
+    if(!use){ try{ if(typeof runAssist==="function") runAssist(t);}catch(e){bot("Hata: "+e.message);} return; }
+    bot("<i>Grok 4.6...</i>");
+    grokChat(t).then(function(text){
+      var bots=box.querySelectorAll(".as-bot"); var last=bots[bots.length-1];
+      if(last && /Grok 4\.6/.test(last.innerHTML) && last.querySelector("i")) last.remove();
+      bot(esc(text));
+    }).catch(function(e){
+      var bots=box.querySelectorAll(".as-bot"); var last=bots[bots.length-1];
+      if(last && last.querySelector("i")) last.remove();
+      bot("Grok baglanamadi: "+esc(e.message||e)+"<br>Yerel asistan devrede.");
+      try{ if(typeof runAssist==="function") runAssist(t);}catch(ex){}
+      if(String(e.message)==="NO_KEY" && typeof toggleGhBox==="function") toggleGhBox(true);
+    });
+  };
+})();
+</script>
+<script>
+if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}
 window.openMob=window.openMob||null;
-window.toggleMob=function(id,ev){
-  if(ev&&ev.target&&ev.target.tagName==="INPUT")return;
-  window.openMob=window.openMob===id?null:id;
-  paintMob();
-};
+window.toggleMob=function(id,ev){ if(ev&&ev.target&&ev.target.tagName==="INPUT")return; window.openMob=window.openMob===id?null:id; paintMob(); };
 function paintMob(){
   var box=document.getElementById("mobileList");
   if(!box||typeof state==="undefined"||!state.people)return;
   var rows=(typeof visible==="function")?visible():state.people;
   box.innerHTML="<div class='mlist'>"+rows.map(function(p){
-    var c=calc(p);
-    var no=state.people.findIndex(function(x){return x.id===p.id;})+1;
-    var on=window.openMob===p.id;
-    var html="<div class='mrow "+(c.toplam>0?"pay":"")+(on?" on":"")+"'>"+
-      "<button type='button' class='mhead' onclick='toggleMob("+p.id+",event)'>"+
-      "<span class='mno'>"+no+"</span><span class='mname'>"+p.name+(p.kurye?" <small>K</small>":"")+"</span>"+
-      "<span class='mtot'>"+dash(c.toplam)+"</span></button>";
-    if(on){
-      html+="<div class='mfields'>"+
-        "<label>Mesai<input type='number' step='0.5' value='"+(p.mesaiSaat||"")+"' onchange='setVal("+p.id+",\"mesaiSaat\",this.value)'></label>"+
-        "<label>HS<input type='number' step='0.5' value='"+(p.hsSaat||"")+"' onchange='setVal("+p.id+",\"hsSaat\",this.value)'></label>"+
-        "<label>Yol<input type='number' value='"+(p.yolTutar||"")+"' onchange='setVal("+p.id+",\"yolTutar\",this.value)'></label>"+
-        "<label>Izin g<input type='number' step='0.5' value='"+(p.izinGun||"")+"' onchange='setVal("+p.id+",\"izinGun\",this.value)'></label>"+
-        "<label>Izin TL<input type='number' value='"+(p.izinTutar||"")+"' onchange='setVal("+p.id+",\"izinTutar\",this.value)'></label>"+
-        "<label>Yillik<input type='number' value='"+(p.yillikTutar||"")+"' onchange='setVal("+p.id+",\"yillikTutar\",this.value)'></label></div>";
-    }
+    var c=calc(p); var no=state.people.findIndex(function(x){return x.id===p.id;})+1; var on=window.openMob===p.id;
+    var html="<div class='mrow "+(c.toplam>0?"pay":"")+(on?" on":"")+"'><button type='button' class='mhead' onclick='toggleMob("+p.id+",event)'><span class='mno'>"+no+"</span><span class='mname'>"+p.name+(p.kurye?" <small>K</small>":"")+"</span><span class='mtot'>"+dash(c.toplam)+"</span></button>";
+    if(on){ html+="<div class='mfields'><label>Mesai<input type='number' step='0.5' value='"+(p.mesaiSaat||"")+"' onchange='setVal("+p.id+",\"mesaiSaat\",this.value)'></label><label>HS<input type='number' step='0.5' value='"+(p.hsSaat||"")+"' onchange='setVal("+p.id+",\"hsSaat\",this.value)'></label><label>Yol<input type='number' value='"+(p.yolTutar||"")+"' onchange='setVal("+p.id+",\"yolTutar\",this.value)'></label><label>Izin g<input type='number' step='0.5' value='"+(p.izinGun||"")+"' onchange='setVal("+p.id+",\"izinGun\",this.value)'></label><label>Izin TL<input type='number' value='"+(p.izinTutar||"")+"' onchange='setVal("+p.id+",\"izinTutar\",this.value)'></label><label>Yillik<input type='number' value='"+(p.yillikTutar||"")+"' onchange='setVal("+p.id+",\"yillikTutar\",this.value)'></label></div>"; }
     return html+"</div>";
   }).join("")+"</div>";
 }
-(function(){
-  function wrap(){
-    if(typeof renderListe!=="function"){setTimeout(wrap,80);return;}
-    var old=renderListe;
-    renderListe=function(){old();paintMob();};
-    paintMob();
-  }
-  wrap();
-  setTimeout(paintMob,400);
-  setTimeout(paintMob,1200);
-})();
+(function(){ function wrap(){ if(typeof renderListe!=="function"){setTimeout(wrap,80);return;} var old=renderListe; renderListe=function(){old();paintMob();}; paintMob(); } wrap(); setTimeout(paintMob,400); setTimeout(paintMob,1200); })();
 </script>
 </body></html>
