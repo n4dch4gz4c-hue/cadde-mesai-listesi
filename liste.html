@@ -48,21 +48,8 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #devamList table{min-width:0!important;width:100%;font-size:18px}
 #devamList th{background:#1f4b8f;padding:14px 12px;font-size:15px}
 #devamList td{padding:14px 12px;font-size:17px}
-#asFab{position:fixed;right:12px;bottom:12px;width:80px;height:98px;padding:0;border:0;background:transparent;z-index:9999;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
-#asFab .siri-wrap{position:relative;width:68px;height:68px;display:block}
-#asFab .siri-halo,#asFab .siri-ring{position:absolute;left:50%;top:50%;border-radius:50%;pointer-events:none}
-#asFab .siri-halo{width:62px;height:62px;margin:-31px 0 0 -31px;background:radial-gradient(circle,rgba(140,200,255,.28) 0%,rgba(255,120,180,.12) 42%,transparent 70%);filter:blur(6px);animation:siriBreath 3.2s ease-in-out infinite}
-#asFab .siri-ring{width:68px;height:68px;margin:-34px 0 0 -34px;border:1.5px solid rgba(160,210,255,.35);opacity:0}
-#asFab .siri-img{position:relative;z-index:1;width:64px;height:64px;object-fit:contain;background:transparent;filter:drop-shadow(0 3px 8px rgba(0,0,0,.16));animation:siriIdle 9s ease-in-out infinite}
-#asFab .siri-lab{font-size:11px;font-weight:800;color:#1f4b8f;text-shadow:0 1px 0 #fff}
-#asFab.busy .siri-halo{animation-duration:1.05s;background:radial-gradient(circle,rgba(180,230,255,.45) 0%,rgba(255,140,200,.2) 40%,transparent 72%)}
-#asFab.busy .siri-img{animation:siriListen 2.4s linear infinite}
-#asFab.busy .siri-ring{animation:siriRipple 1.6s ease-out infinite;opacity:.55}
-@keyframes siriIdle{0%,100%{transform:rotate(-8deg) scale(1)}50%{transform:rotate(8deg) scale(1.04)}}
-@keyframes siriBreath{0%,100%{transform:scale(.92);opacity:.45}50%{transform:scale(1.18);opacity:.9}}
-@keyframes siriListen{to{transform:rotate(360deg)}}
-@keyframes siriRipple{0%{transform:scale(.7);opacity:.5}100%{transform:scale(1.35);opacity:0}}
-#asPanel{position:fixed;right:18px;bottom:122px;width:min(380px,calc(100vw - 24px));height:min(520px,72vh);background:#fff;border:1px solid #d7cfc3;border-radius:16px;z-index:9999;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.2)}
+#asFab{position:fixed;right:18px;bottom:18px;width:58px;height:58px;border-radius:50%;border:0;background:#1f4b8f;color:#fff;font-size:28px;line-height:58px;text-align:center;padding:0;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:9999;cursor:pointer}
+#asPanel{position:fixed;right:18px;bottom:84px;width:min(380px,calc(100vw - 24px));height:min(520px,72vh);background:#fff;border:1px solid #d7cfc3;border-radius:16px;z-index:9999;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.2)}
 #asHead{background:#1f4b8f;color:#fff;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
 #asMsgs{flex:1;overflow:auto;padding:10px;background:#f7f4ee}
 .as-bot,.as-me{padding:8px 10px;border-radius:12px;margin:6px 0;max-width:92%;font-size:14px}
@@ -116,7 +103,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 <section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
-<button id="asFab" type="button" onclick="toggleAs()" title="Asistan"><span class="siri-wrap"><span class="siri-halo"></span><span class="siri-ring"></span><img class="siri-img" id="asImg" alt="Asistan"/></span><span class="siri-lab">Asistan</span></button>
+<button id="asFab" type="button" onclick="toggleAs()">+</button>
 <div id="asPanel" class="hide">
   <div id="asHead"><b>Cadde Asistan</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
   <div id="asMsgs"><div class="as-bot">Giris yok. Komut: Aydin HS 2. Soru: bu ay kim cok alacak?</div></div>
@@ -131,19 +118,17 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   </div>
   <form id="asForm"><input id="asIn" placeholder="Sor veya komut yaz" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
 </div>
-<script src="asistan.js?v=46"></script>
-<script src="lock.js?v=46"></script>
+<script src="lock.js?v=47"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=46"></script>
-<script src="app.js?v=46"></script>
-<script src="gh.js?v=46"></script>
-<script src="plus.js?v=46"></script>
-<script src="assistant.js?v=46"></script>
-<script src="puter-ai.js?v=46"></script>
+<script src="seed.js?v=47"></script>
+<script src="app.js?v=47"></script>
+<script src="gh.js?v=47"></script>
+<script src="plus.js?v=47"></script>
+<script src="assistant.js?v=47"></script>
+<script src="puter-ai.js?v=47"></script>
 <script>
 (function(){
-  var im=document.getElementById("asImg"); if(im&&window.ASISTAN_IMG) im.src=window.ASISTAN_IMG;
   function esc(t){return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\n/g,"<br>");}
   function bot(html){
     var box=document.getElementById("asMsgs"); if(!box)return;
