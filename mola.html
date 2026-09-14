@@ -17,8 +17,8 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif;padding-bottom:84px}
 header{background:var(--navy);color:#fff;padding:12px 14px 14px}
-.brand{display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800}
-.logo{width:22px;height:22px;border-radius:6px;background:#f97316;display:grid;place-items:center}
+.brand{display:flex;align-items:center;justify-content:center}
+.brand img{height:52px;width:auto;max-width:96%;display:block;object-fit:contain;background:#fff;border-radius:10px;padding:4px 10px}
 .meta{display:flex;justify-content:space-between;margin-top:10px;font-size:13px}
 .wrap{padding:12px}
 .search{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin-bottom:12px;display:flex;gap:8px}
@@ -56,7 +56,7 @@ header{background:var(--navy);color:#fff;padding:12px 14px 14px}
 </head>
 <body>
 <header>
-  <div class="brand"><span class="logo">K</span> KIZILKAYALAR</div>
+  <div class="brand"><img src="kizil-logo.svg" alt="Kızılkayalar Hamburger"/></div>
   <div class="meta"><span>Mola Takip · 45 dk · aşım 7 ₺/dk</span><span id="saat"></span></div>
 </header>
 <div class="wrap">
