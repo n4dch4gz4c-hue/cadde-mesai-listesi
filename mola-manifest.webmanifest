@@ -1,0 +1,15 @@
+{
+  "name": "Kızılkayalar Mola Takip",
+  "short_name": "Mola Takip",
+  "description": "Personel mola çıktı / döndü",
+  "start_url": "./mola.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#152238",
+  "theme_color": "#152238",
+  "lang": "tr",
+  "icons": [
+    { "src": "mola-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
