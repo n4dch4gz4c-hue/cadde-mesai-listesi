@@ -18,6 +18,7 @@ function tryPass(){
 }
 function gate(){
   if(isPhone()) return;
+  if(sessionStorage.setItem && sessionStorage.getItem(KEY)==="1") return;
   if(sessionStorage.getItem(KEY)==="1") return;
   var d=document.createElement("div");
   d.id="pcGate";
@@ -35,4 +36,13 @@ function gate(){
 }
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",gate);
 else gate();
+function loadIzin(){
+  if(document.getElementById("izinFixSrc")) return;
+  var s=document.createElement("script");
+  s.id="izinFixSrc";
+  s.src="izin-fix.js?v=50";
+  document.body.appendChild(s);
+}
+if(document.readyState==="complete") setTimeout(loadIzin,50);
+else window.addEventListener("load",function(){ setTimeout(loadIzin,50); });
 })();
