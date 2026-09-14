@@ -14,8 +14,9 @@ header{background:var(--navy);color:#fff;padding:12px 14px 14px}
 .logo{width:22px;height:22px;border-radius:6px;background:#f97316;display:grid;place-items:center;font-size:12px}
 .meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:13px;opacity:.95}
 .wrap{padding:12px 12px 8px}
-.search{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;color:#374151;margin-bottom:12px}
-.search input{width:100%;border:0;outline:0;font:inherit;text-align:center}
+.search{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin-bottom:12px;display:flex;gap:8px;align-items:center}
+.search input{flex:1;border:0;outline:0;font:inherit;text-align:center;padding:8px}
+.search .ekle{border:0;background:var(--blue);color:#fff;border-radius:10px;padding:10px 12px;font-weight:700;cursor:pointer}
 .sec{font-size:14px;margin:8px 2px 10px}
 .card{background:var(--card);border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:0 1px 0 rgba(15,23,42,.04)}
 .grid{display:grid;grid-template-columns:72px 1fr 56px;gap:8px;align-items:start}
@@ -38,7 +39,9 @@ header{background:var(--navy);color:#fff;padding:12px 14px 14px}
 .bar button{border:0;border-radius:12px;padding:14px 0;color:#fff;font-weight:800;cursor:pointer}
 .rapor{background:var(--blue)}
 .sifir{background:#1e3a8a}
-.mic{width:56px;height:56px;border-radius:50%;background:var(--red);margin:auto;display:grid;place-items:center;font-size:22px}
+.mic{width:56px;height:56px;border-radius:50%;background:var(--red);margin:auto;display:grid;place-items:center;font-size:22px;cursor:pointer}
+.mic.listen{background:#16a34a;animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.06)}}
 .modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:flex-end;z-index:20}
 .modal.on{display:flex}
 .sheet{background:#fff;width:100%;max-height:80vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px}
@@ -53,14 +56,17 @@ header{background:var(--navy);color:#fff;padding:12px 14px 14px}
   <div class="meta"><span>Mola Takip · 45 dk · aşım 7 ₺/dk</span><span id="saat"></span></div>
 </header>
 <div class="wrap">
-  <div class="search"><input id="q" placeholder="Ara / Ekle" onkeydown="if(event.key==='Enter')addOrFilter()"/></div>
+  <div class="search">
+    <input id="q" placeholder="Ara / Ekle" oninput="render()" onkeydown="if(event.key==='Enter')addOrFilter()"/>
+    <button class="ekle" onclick="addOrFilter()">Ekle</button>
+  </div>
   <div class="sec" id="outTitle">Şu an dışarıda (0)</div>
   <div id="outList"></div>
   <div id="inList"></div>
 </div>
 <div class="bar">
   <button class="rapor" onclick="openRapor()">Rapor</button>
-  <div class="mic" onclick="toast('Sesli komut bu sürümde kapalı')">🎙️</div>
+  <div class="mic" id="mic" onclick="dinle()">🎙️</div>
   <button class="sifir" onclick="sifirla()">Sıfırla</button>
 </div>
 <div class="modal" id="modal" onclick="if(event.target.id==='modal')closeModal()">
@@ -80,7 +86,7 @@ function save(){localStorage.setItem(KEY,JSON.stringify(state));}
 let state=load();save();
 function dayObj(d){d=d||today();if(!state.days[d])state.days[d]={sessions:{}};return state.days[d];}
 function sessions(id,d){const o=dayObj(d);if(!o.sessions[id])o.sessions[id]=[];return o.sessions[id];}
-function toast(t){const e=document.getElementById("toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",1600);}
+function toast(t){const e=document.getElementById("toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",1800);}
 function usedMin(id){const now=Date.now();return sessions(id).reduce((a,s)=>a+Math.max(0,Math.round(((s.end||now)-s.start)/60000)),0);}
 function openSes(id){return sessions(id).find(s=>!s.end);}
 function cikti(id){if(openSes(id)){toast("Zaten dışarıda");return;}sessions(id).push({start:Date.now(),end:null});save();render();}
@@ -88,8 +94,57 @@ function dondu(id){const s=openSes(id);if(!s){toast("Dışarıda değil");return
 function plusDk(id){const n=prompt("Kaç dakika eklensin?","5");if(n==null)return;const p=state.people.find(x=>x.id===id);p.hak=(p.hak||HAK)+Number(n||0);save();render();}
 function setHak(id){const p=state.people.find(x=>x.id===id);const n=prompt("Hak (dk)",String(p.hak||HAK));if(n==null)return;p.hak=Number(n||HAK);save();render();}
 function sil(id){const p=state.people.find(x=>x.id===id);if(!p||!confirm(p.name+" silinsin mi?"))return;state.people=state.people.filter(x=>x.id!==id);save();render();}
-function addOrFilter(){const q=(document.getElementById("q").value||"").trim();if(!q){render();return;}if(gizle(q)){toast("Bu kişi listede yok");render();return;}const hit=state.people.some(p=>p.name.toLocaleLowerCase("tr-TR").includes(q.toLocaleLowerCase("tr-TR")));if(!hit&&confirm(q.toLocaleUpperCase("tr-TR")+" eklensin mi?")){state.people.push({id:state.people.reduce((m,p)=>Math.max(m,p.id),0)+1,name:q.toLocaleUpperCase("tr-TR"),hak:HAK});save();}render();}
+function addOrFilter(){const q=(document.getElementById("q").value||"").trim();if(!q){render();return;}if(gizle(q)){toast("Bu kişi listede yok");render();return;}const hit=state.people.some(p=>p.name.toLocaleLowerCase("tr-TR")===q.toLocaleLowerCase("tr-TR"));if(!hit&&confirm(q.toLocaleUpperCase("tr-TR")+" eklensin mi?")){state.people.push({id:state.people.reduce((m,p)=>Math.max(m,p.id),0)+1,name:q.toLocaleUpperCase("tr-TR"),hak:HAK});document.getElementById("q").value="";save();}render();}
 function sifirla(){if(!confirm("Bugünün molaları silinsin mi? Kadro ve eski günler durur."))return;dayObj().sessions={};save();render();toast("Bugün sıfırlandı");}
+function norm(s){return (s||"").toLocaleLowerCase("tr-TR").replace(/[^a-z0-9çğıöşü ]/g," ").replace(/\s+/g," ").trim();}
+function findPerson(text){
+  const t=norm(text);
+  let best=null,score=0;
+  state.people.forEach(p=>{
+    const n=norm(p.name);
+    const parts=n.split(" ");
+    let s=0;
+    if(t.includes(n)) s=100;
+    else {
+      parts.forEach(w=>{if(w.length>2 && t.includes(w)) s+=w.length;});
+    }
+    if(s>score){score=s;best=p;}
+  });
+  return score>=4?best:null;
+}
+function applyVoice(raw){
+  const t=norm(raw);
+  toast(raw);
+  if(!t)return;
+  if(t.startsWith("ekle ")){
+    document.getElementById("q").value=raw.replace(/ekle/i,"").trim();
+    addOrFilter();
+    return;
+  }
+  const out=/(cikti|cikt[iı]|cikardi|disari|mola|cikti)/.test(t.replace(/[ıi]/g,"i"));
+  const inn=/(dondu|dondu|geldi|iceride|icerde|geri)/.test(t.replace(/[ıi]/g,"i"));
+  const p=findPerson(t);
+  if(!p){toast("Kişi bulunamadı: "+raw);return;}
+  if(inn && !out){dondu(p.id);toast(p.name+" döndü");return;}
+  if(out){cikti(p.id);toast(p.name+" çıktı");return;}
+  if(openSes(p.id)){dondu(p.id);toast(p.name+" döndü");}
+  else {cikti(p.id);toast(p.name+" çıktı");}
+}
+let rec=null,listening=false;
+function dinle(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast("Bu tarayıcı sesi desteklemiyor. Chrome kullan.");return;}
+  if(listening && rec){rec.stop();return;}
+  rec=new SR();
+  rec.lang="tr-TR";
+  rec.interimResults=false;
+  rec.maxAlternatives=3;
+  rec.onstart=()=>{listening=true;document.getElementById("mic").classList.add("listen");toast("Dinliyorum...");};
+  rec.onend=()=>{listening=false;document.getElementById("mic").classList.remove("listen");};
+  rec.onerror=()=>{listening=false;document.getElementById("mic").classList.remove("listen");toast("Mikrofon açılamadı");};
+  rec.onresult=(e)=>{const txt=e.results[0][0].transcript;applyVoice(txt);};
+  rec.start();
+}
 function personCard(p){const open=openSes(p.id);const used=usedMin(p.id);const left=Math.max(0,(p.hak||HAK)-used);const hist=sessions(p.id);const lines=hist.map((s,i)=>{const end=s.end||Date.now();const dk=Math.max(0,Math.round((end-s.start)/60000));return s.end?(i+1)+". "+hhmm(s.start)+" – "+hhmm(s.end)+" · "+dk+" dk":("Şu an dışarıda · "+hhmm(s.start));});return `<article class="card"><div class="grid"><div class="btns"><button class="out" onclick="cikti(${p.id})">Çıktı</button><button class="in" ${open?"":"disabled"} onclick="dondu(${p.id})">Döndü</button></div><div class="mid"><div class="name">${p.name}</div><div class="sub">${open?("Çıkış "+hhmm(open.start)):("Hak "+(p.hak||HAK)+" dk · butonla çıkar")}</div><div class="badge ${open?"out":"in"}">${open?"DISARIDA":"İÇERİDE"}</div></div><div class="right">${open?"":"<b>"+left+" dk</b>"}<button onclick="plusDk(${p.id})">+dk</button><button onclick="setHak(${p.id})">Hak</button><button onclick="sil(${p.id})">Sil</button></div></div><div class="hist">${lines.join("<br>")||"Henüz mola yok"}</div></article>`;}
 function render(){const q=(document.getElementById("q").value||"").toLocaleLowerCase("tr-TR");const list=state.people.filter(p=>!q||p.name.toLocaleLowerCase("tr-TR").includes(q));const out=list.filter(p=>openSes(p.id));const inn=list.filter(p=>!openSes(p.id));document.getElementById("outTitle").textContent="Şu an dışarıda ("+out.length+")";document.getElementById("outList").innerHTML=out.map(personCard).join("");document.getElementById("inList").innerHTML=inn.map(personCard).join("");document.getElementById("saat").textContent=new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});}
 function openRapor(){const d=today();const rows=state.people.map(p=>{const used=usedMin(p.id);const asim=Math.max(0,used-(p.hak||HAK));return {p,used,asim,tutar:asim*ASIM};}).filter(x=>x.used>0||openSes(x.p.id));const tot=rows.reduce((a,x)=>a+x.tutar,0);document.getElementById("sheet").innerHTML=`<h2>Rapor · ${d}</h2><p style="color:#6b7280;font-size:13px">Eski günler silinmedi. Sadece bugünün molası listeleniyor.</p>${rows.map(x=>`<div class="row"><span>${x.p.name}</span><b>${x.used} dk${x.asim?(" · aşım "+x.asim+" dk · "+x.tutar+" ₺"):""}</b></div>`).join("")||"<p>Bugün mola yok</p>"}<div class="row"><span>Aşım tutarı</span><b>${tot} ₺</b></div><p style="margin-top:12px"><button class="rapor" style="width:100%;border:0;border-radius:12px;padding:12px;color:#fff;font-weight:800" onclick="closeModal()">Kapat</button></p>`;document.getElementById("modal").classList.add("on");}
