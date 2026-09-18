@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Kurye · Ara / Tuşla</title>
+<style>
+:root{--bg:#101418;--card:#1a2128;--line:#2c3640;--txt:#eef3f7;--mut:#8b9aab;--acc:#4c8dff;--ok:#1f9d5a;--warn:#c9841a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:16px}
+h1{font-size:18px;margin:0}
+.sub{color:var(--mut);font-size:12px;margin:4px 0 0}
+.wrap{padding:0 16px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 12px}
+.muted{color:var(--mut);font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+button,a.btn{font:inherit;border-radius:10px;border:1px solid var(--line);background:var(--acc);color:#fff;padding:12px 14px;text-decoration:none;display:inline-block}
+button.ghost,a.ghost{background:transparent;color:var(--txt)}
+button.ok{background:var(--ok);border-color:var(--ok)}
+input,textarea{width:100%;font:inherit;border-radius:10px;border:1px solid var(--line);background:#12181e;color:var(--txt);padding:10px}
+#toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#000;padding:8px 14px;border-radius:8px;display:none;z-index:9}
+code{color:#9ec1ff}
+</style>
+</head>
+<body>
+<header>
+  <h1>Trendyol MH · Ara / Tuşla</h1>
+  <p class="sub">Alan kodlu MH + virgülle sipariş · kurye denemesi</p>
+</header>
+<div class="wrap">
+  <article class="card" id="demo">
+    <b>#A058961 · bengusu c</b>
+    <div class="muted">Kozyatağı Mah · Apt 7 Kat 2 Kapı 3</div>
+    <div class="muted" id="rawLine">0212 365 34 03-11617581048</div>
+    <div class="muted" id="parseLine"></div>
+    <div class="row">
+      <a class="btn" id="btnAra" href="#">Müşteriyi ara</a>
+      <button class="ok" type="button" id="btnTusla">Tuşla (kopyala)</button>
+    </div>
+  </article>
+
+  <div class="card">
+    <b>Kendi kartını yapıştır</b>
+    <p class="muted">Vega telefon satırı: <code>0212 365 34 03-11617581048</code></p>
+    <textarea id="raw" rows="3">0212 365 34 03-11617581048</textarea>
+    <div class="row">
+      <button type="button" id="btnUygula">Bu numarayı kullan</button>
+      <button class="ghost" type="button" id="btnSifir">Örneğe dön</button>
+    </div>
+  </div>
+
+  <div class="card muted">
+    <b style="color:var(--txt)">Kuryede ne basılacak</b>
+    <p><b>Ara</b> → <code>tel:02123653403,,,11617581048</code><br>
+    MH bağlanır, ~6 sn bekler, siparişi ton olarak basar.</p>
+    <p><b>Tuşla</b> → uzun rakamı panoya alır. Çevirici arama kutusu açıksa yapıştır.</p>
+    <p>Virgül az/çoksa aşağıdaki sayıyı değiştir (kayıtlı kalır).</p>
+    <label class="muted">Virgül (bekleme) <input id="pause" type="number" min="1" max="8" value="3" style="width:80px;display:inline-block"></label>
+  </div>
+</div>
+<div id="toast"></div>
+<script>
+const KEY="kurye_ara_pause_v1";
+function toast(t){
+  const e=document.getElementById("toast");
+  e.textContent=t; e.style.display="block";
+  setTimeout(()=>e.style.display="none",1600);
+}
+function digits(s){ return String(s||"").replace(/\D/g,""); }
+function splitPhones(raw){
+  raw=String(raw||"");
+  let mh="", sip="";
+  const dash=raw.split("-");
+  if(dash.length>=2){
+    mh=digits(dash[0]);
+    sip=digits(dash.slice(1).join("-"));
+  } else {
+    const parts=[...raw.matchAll(/\d[\d\s]+/g)].map(m=>digits(m[0])).filter(p=>p.length>=7);
+    mh=parts[0]||"";
+    sip=parts[1]||"";
+    if(!sip && mh.length>11){ sip=mh.slice(11); mh=mh.slice(0,11); }
+  }
+  if(mh && mh.length===10 && !mh.startsWith("0")) mh="0"+mh;
+  if(mh && mh.length===11 && !mh.startsWith("0") && /^[2-4]/.test(mh)) mh="0"+mh.slice(0,10);
+  return {mh,sip,raw};
+}
+function pauses(){
+  const n=Math.max(1,Math.min(8,Number(document.getElementById("pause").value||3)));
+  try{localStorage.setItem(KEY,String(n));}catch(e){}
+  return ",".repeat(n);
+}
+function telHref(p){
+  if(!p.mh) return "#";
+  if(p.sip) return "tel:"+p.mh+pauses()+p.sip;
+  return "tel:"+p.mh;
+}
+function render(raw){
+  const p=splitPhones(raw);
+  document.getElementById("rawLine").textContent=raw;
+  document.getElementById("parseLine").textContent=
+    (p.mh?("Ara "+p.mh):"MH yok")+" · "+(p.sip?("Tuşla "+p.sip):"sipariş yok");
+  const a=document.getElementById("btnAra");
+  a.href=telHref(p);
+  a.onclick=function(){
+    if(!p.mh){ toast("Numara yok"); return false; }
+    toast("Aranıyor "+p.mh+(p.sip?(" + "+p.sip):""));
+  };
+  document.getElementById("btnTusla").onclick=async function(){
+    if(!p.sip){ toast("Uzun rakam yok"); return; }
+    try{ await navigator.clipboard.writeText(p.sip); toast("Kopyalandı "+p.sip); }
+    catch(e){ toast(p.sip); }
+  };
+  window._phones=p;
+}
+document.getElementById("pause").value=localStorage.getItem(KEY)||"3";
+document.getElementById("pause").onchange=function(){ render(document.getElementById("raw").value); };
+document.getElementById("btnUygula").onclick=function(){
+  render(document.getElementById("raw").value);
+  toast("Güncellendi");
+};
+document.getElementById("btnSifir").onclick=function(){
+  document.getElementById("raw").value="0212 365 34 03-11617581048";
+  render(document.getElementById("raw").value);
+};
+render(document.getElementById("raw").value);
+</script>
+</body>
+</html>
