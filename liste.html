@@ -42,6 +42,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #q{min-width:140px;flex:1}
 #mobileList{display:none}
 #asFab,#asPanel{display:none!important}
+.kmark{font-size:9px;font-weight:600;opacity:.6;margin-left:3px;vertical-align:super;letter-spacing:0}
 @media(max-width:900px){
 html.night,html.night body{background:#0b1220!important;color:#e8eef8!important}
 html.night header.bar{position:sticky;top:0;z-index:20;background:rgba(12,18,32,.75)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.12)}
@@ -63,6 +64,7 @@ html.night .mrow.pay{background:rgba(251,191,36,.12)!important;border-color:rgba
 html.night .mtot{color:#93c5fd!important}
 html.night .mrow.pay .mtot{color:#fbbf24!important}
 html.night .mfields input{background:rgba(0,0,0,.3)!important;color:#e8eef8!important;border-color:rgba(255,255,255,.14)!important}
+html.night .kmark{color:#93c5fd;opacity:.8}
 }
 </style></head>
 <body>
@@ -97,12 +99,14 @@ html.night .mfields input{background:rgba(0,0,0,.3)!important;color:#e8eef8!impo
 </nav>
 <section id="sec-liste">
   <div class="stats" id="stats"></div>
-  <div class="panel"><b>Kisi ekle</b><div class="row"><input id="nAd" placeholder="Ad soyad"/><input id="nBirim" type="number" value="300" style="width:90px"/><label><input id="nKurye" type="checkbox"/> Kurye</label><button class="btn primary" onclick="addKisi()">Ekle</button></div></div>
   <div class="table-wrap"><table class="sheet"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai tutar</th><th>HS adet</th><th>HS tutar</th><th>Prim</th><th>Yol</th><th>Izin gun</th><th>Izin tutar</th><th>Yillik</th><th>Disiplin</th><th>Toplam</th></tr></thead><tbody id="tbody"></tbody><tfoot id="tfoot"></tfoot></table></div>
   <div id="mobileList"></div>
 </section>
 <section id="sec-duzenle" class="hide">
-  <div class="panel"><h2>Duzenleme</h2><p>Isim duzelt, kurye isaretle, sirayi tasi veya sil.</p></div>
+  <div class="panel"><h2>Duzenleme</h2><p>Isim duzelt, kurye isaretle, sirayi tasi veya sil.</p>
+    <b>Kisi ekle</b>
+    <div class="row"><input id="nAd" placeholder="Ad soyad"/><input id="nBirim" type="number" value="300" style="width:90px"/><label><input id="nKurye" type="checkbox"/> Kurye</label><button class="btn primary" onclick="addKisi()">Ekle</button></div>
+  </div>
   <div id="duzenleList"></div>
 </section>
 <section id="sec-kurye" class="hide"><div class="panel"><h2>Kurye primleri</h2></div><div id="kuryeList" class="cards"></div></section>
@@ -111,15 +115,15 @@ html.night .mfields input{background:rgba(0,0,0,.3)!important;color:#e8eef8!impo
 <section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
-<script src="lock.js?v=81"></script>
+<script src="lock.js?v=83"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=81"></script>
-<script src="app.js?v=81"></script>
-<script src="gh.js?v=81"></script>
-<script src="plus.js?v=81"></script>
-<script src="page-extra.js?v=82"></script>
-<script src="mobile-fix.js?v=81"></script>
-<script src="puter-ai.js?v=81"></script>
-<script src="ozet-all.js?v=81"></script>
+<script src="seed.js?v=83"></script>
+<script src="app.js?v=83"></script>
+<script src="gh.js?v=83"></script>
+<script src="plus.js?v=83"></script>
+<script src="page-extra.js?v=83"></script>
+<script src="mobile-fix.js?v=83"></script>
+<script src="puter-ai.js?v=83"></script>
+<script src="ozet-all.js?v=83"></script>
 </body></html>
