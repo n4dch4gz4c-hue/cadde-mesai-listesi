@@ -58,19 +58,19 @@ nav.tabs .tab.on{background:#2563eb!important;color:#fff!important}
 .stats{grid-template-columns:1fr 1fr;padding:10px 12px}
 .stat{background:#1a2438!important;border-color:#2a3a55!important;color:#fff}
 .stat span{display:block;font-size:11px;color:#9aa8c2}
-.table-wrap{display:none}
+#sec-liste > .table-wrap{display:none}
 #mobileList{display:block!important;padding:4px 12px 32px}
-#sec-ozet .panel{background:#fff!important;color:#111!important}
-#sec-ozet table{display:table!important;min-width:0!important;width:100%!important;background:#fff!important;color:#111!important}
-#sec-ozet td,#sec-ozet td.name{color:#111!important;-webkit-text-fill-color:#111!important;background:#fff!important}
-#sec-ozet td.tot{background:#f3e8d2!important;color:#111!important}
-#kalemPanel{background:#fff!important;color:#111!important}
-#kalemPanel table{display:table!important;min-width:0!important;width:100%!important}
-#kalemPanel td{color:#111!important}
-#kisiPanel table{display:none!important}
+#sec-ozet .panel,#kalemPanel,#kisiPanel,#sec-duzenle .panel,#sec-devam .panel{background:#fff!important;color:#111!important}
+#sec-ozet table,#kalemPanel table,#kisiPanel table,#sec-duzenle table,#sec-devam table{display:table!important;min-width:0!important;width:100%!important;background:#fff!important;color:#111!important}
+#sec-ozet td,#sec-ozet td.name,#kalemPanel td,#kisiPanel td,#sec-duzenle td,#sec-devam td{color:#111!important;-webkit-text-fill-color:#111!important}
+#sec-ozet td.tot,#kisiPanel td.tot{background:#f3e8d2!important;color:#111!important}
+#sec-duzenle .table-wrap,#sec-devam .table-wrap,#sec-ozet .table-wrap,#sec-rapor .table-wrap{display:block!important;overflow:auto;padding:0 12px 24px}
+#kisiPanel{overflow:auto}
+#kisiPanel table.kisi-table{min-width:520px!important}
 .mrow{background:#fff!important;color:#111!important}
 .mrow.pay{background:#fff3d0!important}
 .mname,.mhead{color:#111!important}
+#duzenleList input.nm{color:#111;background:#fff}
 }
 </style></head>
 <body>
@@ -121,14 +121,14 @@ nav.tabs .tab.on{background:#2563eb!important;color:#fff!important}
 <section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
-<script src="lock.js?v=91"></script>
+<script src="lock.js?v=92"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=91"></script>
-<script src="app.js?v=91"></script>
-<script src="gh.js?v=91"></script>
-<script src="plus.js?v=91"></script>
-<script src="page-extra.js?v=91"></script>
-<script src="mobile-fix.js?v=91"></script>
-<script src="ozet-all.js?v=91"></script>
+<script src="seed.js?v=92"></script>
+<script src="app.js?v=92"></script>
+<script src="gh.js?v=92"></script>
+<script src="plus.js?v=92"></script>
+<script src="page-extra.js?v=92"></script>
+<script src="mobile-fix.js?v=92"></script>
+<script src="ozet-all.js?v=92"></script>
 </body></html>
