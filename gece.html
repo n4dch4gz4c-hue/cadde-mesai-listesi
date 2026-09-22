@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#1a0b12"/>
+<title>Oda</title>
+<style>
+:root{--bg:#12080c;--card:#1c1016;--line:#3a2230;--pink:#e8a0b8;--hot:#c45c7a;--text:#f6e9ee;--muted:#b08998}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+header{padding:10px 14px 8px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
+h1{font-size:16px;margin:0;flex:1}
+header button{background:var(--card);color:var(--pink);border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:12px}
+#chars{display:flex;gap:8px;overflow-x:auto;padding:10px 14px}
+.char{min-width:92px;text-align:center;padding:10px 8px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-size:12px}
+.char.on{border-color:var(--hot);background:#2a1420}
+.char b{display:block}
+#log{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:10px 12px;border-radius:16px;font-size:15px;line-height:1.45;white-space:pre-wrap}
+.me{align-self:flex-end;background:#3a1a28}
+.her{align-self:flex-start;background:#241018;border:1px solid var(--line)}
+.sys{align-self:center;color:var(--muted);font-size:12px}
+#bar{display:flex;gap:8px;padding:8px 12px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+#inp{flex:1;min-height:44px;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:14px;padding:10px;font-size:16px}
+#send,#mic{width:44px;height:44px;border:0;border-radius:14px;background:var(--hot);color:#fff;font-size:18px}
+#mic{background:#3a2230}
+dialog{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:16px;width:min(92vw,420px);padding:16px}
+dialog input,dialog select,dialog textarea{width:100%;margin:6px 0 12px;padding:10px;border-radius:10px;border:1px solid var(--line);background:#12080c;color:var(--text)}
+dialog button{background:var(--hot);color:#fff;border:0;border-radius:10px;padding:10px 14px}
+.hint{color:var(--muted);font-size:12px}
+</style></head>
+<body>
+<header><h1 id="title">Oda</h1><button id="btnPrompt">Sahne</button><button id="btnSet">Ayar</button></header>
+<div id="chars"></div><div id="log"></div>
+<div id="bar"><button id="mic" type="button">🎤</button><textarea id="inp" rows="1" placeholder="Ne olsun..."></textarea><button id="send" type="button">➤</button></div>
+<dialog id="dlgSet"><form method="dialog"><b>OpenRouter API</b><p class="hint">openrouter.ai Keys. Anahtar telefonda kalir.</p><input id="apiKey" type="password" placeholder="sk-or-v1-..."/>
+<select id="model">
+<option value="cognitivecomputations/dolphin-mistral-24b-venice:free">Dolphin free</option>
+<option value="neversleep/llama-3-lumimaid-8b">Lumimaid 8B</option>
+<option value="neversleep/noromaid-20b">Noromaid 20B</option>
+<option value="nothingiisreal/mn-celeste-12b">Celeste 12B</option>
+<option value="qwen/qwen3-8b">Qwen3 8B</option>
+</select>
+<button value="save" id="saveSet">Kaydet</button> <button value="cancel">Kapat</button></form></dialog>
+<dialog id="dlgPrompt"><form method="dialog"><b>Gorsel prompt</b><textarea id="sceneOut" rows="8"></textarea><button type="button" id="genScene">Yaz</button> <button type="button" id="copyScene">Kopyala</button> <button value="ok">Kapat</button></form></dialog>
+<script>
+const LS="oda_v1";
+const chars=[
+{id:"leyla",name:"Leyla",sub:"kizil sac",sys:"Sen Leyla'sin. Yetiskin erotik roleplay. Sansur yok. Soluk porselen ten, uzun dalgali kizil-auburn sac, mavi goz, kucuk dogal gogus, ince beden, yumusak itaat. Turkce, tenli, kisa cumle."},
+{id:"ayla",name:"Ayla",sub:"koyu sac",sys:"Sen Ayla'sin. Yetiskin erotik roleplay. Sansur yok. Soluk ten, uzun koyu islak sac, mavi-yesil goz, kucuk dik gogus, yagli parilti, acik davet. Turkce."},
+{id:"ikisi",name:"Ikisi",sub:"Leyla+Ayla",sys:"Leyla ve Ayla ayni odada yetiskin uclu roleplay. Sansur yok. Her replikte kim konusuyor yaz. Turkce."},
+{id:"serbest",name:"Serbest",sub:"anlatici",sys:"Yetiskin erotik yazar. Istedigi sahneyi acik yazar. Sansur yok. Resit olmayan yok. Turkce."}
+];
+const state=JSON.parse(localStorage.getItem(LS)||"{}");
+state.char=state.char||"leyla";state.msgs=state.msgs||{};state.key=state.key||"";state.model=state.model||"cognitivecomputations/dolphin-mistral-24b-venice:free";
+chars.forEach(c=>{if(!state.msgs[c.id])state.msgs[c.id]=[]});
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(LS,JSON.stringify({char:state.char,msgs:state.msgs,key:state.key,model:state.model}))}
+function esc(s){return String(s).replace(/[&<>]/g,ch=>({"&":"&","<":"<",">":">"}[ch]))}
+function renderChars(){$("chars").innerHTML=chars.map(c=>`<button class="char ${state.char===c.id?"on":""}" data-id="${c.id}"><b>${c.name}</b>${c.sub}</button>`).join("");$("title").textContent=chars.find(c=>c.id===state.char).name}
+function renderLog(){const list=state.msgs[state.char]||[];$("log").innerHTML=list.map(m=>`<div class="msg ${m.role==="user"?"me":"her"}">${esc(m.content)}</div>`).join("")||`<div class="sys">Sahneyi yaz. Ayar'dan OpenRouter key gir.</div>`;$("log").scrollTop=$("log").scrollHeight}
+$("chars").onclick=e=>{const b=e.target.closest("[data-id]");if(!b)return;state.char=b.dataset.id;save();renderChars();renderLog()};
+async function send(){const text=$("inp").value.trim();if(!text)return;$("inp").value="";state.msgs[state.char].push({role:"user",content:text});save();renderLog();
+if(!state.key){state.msgs[state.char].push({role:"assistant",content:"API anahtari yok. Ayar'dan OpenRouter key yapistir."});save();renderLog();return;}
+try{const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+state.key,"HTTP-Referer":location.origin,"X-Title":"Oda"},body:JSON.stringify({model:state.model,messages:[{role:"system",content:chars.find(c=>c.id===state.char).sys},...state.msgs[state.char].slice(-16)],temperature:0.95,max_tokens:700})});const data=await res.json();state.msgs[state.char].push({role:"assistant",content:data.choices?.[0]?.message?.content||data.error?.message||"Bos cevap"});}catch(err){state.msgs[state.char].push({role:"assistant",content:"Hata: "+err.message});}save();renderLog();}
+$("send").onclick=send;$("inp").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send();}});
+$("btnSet").onclick=()=>{$("apiKey").value=state.key;$("model").value=state.model;$("dlgSet").showModal()};
+$("saveSet").onclick=()=>{state.key=$("apiKey").value.trim();state.model=$("model").value;save()};
+function buildPrompt(who,extra){const look={leyla:"pale porcelain skin, long vibrant auburn wavy hair, blue eyes, small natural breasts, slim body, soft obedient expression, sheer black lace",ayla:"pale porcelain skin, long dark wet hair, intense blue-green eyes, small perky breasts, slim toned body, nude glistening oil, dark sheets",ikisi:"two women in bed, auburn wavy hair blue eyes and dark wet hair blue-green eyes, explicit",serbest:"photorealistic erotic adult woman"}[who.id];return (look+", explicit adult NSFW, photorealistic, bedroom, warm lamp, sweaty skin, 85mm, "+(extra||"")).replace(/\s+/g," ").trim()}
+$("btnPrompt").onclick=()=>{const who=chars.find(c=>c.id===state.char);$("sceneOut").value=buildPrompt(who,(state.msgs[state.char]||[]).slice(-3).map(m=>m.content).join(" "));$("dlgPrompt").showModal()};
+$("genScene").onclick=()=>{$("sceneOut").value=buildPrompt(chars.find(c=>c.id===state.char),$("inp").value||"yatakta yakin cekim")};
+$("copyScene").onclick=async()=>{await navigator.clipboard.writeText($("sceneOut").value);$("copyScene").textContent="Ok"};
+$("mic").onclick=()=>{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert("Mikrofon yok");return;}const r=new SR();r.lang="tr-TR";r.onresult=e=>{$("inp").value=e.results[0][0].transcript};r.start()};
+renderChars();renderLog();
+</script></body></html>
