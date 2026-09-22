@@ -8,9 +8,13 @@
 <link rel="manifest" href="manifest.webmanifest"/>
 <title>Cadde Mesai Listesi</title>
 <script>
-if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}
+if(navigator.serviceWorker){
+  navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});
+  if(window.caches){caches.keys().then(function(k){k.forEach(function(x){caches.delete(x);});});}
+}
 function __killGate(){var g=document.getElementById("pcGate");if(g)g.remove();}
 setInterval(__killGate,250);
+(function(){if(window.innerWidth<=900||('ontouchstart' in window)){document.documentElement.classList.add('night');}}());
 </script>
 <style>
 html,body{margin:0;font-family:system-ui,sans-serif;background:#f4f1ea;color:#1f2933}
@@ -37,7 +41,29 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none;z-index:9}
 #q{min-width:140px;flex:1}
 #mobileList{display:none}
-@media(max-width:800px){.table-wrap{display:none}#mobileList{display:block;padding-bottom:88px}.stats{grid-template-columns:1fr 1fr}#sec-ozet .table-wrap{display:block!important}}
+@media(max-width:900px){
+html.night,html.night body{background:#0b1220!important;color:#e8eef8!important}
+html.night header.bar{position:sticky;top:0;z-index:20;background:rgba(12,18,32,.75)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.12)}
+html.night header.bar h1,html.night #pageSub,html.night .btn,html.night .tab,html.night .panel,html.night .stat,html.night .pcard,html.night .card{color:#e8eef8!important}
+html.night #pageSub{color:#9aa8c2!important}
+html.night header.bar #q,html.night header.bar .btn{background:rgba(255,255,255,.08)!important;border-color:rgba(255,255,255,.16)!important;color:#e8eef8!important}
+html.night .btn.primary{background:rgba(59,130,246,.6)!important;border-color:transparent!important}
+html.night .btn.sync{background:rgba(16,185,129,.45)!important}
+html.night nav.tabs{position:sticky;top:86px;z-index:19;background:rgba(12,18,32,.55)!important;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow-x:auto;flex-wrap:nowrap}
+html.night nav.tabs .tab{background:rgba(255,255,255,.08)!important;border-color:rgba(255,255,255,.14)!important;color:#d7e2f4!important;border-radius:999px}
+html.night nav.tabs .tab.on{background:rgba(59,130,246,.75)!important;color:#fff!important}
+html.night .stat,html.night .panel,html.night .card,html.night .pcard{background:rgba(255,255,255,.08)!important;border-color:rgba(255,255,255,.14)!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+html.night .table-wrap{display:none}
+html.night #mobileList{display:block!important;padding-bottom:88px}
+html.night .stats{grid-template-columns:1fr 1fr}
+html.night #sec-ozet .table-wrap,html.night #sec-rapor .table-wrap,html.night #sec-duzenle .table-wrap,html.night #sec-devam .table-wrap{display:block!important}
+html.night .mrow{background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.14)!important;color:#e8eef8!important;border-radius:16px;backdrop-filter:blur(16px)}
+html.night .mrow.pay{background:rgba(251,191,36,.12)!important;border-color:rgba(251,191,36,.3)!important}
+html.night .mtot{color:#93c5fd!important}
+html.night .mrow.pay .mtot{color:#fbbf24!important}
+html.night .mfields input{background:rgba(0,0,0,.3)!important;color:#e8eef8!important;border-color:rgba(255,255,255,.14)!important}
+html.night #asFab{background:rgba(37,99,235,.75)!important;color:#fff!important}
+}
 </style></head>
 <body>
 <header class="bar">
@@ -91,16 +117,16 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   <div id="asMsgs"><div class="as-bot">Komut yaz.</div></div>
   <form id="asForm"><input id="asIn" placeholder="Sor" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
 </div>
-<script src="lock.js?v=68"></script>
+<script src="lock.js?v=80"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=73"></script>
-<script src="app.js?v=68"></script>
-<script src="gh.js?v=68"></script>
-<script src="plus.js?v=68"></script>
-<script src="page-extra.js?v=68"></script>
-<script src="mobile-fix.js?v=78"></script>
-<script src="assistant.js?v=68"></script>
-<script src="puter-ai.js?v=68"></script>
-<script src="ozet-all.js?v=76"></script>
+<script src="seed.js?v=80"></script>
+<script src="app.js?v=80"></script>
+<script src="gh.js?v=80"></script>
+<script src="plus.js?v=80"></script>
+<script src="page-extra.js?v=80"></script>
+<script src="mobile-fix.js?v=80"></script>
+<script src="assistant.js?v=80"></script>
+<script src="puter-ai.js?v=80"></script>
+<script src="ozet-all.js?v=80"></script>
 </body></html>
