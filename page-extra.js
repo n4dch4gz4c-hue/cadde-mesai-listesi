@@ -3,7 +3,7 @@ function css(){
   if(document.getElementById("pagePdfCss"))return;
   var st=document.createElement("style");
   st.id="pagePdfCss";
-  st.textContent=".page-pdf{gap:6px;margin:6px 0}.ozet-kisa{min-width:0!important;width:min(440px,100%)}.ozet-kisa td,.ozet-kisa th{padding:5px 8px;font-size:13px}#duzenleList input.nm{width:100%;text-align:left;min-width:180px}#asFab,#asPanel{display:none!important}";
+  st.textContent=".page-pdf{gap:6px;margin:6px 0}#duzenleList input.nm{width:100%;text-align:left;min-width:180px}#asFab,#asPanel{display:none!important}#ozetKisa table{width:100%!important;max-width:none!important;min-width:0!important}";
   document.head.appendChild(st);
 }
 function bar(kind){
@@ -91,48 +91,31 @@ function drawRaporMax2(doc,font,s,now){
   }
   trimPages(doc,2);
 }
-function drawKisaOnePage(doc,font,s,now){
+function drawKisaFull(doc,font,s,now){
   var W=doc.internal.pageSize.getWidth();
   doc.setFillColor(11,18,32);
   doc.rect(0,0,W,12,"F");
-  doc.setFont(font,"bold"); doc.setFontSize(11); doc.setTextColor(255,255,255);
+  doc.setFont(font,"bold"); doc.setFontSize(12); doc.setTextColor(255,255,255);
   doc.text("CADDE  \u00b7  KISA OZET",10,8);
   doc.setFont(font,"normal"); doc.setFontSize(8);
   doc.text(now,W-10,8,{align:"right"});
   doc.setTextColor(31,75,143); doc.setFontSize(9);
-  doc.text(s.pay.length+" odeme / "+s.all.length+" kisi   TOPLAM  "+tl(s.toplam)+" TL",10,17);
-  var mid=Math.ceil(s.all.length/2);
-  var left=s.all.slice(0,mid);
-  var right=s.all.slice(mid);
-  var mk=function(arr,off){
-    return arr.map(function(x,i){return [String(i+1+off),x.p.name,dash(x.c.toplam)];});
-  };
-  var base={
+  doc.text(s.pay.length+" odeme / "+s.all.length+" kisi   TOPLAM  "+tl(s.toplam)+" TL",10,18);
+  doc.autoTable({
+    startY:21,
+    head:[["No","Ad Soyad","Odenecek"]],
+    body:s.all.map(function(x,i){ return [String(i+1),x.p.name+(x.p.kurye?" K":""),dash(x.c.toplam)]; }),
+    foot:[["","TOPLAM",tl(s.toplam)]],
     theme:"grid",
-    styles:{font:font,fontSize:7,cellPadding:0.55,halign:"center",textColor:[31,41,51],lineColor:[210,210,210],overflow:"ellipsize",minCellHeight:4.1},
-    headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:7,cellPadding:0.7},
-    footStyles:{fillColor:[34,34,34],textColor:[255,255,255],fontSize:7},
-    columnStyles:{0:{cellWidth:8},1:{halign:"left",cellWidth:52},2:{cellWidth:22,fillColor:[243,232,210]}},
-    margin:{top:20,bottom:8},
-    pageBreak:"avoid",
-    rowPageBreak:"avoid"
-  };
-  doc.autoTable(Object.assign({},base,{
-    startY:20,
-    margin:{left:8,right:W/2+2,top:20,bottom:8},
-    tableWidth:W/2-12,
-    head:[["No","Ad Soyad","Odenecek"]],
-    body:mk(left,0),
-    foot:[["","TOPLAM",tl(s.toplam)]]
-  }));
-  doc.autoTable(Object.assign({},base,{
-    startY:20,
-    margin:{left:W/2+2,right:8,top:20,bottom:8},
-    tableWidth:W/2-12,
-    head:[["No","Ad Soyad","Odenecek"]],
-    body:mk(right,mid),
-    showFoot:"never"
-  }));
+    styles:{font:font,fontSize:9,cellPadding:1.1,halign:"center",textColor:[20,20,20],lineColor:[210,210,210]},
+    headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:9},
+    footStyles:{fillColor:[34,34,34],textColor:[255,255,255]},
+    columnStyles:{0:{cellWidth:16},1:{halign:"left"},2:{cellWidth:36,fillColor:[243,232,210]}},
+    margin:{left:10,right:10,top:16,bottom:12},
+    pageBreak:"auto",
+    rowPageBreak:"avoid",
+    showHead:"everyPage"
+  });
 }
 window.pagePdf=async function(kind,share){
   toast("PDF hazirlaniyor...");
@@ -146,9 +129,9 @@ window.pagePdf=async function(kind,share){
   var font=hasFont?"DejaVu":"helvetica";
   var W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
   if(kind==="ozet-kisa"){
-    drawKisaOnePage(doc,font,s,now);
+    drawKisaFull(doc,font,s,now);
     if(share && typeof outPdf==="function") await outPdf(doc,"cadde-ozet-kisa.pdf");
-    else { doc.save("cadde-ozet-kisa.pdf"); toast("PDF indirildi (1 sayfa)"); }
+    else { doc.save("cadde-ozet-kisa.pdf"); toast("PDF indirildi"); }
     return;
   }
   if(kind==="rapor"){
