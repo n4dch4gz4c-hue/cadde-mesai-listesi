@@ -3,7 +3,7 @@ function css(){
   if(document.getElementById("pagePdfCss"))return;
   var st=document.createElement("style");
   st.id="pagePdfCss";
-  st.textContent=".page-pdf{gap:6px;margin:6px 0}.ozet-kisa{min-width:0!important;width:min(440px,100%)}.ozet-kisa td,.ozet-kisa th{padding:5px 8px;font-size:13px}";
+  st.textContent=".page-pdf{gap:6px;margin:6px 0}.ozet-kisa{min-width:0!important;width:min(440px,100%)}.ozet-kisa td,.ozet-kisa th{padding:5px 8px;font-size:13px}#duzenleList input.nm{width:100%;text-align:left;min-width:180px}";
   document.head.appendChild(st);
 }
 function bar(kind){
@@ -26,11 +26,12 @@ renderOzet=function(){
   var kisa=document.getElementById("ozetKisa");
   var ayr=document.getElementById("ozetAyrinti");
   if(!kisa||!ayr)return;
-  kisa.innerHTML='<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0;font-size:18px">Kisa ozet</h2>'+bar("ozet-kisa")+'</div><p style="margin:4px 0 8px;font-size:13px">'+s.pay.length+" odeme / "+s.all.length+" kisi · <b>"+tl(s.toplam)+" TL</b></p><table class=\"sheet slim ozet-kisa\"><thead><tr><th>No</th><th>Ad Soyad</th><th>Odenecek</th></tr></thead><tbody>"+s.pay.map(function(x,i){return '<tr class="pay"><td>'+(i+1)+'</td><td class="name">'+x.p.name+'</td><td class="tot">'+dash(x.c.toplam)+"</td></tr>";}).join("")+"</tbody><tfoot><tr><td></td><td>TOPLAM</td><td>"+tl(s.toplam)+"</td></tr></tfoot></table>";
-  ayr.innerHTML='<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Ayrintili ozet</h2>'+bar("ozet-ayrinti")+'</div><p>'+s.all.length+" kisi · "+s.pay.length+" odeme · "+tl(s.toplam)+' TL</p><div class="table-wrap" style="max-height:62vh;padding:0"><table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai</th><th>HS adet</th><th>HS</th><th>Prim</th><th>Yol</th><th>Izin g</th><th>Izin</th><th>Yillik</th><th>Toplam</th></tr></thead><tbody>'+s.all.map(function(x,i){var p=x.p,c=x.c;return '<tr class="'+(c.toplam>0?"pay":"zero")+'"><td>'+(i+1)+'</td><td class="name">'+p.name+(p.kurye?" <small>K</small>":"")+"</td><td>"+(p.mesaiSaat||"-")+"</td><td>"+dash(c.mesai)+"</td><td>"+(p.hsSaat||"-")+"</td><td>"+dash(c.hs)+"</td><td>"+dash(c.prim)+"</td><td>"+dash(c.yol)+"</td><td>"+(p.izinGun||"-")+"</td><td>"+dash(c.izin)+"</td><td>"+dash(c.yillik)+'</td><td class="tot">'+dash(c.toplam)+"</td></tr>";}).join("")+"</tbody><tfoot><tr><td></td><td>TOPLAM</td><td></td><td>"+tl(s.mesai)+"</td><td></td><td>"+tl(s.hs)+"</td><td>"+tl(s.prim)+"</td><td>"+tl(s.yol)+"</td><td></td><td>"+tl(s.izin)+"</td><td>"+tl(s.yillik)+"</td><td>"+tl(s.toplam)+"</td></tr></tfoot></table></div>";
+  kisa.innerHTML='<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0;font-size:18px">Kisa ozet</h2>'+bar("ozet-kisa")+'</div><p style="margin:4px 0 8px;font-size:13px">'+s.pay.length+" odeme / "+s.all.length+" kisi \u00b7 <b>"+tl(s.toplam)+" TL</b></p><table class=\"sheet slim ozet-kisa\"><thead><tr><th>No</th><th>Ad Soyad</th><th>Odenecek</th></tr></thead><tbody>"+s.pay.map(function(x,i){return '<tr class="pay"><td>'+(i+1)+'</td><td class="name">'+x.p.name+'</td><td class="tot">'+dash(x.c.toplam)+"</td></tr>";}).join("")+"</tbody><tfoot><tr><td></td><td>TOPLAM</td><td>"+tl(s.toplam)+"</td></tr></tfoot></table>";
+  ayr.innerHTML='<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Ayrintili ozet</h2>'+bar("ozet-ayrinti")+'</div><p>'+s.all.length+" kisi \u00b7 "+s.pay.length+" odeme \u00b7 "+tl(s.toplam)+' TL</p><div class="table-wrap" style="max-height:62vh;padding:0"><table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai</th><th>HS adet</th><th>HS</th><th>Prim</th><th>Yol</th><th>Izin g</th><th>Izin</th><th>Yillik</th><th>Toplam</th></tr></thead><tbody>'+s.all.map(function(x,i){var p=x.p,c=x.c;return '<tr class="'+(c.toplam>0?"pay":"zero")+'"><td>'+(i+1)+'</td><td class="name">'+p.name+(p.kurye?" <small>K</small>":"")+"</td><td>"+(p.mesaiSaat||"-")+"</td><td>"+dash(c.mesai)+"</td><td>"+(p.hsSaat||"-")+"</td><td>"+dash(c.hs)+"</td><td>"+dash(c.prim)+"</td><td>"+dash(c.yol)+"</td><td>"+(p.izinGun||"-")+"</td><td>"+dash(c.izin)+"</td><td>"+dash(c.yillik)+'</td><td class="tot">'+dash(c.toplam)+"</td></tr>";}).join("")+"</tbody><tfoot><tr><td></td><td>TOPLAM</td><td></td><td>"+tl(s.mesai)+"</td><td></td><td>"+tl(s.hs)+"</td><td>"+tl(s.prim)+"</td><td>"+tl(s.yol)+"</td><td></td><td>"+tl(s.izin)+"</td><td>"+tl(s.yillik)+"</td><td>"+tl(s.toplam)+"</td></tr></tfoot></table></div>";
 };
-async function makePageDoc(kind){
-  if(!window.jspdf||!window.jspdf.jsPDF){toast("PDF yok");return null;}
+window.pagePdf=async function(kind,share){
+  toast("PDF hazirlaniyor...");
+  if(!window.jspdf||!window.jspdf.jsPDF){toast("PDF yok");return;}
   var jsPDF=window.jspdf.jsPDF;
   var s=_sums();
   var now=new Date().toLocaleString("tr-TR",{day:"2-digit",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
@@ -74,14 +75,8 @@ async function makePageDoc(kind){
   var opt={startY:24,head:head,body:body,theme:"grid",styles:{font:font,fontSize:kind==="ozet-kisa"?9:6.2,cellPadding:kind==="ozet-kisa"?1.1:0.55,halign:"center",textColor:[31,41,51],lineColor:[232,223,210],overflow:"linebreak"},headStyles:{fillColor:[31,75,143],textColor:[255,255,255]},footStyles:{fillColor:[34,34,34],textColor:[255,255,255]},columnStyles:col,margin:{left:10,right:10,top:16,bottom:10},didDrawPage:function(){pdfDrawChrome(doc,font,W,H,now,s.pay.length,s.all.length);}};
   if(foot) opt.foot=foot;
   doc.autoTable(opt);
-  return {doc:doc,name:"cadde-"+kind+".pdf"};
-}
-window.pagePdf=async function(kind,share){
-  toast("PDF hazirlaniyor...");
-  var r=await makePageDoc(kind);
-  if(!r)return;
-  if(share && typeof outPdf==="function") await outPdf(r.doc,r.name);
-  else { r.doc.save(r.name); toast("PDF indirildi"); }
+  if(share && typeof outPdf==="function") await outPdf(doc,"cadde-"+kind+".pdf");
+  else { doc.save("cadde-"+kind+".pdf"); toast("PDF indirildi"); }
 };
 function renderDuzenle(){
   var box=document.getElementById("duzenleList");
@@ -89,27 +84,31 @@ function renderDuzenle(){
   var rows=state.people||[];
   box.innerHTML='<div class="table-wrap" style="max-height:70vh;padding:0"><table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Kurye</th><th>Birim</th><th>Tasi</th><th></th></tr></thead><tbody>'+
     rows.map(function(p,i){
-      return '<tr><td>'+(i+1)+'</td>'+
-        '<td class="name"><input style="width:100%;text-align:left;min-width:180px" value="'+String(p.name||"").replace(/"/g,""")+ '" onchange="editName('+p.id+',this.value)"></td>'+
-        '<td><input type="checkbox" '+(p.kurye?"checked":"")+' onchange="editKurye('+p.id+',this.checked)"></td>'+
-        '<td><input type="number" value="'+(p.mesaiBirim||300)+'" onchange="editBirim('+p.id+',this.value)"></td>'+
-        '<td><button class="btn" type="button" onclick="moveKisi('+p.id+',-1)">Yukari</button> <button class="btn" type="button" onclick="moveKisi('+p.id+',1)">Asagi</button></td>'+
-        '<td><button class="btn" type="button" onclick="silKisi('+p.id+');renderDuzenle()">Sil</button></td></tr>';
+      return '<tr data-id="'+p.id+'"><td>'+(i+1)+'</td><td class="name"><input class="nm"></td><td><input type="checkbox" class="ky"'+(p.kurye?" checked":"")+'></td><td><input type="number" class="br" value="'+(p.mesaiBirim||300)+'"></td><td><button class="btn up" type="button">Yukari</button> <button class="btn down" type="button">Asagi</button></td><td><button class="btn del" type="button">Sil</button></td></tr>';
     }).join("")+"</tbody></table></div>";
+  rows.forEach(function(p){
+    var tr=box.querySelector('tr[data-id="'+p.id+'"]');
+    if(!tr)return;
+    var nm=tr.querySelector(".nm");
+    if(nm) nm.value=p.name||"";
+  });
+  box.onchange=function(ev){
+    var tr=ev.target.closest("tr[data-id]"); if(!tr)return;
+    var id=+tr.getAttribute("data-id");
+    var p=state.people.find(function(x){return x.id===id;}); if(!p)return;
+    if(ev.target.classList.contains("nm")){ p.name=ev.target.value.trim(); persist(); toast("Isim guncellendi"); }
+    if(ev.target.classList.contains("ky")){ p.kurye=!!ev.target.checked; persist(); renderAll(); }
+    if(ev.target.classList.contains("br")){ p.mesaiBirim=num(ev.target.value,300); persist(); renderAll(); }
+  };
+  box.onclick=function(ev){
+    var tr=ev.target.closest("tr[data-id]"); if(!tr)return;
+    var id=+tr.getAttribute("data-id");
+    if(ev.target.classList.contains("up")) window.moveKisi(id,-1);
+    if(ev.target.classList.contains("down")) window.moveKisi(id,1);
+    if(ev.target.classList.contains("del")){ if(typeof silKisi==="function") silKisi(id); renderDuzenle(); }
+  };
 }
 window.renderDuzenle=renderDuzenle;
-window.editName=function(id,val){
-  var p=state.people.find(function(x){return x.id===id;}); if(!p)return;
-  p.name=String(val||"").trim(); persist(); toast("Isim guncellendi");
-};
-window.editKurye=function(id,on){
-  var p=state.people.find(function(x){return x.id===id;}); if(!p)return;
-  p.kurye=!!on; persist(); renderAll(); renderDuzenle();
-};
-window.editBirim=function(id,val){
-  var p=state.people.find(function(x){return x.id===id;}); if(!p)return;
-  p.mesaiBirim=num(val,300); persist(); renderAll();
-};
 window.moveKisi=function(id,dir){
   var i=state.people.findIndex(function(x){return x.id===id;});
   var j=i+dir;
@@ -121,17 +120,22 @@ window.tab=function(el){
   document.querySelectorAll(".tab[data-tab]").forEach(function(t){t.classList.toggle("on",t===el);});
   var id=el.dataset.tab;
   ["liste","kurye","devam","ceza","ozet","rapor","duzenle"].forEach(function(s){
-    var e=document.getElementById("sec-"+s); if(e)e.classList.toggle("hide",s!==id);
+    var e=document.getElementById("sec-"+s); if(e) e.classList.toggle("hide",s!==id);
   });
   if(id==="kurye") renderKurye();
   if(id==="devam") renderDevam();
   if(id==="ceza") renderCeza();
-  if(id==="ozet"){ renderOzet(); ozetMod((document.querySelector("[data-ozet].on")||{}).dataset.ozet||"kisa"); }
+  if(id==="ozet"){ renderOzet(); if(typeof ozetMod==="function") ozetMod((document.querySelector("[data-ozet].on")||{}).dataset.ozet||"kisa"); }
   if(id==="rapor") renderRapor();
   if(id==="duzenle") renderDuzenle();
 };
 var _ra=renderAll;
-renderAll=function(){ _ra(); attach(); var d=document.getElementById("sec-duzenle"); if(d && !d.classList.contains("hide")) renderDuzenle(); };
+renderAll=function(){
+  _ra();
+  attach();
+  var d=document.getElementById("sec-duzenle");
+  if(d && !d.classList.contains("hide")) renderDuzenle();
+};
 setTimeout(attach,400);
 setTimeout(attach,1200);
 })();
