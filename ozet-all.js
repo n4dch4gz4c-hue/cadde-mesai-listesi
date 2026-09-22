@@ -7,8 +7,9 @@ function draw(list){
   var html, i, p, c, tot=0, pay=0;
   html="<div class='row'><h2 style='margin:0;font-size:18px'>Kisa ozet</h2></div>";
   html+="<p style='margin:6px 0' id='ozetKisaMeta'></p>";
-  html+="<div style='overflow:auto;max-height:70vh'><table class='sheet slim' style='min-width:0;width:100%'>";
-  html+="<thead><tr><th>No</th><th>Ad Soyad</th><th>Odenecek</th></tr></thead><tbody>";
+  html+="<div style='overflow:auto;max-width:420px'>";
+  html+="<table class='sheet slim' style='min-width:0;width:100%;max-width:420px'>";
+  html+="<thead><tr><th style='width:44px'>No</th><th>Ad Soyad</th><th style='width:90px'>Odenecek</th></tr></thead><tbody>";
   for(i=0;i<list.length;i++){
     p=list[i];
     c=(typeof calc==="function")?calc(p):{toplam:Number(p.mesaiSaat||0)*Number(p.mesaiBirim||300)+Number(p.hsSaat||0)*2500+Number(p.yolTutar||0)+Number(p.izinTutar||0)+Number(p.yillikTutar||0)};
