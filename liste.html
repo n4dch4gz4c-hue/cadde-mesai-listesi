@@ -1,1 +1,186 @@
-PLACEHOLDER_HTML
+<!DOCTYPE html>
+<html lang="tr"><head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta name="theme-color" content="#1f4b8f"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<title>Cadde Mesai Listesi</title>
+<style>
+html,body{margin:0;font-family:system-ui,sans-serif;background:#f4f1ea;color:#1f2933}
+.bar,.tabs,.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 16px}
+h1{margin:0;font-size:22px}
+.btn,.tab{border:1px solid #d7cfc3;background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer}
+.tab.on,.btn.primary{background:#1f4b8f;color:#fff;border-color:#1f4b8f}
+.btn.sync{background:#0f7b4c;color:#fff;border-color:#0f7b4c}
+table{border-collapse:collapse;width:100%;min-width:1100px;background:#fff;font-size:13px}
+table.slim{min-width:0}
+th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0}
+td{border:1px solid #eadfd2;padding:3px 4px;text-align:center}
+td.name{text-align:left;font-weight:700}
+tr.pay td.tot,.pcard.pay .ptot{background:#f3e8d2;font-weight:700}
+tfoot td{background:#222;color:#fff}
+input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16px}
+.sheet input{width:64px;text-align:center;font-size:14px}
+.hide{display:none!important}
+.panel,.card,.pcard{background:#fff;border:1px solid #d7cfc3;border-radius:12px;padding:12px;margin:12px 16px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px}
+.stat{background:#fff;border:1px solid #d7cfc3;border-radius:10px;padding:10px}
+.table-wrap{overflow:auto;padding:0 16px 24px;max-height:70vh}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;padding:0 16px 24px}
+#toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none;z-index:9}
+#q{min-width:140px;flex:1}
+#mobileList{display:none}
+.mlist{background:#fff;border-top:1px solid #eadfd2}
+.mrow{border-bottom:1px solid #eadfd2}
+.mrow.pay{background:#fffdf8}
+.mhead{width:100%;display:flex;align-items:center;gap:10px;padding:11px 12px;border:0;background:transparent;text-align:left;font:inherit;cursor:pointer}
+.mno{width:28px;color:#8a7d6e;font-size:13px;flex:none}
+.mname{flex:1;font-weight:700;font-size:15px}
+.mtot{font-weight:800;font-size:15px;flex:none}
+.mfields{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 12px 12px}
+.mfields label{font-size:11px;color:#6b6258;display:flex;flex-direction:column;gap:3px}
+.mfields input{width:100%;box-sizing:border-box;font-size:16px;padding:8px 6px}
+#sec-devam .panel h2{font-size:26px;margin:0 0 10px}
+#devamList{padding:0 16px 48px}
+#devamList .table-wrap{max-height:none;padding:0}
+#devamList table{min-width:0!important;width:100%;font-size:18px}
+#devamList th{background:#1f4b8f;padding:14px 12px;font-size:15px}
+#devamList td{padding:14px 12px;font-size:17px}
+#asFab{position:fixed;right:18px;bottom:18px;width:58px;height:58px;border-radius:50%;border:0;background:#1f4b8f;color:#fff;font-size:28px;line-height:58px;text-align:center;padding:0;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:9999;cursor:pointer}
+#asPanel{position:fixed;right:18px;bottom:84px;width:min(380px,calc(100vw - 24px));height:min(520px,72vh);background:#fff;border:1px solid #d7cfc3;border-radius:16px;z-index:9999;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.2)}
+#asHead{background:#1f4b8f;color:#fff;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
+#asMsgs{flex:1;overflow:auto;padding:10px;background:#f7f4ee}
+.as-bot,.as-me{padding:8px 10px;border-radius:12px;margin:6px 0;max-width:92%;font-size:14px}
+.as-bot{background:#fff;border:1px solid #eadfd2}
+.as-me{background:#1f4b8f;color:#fff;margin-left:auto}
+#asChips{display:flex;gap:6px;flex-wrap:wrap;padding:8px 8px 0}
+#asChips button{border:1px solid #d7cfc3;background:#fff;border-radius:999px;padding:5px 10px;font-size:12px;cursor:pointer}
+#asForm{display:flex;gap:6px;padding:8px;border-top:1px solid #eadfd2}
+#asIn{flex:1;min-width:0}
+@media(max-width:800px){.table-wrap{display:none}#mobileList{display:block;padding-bottom:88px}.stats{grid-template-columns:1fr 1fr}#sec-liste .panel{margin:8px 12px}#sec-devam .table-wrap,#sec-rapor .table-wrap,#sec-ozet .table-wrap{display:block}}
+@media print{header,nav,#asFab,#asPanel,#ghBox,#pcGate{display:none!important}}
+</style></head>
+<body>
+<header class="bar">
+  <div><h1 onclick="secretTap()">Cadde Mesai Listesi</h1><p id="pageSub"></p></div>
+  <div class="row">
+    <input id="q" placeholder="Isim ara..." oninput="renderAll()"/>
+    <button class="btn sync" onclick="yenileSunucu()">Cek</button>
+    <button class="btn primary" onclick="save()">Kaydet</button>
+    <button class="btn" onclick="toggleGhBox()">Senkron</button>
+    <button class="btn" onclick="exportCSV()">CSV</button>
+    <button class="btn" onclick="sharePDF()">PDF</button>
+  </div>
+</header>
+<div id="ghBox" class="panel hide">
+  <b>Senkron anahtari</b>
+  <div class="row">
+    <input id="ghToken" type="password" placeholder="GitHub token"/>
+    <input id="ghRepo" placeholder="n4dch4gz4c-hue/cadde-mesai-listesi"/>
+    <input id="ghPath" placeholder="cadde-data.json"/>
+    <button class="btn" onclick="ghSaveCfg()">Anahtari kaydet</button>
+  </div>
+</div>
+<nav class="tabs">
+  <button class="tab on" data-tab="liste" onclick="tab(this)">Liste</button>
+  <button class="tab" data-tab="kurye" onclick="tab(this)">Kurye</button>
+  <button class="tab" data-tab="devam" onclick="tab(this)">Devamsizlik</button>
+  <button class="tab" data-tab="ceza" onclick="tab(this)">Ceza</button>
+  <button class="tab" data-tab="ozet" onclick="tab(this)">Ozet</button>
+  <button class="tab" data-tab="rapor" onclick="tab(this)">Aylik rapor</button>
+</nav>
+<section id="sec-liste">
+  <div class="stats" id="stats"></div>
+  <div class="panel"><b>Kisi ekle</b><div class="row"><input id="nAd" placeholder="Ad soyad"/><input id="nBirim" type="number" value="300" style="width:90px"/><label><input id="nKurye" type="checkbox"/> Kurye</label><button class="btn primary" onclick="addKisi()">Ekle</button></div></div>
+  <div class="table-wrap"><table class="sheet"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai tutar</th><th>HS adet</th><th>HS tutar</th><th>Prim</th><th>Yol</th><th>Izin gun</th><th>Izin tutar</th><th>Yillik</th><th>Disiplin</th><th>Toplam</th></tr></thead><tbody id="tbody"></tbody><tfoot id="tfoot"></tfoot></table></div>
+  <div id="mobileList"></div>
+</section>
+<section id="sec-kurye" class="hide"><div class="panel"><h2>Kurye primleri</h2></div><div id="kuryeList" class="cards"></div></section>
+<section id="sec-devam" class="hide"><div class="panel"><h2>Devamsizlik</h2><div class="row"><select id="dKisi"></select><input id="dGun" type="number" value="1"/><input id="dNot" placeholder="Not"/><button class="btn primary" onclick="addDevam()">Ekle</button></div></div><div id="devamList"></div></section>
+<section id="sec-ceza" class="hide"><div class="panel"><h2>Cezalar</h2><div class="row"><select id="cKisi"></select><input id="cTutar" type="number" value="1000"/><input id="cNeden" placeholder="Neden"/><button class="btn primary" onclick="addCeza()">Ekle</button></div></div><div id="cezaList" class="cards"></div></section>
+<section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
+<section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
+<div id="toast"></div>
+<button id="asFab" type="button" onclick="toggleAs()">+</button>
+<div id="asPanel" class="hide">
+  <div id="asHead"><b>Cadde Asistan</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
+  <div id="asMsgs"><div class="as-bot">Komut veya soru yaz. Ornek: bu ay kim cok alacak?</div></div>
+  <div id="asChips">
+    <button type="button" data-cmd="toplam">Toplam</button>
+    <button type="button" data-cmd="bu ay kim cok alacak">Kim cok alacak</button>
+    <button type="button" data-cmd="kimler izin parasi aliyor">Izin parasi</button>
+    <button type="button" data-cmd="cek">Cek</button>
+    <button type="button" data-cmd="kaydet">Kaydet</button>
+    <button type="button" data-cmd="dagilim">Dagilim</button>
+    <button type="button" data-cmd="hs kimde">HS kimde</button>
+    <button type="button" data-cmd="yardim">Yardim</button>
+  </div>
+  <form id="asForm"><input id="asIn" placeholder="Sor veya komut yaz" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
+</div>
+<script src="lock.js?v=51"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="seed.js?v=51"></script>
+<script src="app.js?v=51"></script>
+<script src="gh.js?v=51"></script>
+<script src="plus.js?v=51"></script>
+<script src="assistant.js?v=51"></script>
+<script src="puter-ai.js?v=51"></script>
+<script>
+(function(){
+  function esc(t){return String(t||"").replace(/&/g,"&").replace(/</g,"<").replace(/\n/g,"<br>");}
+  function bot(html){
+    var box=document.getElementById("asMsgs"); if(!box)return;
+    var d=document.createElement("div"); d.className="as-bot"; d.innerHTML=html;
+    box.appendChild(d); box.scrollTop=box.scrollHeight;
+  }
+  document.addEventListener("submit",function(e){
+    if(e.target&&e.target.id==="asForm"){ e.preventDefault(); e.stopImmediatePropagation(); window.sendAssist(); }
+  },true);
+  var chips=document.getElementById("asChips");
+  if(chips) chips.onclick=function(ev){ var b=ev.target.closest("[data-cmd]"); if(!b)return; window.sendAssist(b.getAttribute("data-cmd")); };
+  window.sendAssist=function(preset){
+    var inp=document.getElementById("asIn");
+    var t=(preset!=null?preset:(inp&&inp.value||"")).trim();
+    if(!t)return;
+    if(inp)inp.value="";
+    var box=document.getElementById("asMsgs");
+    if(box){ var me=document.createElement("div"); me.className="as-me"; me.textContent=t; box.appendChild(me); }
+    if(typeof runAssist==="function"){
+      try{ runAssist(t); }catch(e){ bot("Hata: "+e.message); }
+      return;
+    }
+    if(typeof freeAI!=="function"){ bot("Asistan yuklenmedi"); return; }
+    var fab=document.getElementById("asFab"); if(fab)fab.classList.add("busy"); bot("<i>AI dusunuyor...</i>");
+    freeAI(t).then(function(text){
+      var bots=box.querySelectorAll(".as-bot"); var last=bots[bots.length-1];
+      if(last && last.querySelector("i")) last.remove();
+      if(fab)fab.classList.remove("busy"); bot(esc(text));
+    }).catch(function(e){
+      var bots=box.querySelectorAll(".as-bot"); var last=bots[bots.length-1];
+      if(last && last.querySelector("i")) last.remove();
+      if(fab)fab.classList.remove("busy"); bot("AI yogun: "+esc(e.message||e));
+    });
+  };
+})();
+</script>
+<script>
+if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}
+window.openMob=window.openMob||null;
+window.toggleMob=function(id,ev){ if(ev&&ev.target&&ev.target.tagName==="INPUT")return; window.openMob=window.openMob===id?null:id; paintMob(); };
+function paintMob(){
+  var box=document.getElementById("mobileList");
+  if(!box||typeof state==="undefined"||!state.people)return;
+  var rows=(typeof visible==="function")?visible():state.people;
+  box.innerHTML="<div class='mlist'>"+rows.map(function(p){
+    var c=calc(p); var no=state.people.findIndex(function(x){return x.id===p.id;})+1; var on=window.openMob===p.id;
+    var html="<div class='mrow "+(c.toplam>0?"pay":"")+(on?" on":"")+"'><button type='button' class='mhead' onclick='toggleMob("+p.id+",event)'><span class='mno'>"+no+"</span><span class='mname'>"+p.name+(p.kurye?" <small>K</small>":"")+"</span><span class='mtot'>"+dash(c.toplam)+"</span></button>";
+    if(on){ html+="<div class='mfields'><label>Mesai<input type='number' step='0.5' value='"+(p.mesaiSaat||"")+"' onchange='setVal("+p.id+",\"mesaiSaat\",this.value)'></label><label>HS<input type='number' step='0.5' value='"+(p.hsSaat||"")+"' onchange='setVal("+p.id+",\"hsSaat\",this.value)'></label><label>Yol<input type='number' value='"+(p.yolTutar||"")+"' onchange='setVal("+p.id+",\"yolTutar\",this.value)'></label><label>Izin g<input type='number' step='0.5' value='"+(p.izinGun||"")+"' onchange='setVal("+p.id+",\"izinGun\",this.value)'></label><label>Izin TL<input type='number' value='"+(p.izinTutar||"")+"' onchange='setVal("+p.id+",\"izinTutar\",this.value)'></label><label>Yillik<input type='number' value='"+(p.yillikTutar||"")+"' onchange='setVal("+p.id+",\"yillikTutar\",this.value)'></label></div>"; }
+    return html+"</div>";
+  }).join("")+"</div>";
+}
+(function(){ function wrap(){ if(typeof renderListe!=="function"){setTimeout(wrap,80);return;} var old=renderListe; renderListe=function(){old();paintMob();}; paintMob(); } wrap(); setTimeout(paintMob,400); setTimeout(paintMob,1200); })();
+</script>
+</body></html>
