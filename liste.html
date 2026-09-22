@@ -2,16 +2,13 @@
 <html lang="tr"><head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate"/>
-<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Cache-Control" content="no-store"/>
 <meta name="theme-color" content="#0b1220"/>
 <title>Cadde Mesai Listesi</title>
 <script>
 if(navigator.serviceWorker){
   navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});
-  if(window.caches){caches.keys().then(function(k){k.forEach(function(x){caches.delete(x);});});}
 }
-(function(){if(window.innerWidth<=900||('ontouchstart' in window)){document.documentElement.classList.add('night');}}());
 </script>
 <style>
 html,body{margin:0;font-family:system-ui,sans-serif;background:#f4f1ea;color:#1f2933}
@@ -25,7 +22,7 @@ table.slim{min-width:0}
 th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0}
 td{border:1px solid #eadfd2;padding:3px 4px;text-align:center}
 td.name{text-align:left;font-weight:700}
-tr.pay td.tot,.pcard.pay .ptot{background:#f3e8d2;font-weight:700;color:#111}
+tr.pay td.tot{background:#f3e8d2;font-weight:700;color:#111}
 tfoot td{background:#222;color:#fff}
 input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16px}
 .sheet input{width:64px;text-align:center;font-size:14px}
@@ -39,12 +36,51 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #q{min-width:140px;flex:1}
 #mobileList{display:none}
 #asFab,#asPanel{display:none!important}
-.kmark{font-size:9px;font-weight:600;opacity:.6;margin-left:3px;vertical-align:super}
+.kmark{font-size:9px;font-weight:600;opacity:.65;margin-left:3px;vertical-align:super}
+.mlist{display:flex;flex-direction:column;gap:8px}
+.mrow{border:1px solid #eadfd2;border-radius:16px;background:#fff;overflow:hidden}
+.mrow.pay{background:#fff8e8;border-color:#e8d7a8}
+.mhead{width:100%;display:flex!important;align-items:center;gap:10px;padding:13px 14px;border:0;background:transparent;text-align:left;font:inherit;color:inherit;box-sizing:border-box}
+.mno{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#e8eef8;color:#1f4b8f;font-size:12px;font-weight:700;flex:none}
+.mname{flex:1;font-weight:700;font-size:15px;min-width:0}
+.mtot{font-weight:800;font-size:15px;flex:none;color:#1f4b8f}
+.mrow.pay .mtot{color:#8a4b12}
+.mfields{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 12px 14px}
+.mfields label{font-size:11px;color:#6b6258;display:flex;flex-direction:column;gap:4px}
+.mfields input{width:100%;box-sizing:border-box;font-size:16px;padding:9px 8px;border:1px solid #d7cfc3;border-radius:10px}
+.rrow{border:1px solid #eadfd2;border-radius:14px;background:#fff;padding:10px 12px;margin:0 0 8px}
+.rrow.pay{background:#fff8e8}
+.rrow .rh{display:flex;justify-content:space-between;gap:8px}
+.rrow .rn{font-weight:700;font-size:14px}
+.rrow .rt{font-weight:800;color:#1f4b8f}
 @media(max-width:900px){
+html,body{background:#0b1220!important;color:#e8eef8!important}
+header.bar{position:sticky;top:0;z-index:20;background:#121a2b!important;border-bottom:1px solid rgba(255,255,255,.12)}
+header.bar h1{font-size:18px;color:#fff}
+#pageSub{color:#9aa8c2;margin:2px 0 0;font-size:12px}
+header.bar #q,header.bar .btn{background:#1a2438!important;border-color:#2a3a55!important;color:#e8eef8!important}
+header.bar .btn.primary{background:#2563eb!important}
+header.bar .btn.sync{background:#0f7b4c!important}
+nav.tabs{position:sticky;top:78px;z-index:19;background:#121a2b!important;overflow-x:auto;flex-wrap:nowrap}
+nav.tabs .tab{flex:none;border-radius:999px;background:#1a2438;border-color:#2a3a55;color:#d7e2f4}
+nav.tabs .tab.on{background:#2563eb!important;color:#fff!important}
+.stats{grid-template-columns:1fr 1fr;padding:10px 12px}
+.stat,.panel,.card,.pcard{background:#1a2438!important;border-color:#2a3a55!important;color:#e8eef8}
+.stat span{display:block;font-size:11px;color:#9aa8c2;margin-bottom:3px}
+.stat b{display:block}
 .table-wrap{display:none}
-#mobileList{display:block;padding-bottom:40px}
-.stats{grid-template-columns:1fr 1fr}
+#mobileList{display:block!important;padding:4px 12px 32px}
 #sec-ozet .table-wrap,#sec-duzenle .table-wrap,#sec-devam .table-wrap{display:block!important}
+#sec-rapor table,#sec-rapor .table-wrap{display:none!important}
+.mrow{background:#1a2438;border-color:#2a3a55;color:#e8eef8}
+.mrow.pay{background:#2a2414;border-color:#6b5420}
+.mno{background:#243356;color:#93c5fd}
+.mtot{color:#93c5fd}
+.mrow.pay .mtot{color:#fbbf24}
+.mfields input{background:#0b1220;color:#e8eef8;border-color:#2a3a55}
+.rrow{background:#1a2438;border-color:#2a3a55;color:#e8eef8}
+.rrow.pay{background:#2a2414}
+.rrow .rt{color:#fbbf24}
 }
 </style></head>
 <body>
@@ -95,14 +131,14 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 <section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
-<script src="lock.js?v=85"></script>
+<script src="lock.js?v=86"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=85"></script>
-<script src="app.js?v=85"></script>
-<script src="gh.js?v=85"></script>
-<script src="plus.js?v=85"></script>
-<script src="page-extra.js?v=85"></script>
-<script src="mobile-fix.js?v=85"></script>
-<script src="ozet-all.js?v=85"></script>
+<script src="seed.js?v=86"></script>
+<script src="app.js?v=86"></script>
+<script src="gh.js?v=86"></script>
+<script src="plus.js?v=86"></script>
+<script src="page-extra.js?v=86"></script>
+<script src="mobile-fix.js?v=86"></script>
+<script src="ozet-all.js?v=86"></script>
 </body></html>
