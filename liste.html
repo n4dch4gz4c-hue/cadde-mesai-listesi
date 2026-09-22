@@ -7,6 +7,11 @@
 <meta name="theme-color" content="#1f4b8f"/>
 <link rel="manifest" href="manifest.webmanifest"/>
 <title>Cadde Mesai Listesi</title>
+<script>
+if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}
+function __killGate(){var g=document.getElementById("pcGate");if(g)g.remove();}
+setInterval(__killGate,250);
+</script>
 <style>
 html,body{margin:0;font-family:system-ui,sans-serif;background:#f4f1ea;color:#1f2933}
 .bar,.tabs,.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 16px}
@@ -32,35 +37,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none;z-index:9}
 #q{min-width:140px;flex:1}
 #mobileList{display:none}
-.mlist{background:#fff;border-top:1px solid #eadfd2}
-.mrow{border-bottom:1px solid #eadfd2}
-.mrow.pay{background:#fffdf8}
-.mhead{width:100%;display:flex;align-items:center;gap:10px;padding:11px 12px;border:0;background:transparent;text-align:left;font:inherit;cursor:pointer}
-.mno{width:28px;color:#8a7d6e;font-size:13px;flex:none}
-.mname{flex:1;font-weight:700;font-size:15px}
-.mtot{font-weight:800;font-size:15px;flex:none}
-.mfields{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 12px 12px}
-.mfields label{font-size:11px;color:#6b6258;display:flex;flex-direction:column;gap:3px}
-.mfields input{width:100%;box-sizing:border-box;font-size:16px;padding:8px 6px}
-#sec-devam .panel h2{font-size:26px;margin:0 0 10px}
-#devamList{padding:0 16px 48px}
-#devamList .table-wrap{max-height:none;padding:0}
-#devamList table{min-width:0!important;width:100%;font-size:18px}
-#devamList th{background:#1f4b8f;padding:14px 12px;font-size:15px}
-#devamList td{padding:14px 12px;font-size:17px}
-#asFab{position:fixed;right:18px;bottom:18px;width:58px;height:58px;border-radius:50%;border:0;background:#1f4b8f;color:#fff;font-size:28px;line-height:58px;text-align:center;padding:0;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:9999;cursor:pointer}
-#asPanel{position:fixed;right:18px;bottom:84px;width:min(380px,calc(100vw - 24px));height:min(520px,72vh);background:#fff;border:1px solid #d7cfc3;border-radius:16px;z-index:9999;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.2)}
-#asHead{background:#1f4b8f;color:#fff;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
-#asMsgs{flex:1;overflow:auto;padding:10px;background:#f7f4ee}
-.as-bot,.as-me{padding:8px 10px;border-radius:12px;margin:6px 0;max-width:92%;font-size:14px}
-.as-bot{background:#fff;border:1px solid #eadfd2}
-.as-me{background:#1f4b8f;color:#fff;margin-left:auto}
-#asChips{display:flex;gap:6px;flex-wrap:wrap;padding:8px 8px 0}
-#asChips button{border:1px solid #d7cfc3;background:#fff;border-radius:999px;padding:5px 10px;font-size:12px;cursor:pointer}
-#asForm{display:flex;gap:6px;padding:8px;border-top:1px solid #eadfd2}
-#asIn{flex:1;min-width:0}
-@media(max-width:800px){.table-wrap{display:none}#mobileList{display:block;padding-bottom:88px}.stats{grid-template-columns:1fr 1fr}#sec-liste .panel{margin:8px 12px}#sec-devam .table-wrap,#sec-rapor .table-wrap,#sec-ozet .table-wrap{display:block}}
-@media print{header,nav,#asFab,#asPanel,#ghBox,#pcGate{display:none!important}}
+@media(max-width:800px){.table-wrap{display:none}#mobileList{display:block;padding-bottom:88px}.stats{grid-template-columns:1fr 1fr}}
 </style></head>
 <body>
 <header class="bar">
@@ -99,10 +76,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   <div id="mobileList"></div>
 </section>
 <section id="sec-duzenle" class="hide">
-  <div class="panel">
-    <h2>Duzenleme</h2>
-    <p>Isim duzelt, kurye isaretle, sirayi tasi veya sil. Mesai rakamlarina dokunulmaz.</p>
-  </div>
+  <div class="panel"><h2>Duzenleme</h2><p>Isim duzelt, kurye isaretle, sirayi tasi veya sil.</p></div>
   <div id="duzenleList"></div>
 </section>
 <section id="sec-kurye" class="hide"><div class="panel"><h2>Kurye primleri</h2></div><div id="kuryeList" class="cards"></div></section>
@@ -114,27 +88,17 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 <button id="asFab" type="button" onclick="toggleAs()">+</button>
 <div id="asPanel" class="hide">
   <div id="asHead"><b>Cadde Asistan</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
-  <div id="asMsgs"><div class="as-bot">Komut veya soru yaz. Ornek: bu ay kim cok alacak?</div></div>
-  <div id="asChips">
-    <button type="button" data-cmd="toplam">Toplam</button>
-    <button type="button" data-cmd="bu ay kim cok alacak">Kim cok alacak</button>
-    <button type="button" data-cmd="kimler izin parasi aliyor">Izin parasi</button>
-    <button type="button" data-cmd="cek">Cek</button>
-    <button type="button" data-cmd="kaydet">Kaydet</button>
-    <button type="button" data-cmd="dagilim">Dagilim</button>
-    <button type="button" data-cmd="hs kimde">HS kimde</button>
-    <button type="button" data-cmd="yardim">Yardim</button>
-  </div>
-  <form id="asForm"><input id="asIn" placeholder="Sor veya komut yaz" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
+  <div id="asMsgs"><div class="as-bot">Komut yaz.</div></div>
+  <form id="asForm"><input id="asIn" placeholder="Sor" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
 </div>
-<script src="lock.js?v=64"></script>
+<script src="lock.js?v=65"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=64"></script>
-<script src="app.js?v=64"></script>
-<script src="gh.js?v=64"></script>
-<script src="plus.js?v=64"></script>
-<script src="page-extra.js?v=64"></script>
-<script src="assistant.js?v=64"></script>
-<script src="puter-ai.js?v=64"></script>
+<script src="seed.js?v=65"></script>
+<script src="app.js?v=65"></script>
+<script src="gh.js?v=65"></script>
+<script src="plus.js?v=65"></script>
+<script src="page-extra.js?v=65"></script>
+<script src="assistant.js?v=65"></script>
+<script src="puter-ai.js?v=65"></script>
 </body></html>
