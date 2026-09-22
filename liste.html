@@ -41,6 +41,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none;z-index:9}
 #q{min-width:140px;flex:1}
 #mobileList{display:none}
+#asFab,#asPanel{display:none!important}
 @media(max-width:900px){
 html.night,html.night body{background:#0b1220!important;color:#e8eef8!important}
 html.night header.bar{position:sticky;top:0;z-index:20;background:rgba(12,18,32,.75)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.12)}
@@ -62,7 +63,6 @@ html.night .mrow.pay{background:rgba(251,191,36,.12)!important;border-color:rgba
 html.night .mtot{color:#93c5fd!important}
 html.night .mrow.pay .mtot{color:#fbbf24!important}
 html.night .mfields input{background:rgba(0,0,0,.3)!important;color:#e8eef8!important;border-color:rgba(255,255,255,.14)!important}
-html.night #asFab{background:rgba(37,99,235,.75)!important;color:#fff!important}
 }
 </style></head>
 <body>
@@ -111,22 +111,15 @@ html.night #asFab{background:rgba(37,99,235,.75)!important;color:#fff!important}
 <section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
-<button id="asFab" type="button" onclick="toggleAs()">+</button>
-<div id="asPanel" class="hide">
-  <div id="asHead"><b>Cadde Asistan</b><button type="button" class="btn" onclick="toggleAs()">x</button></div>
-  <div id="asMsgs"><div class="as-bot">Komut yaz.</div></div>
-  <form id="asForm"><input id="asIn" placeholder="Sor" autocomplete="off"/><button class="btn primary" type="submit">Gonder</button></form>
-</div>
-<script src="lock.js?v=80"></script>
+<script src="lock.js?v=81"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=80"></script>
-<script src="app.js?v=80"></script>
-<script src="gh.js?v=80"></script>
-<script src="plus.js?v=80"></script>
-<script src="page-extra.js?v=80"></script>
-<script src="mobile-fix.js?v=80"></script>
-<script src="assistant.js?v=80"></script>
-<script src="puter-ai.js?v=80"></script>
-<script src="ozet-all.js?v=80"></script>
+<script src="seed.js?v=81"></script>
+<script src="app.js?v=81"></script>
+<script src="gh.js?v=81"></script>
+<script src="plus.js?v=81"></script>
+<script src="page-extra.js?v=81"></script>
+<script src="mobile-fix.js?v=81"></script>
+<script src="puter-ai.js?v=81"></script>
+<script src="ozet-all.js?v=81"></script>
 </body></html>
