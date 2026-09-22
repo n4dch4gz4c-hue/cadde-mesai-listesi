@@ -26,7 +26,7 @@ renderOzet=function(){
   var kisa=document.getElementById("ozetKisa");
   var ayr=document.getElementById("ozetAyrinti");
   if(!kisa||!ayr)return;
-  kisa.innerHTML='<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0;font-size:18px">Kisa ozet</h2>'+bar("ozet-kisa")+'</div><p style="margin:4px 0 8px;font-size:13px">'+s.pay.length+" odeme / "+s.all.length+" kisi \u00b7 <b>"+tl(s.toplam)+" TL</b></p><table class=\"sheet slim ozet-kisa\"><thead><tr><th>No</th><th>Ad Soyad</th><th>Odenecek</th></tr></thead><tbody>"+s.pay.map(function(x,i){return '<tr class="pay"><td>'+(i+1)+'</td><td class="name">'+x.p.name+'</td><td class="tot">'+dash(x.c.toplam)+"</td></tr>";}).join("")+"</tbody><tfoot><tr><td></td><td>TOPLAM</td><td>"+tl(s.toplam)+"</td></tr></tfoot></table>";
+  kisa.innerHTML='<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0;font-size:18px">Kisa ozet</h2>'+bar("ozet-kisa")+'</div><p style="margin:4px 0 8px;font-size:13px">'+s.pay.length+" odeme / "+s.all.length+" kisi \u00b7 <b>"+tl(s.toplam)+" TL</b></p><table class=\"sheet slim ozet-kisa\"><thead><tr><th>No</th><th>Ad Soyad</th><th>Odenecek</th></tr></thead><tbody>"+s.all.map(function(x,i){return '<tr class="'+(x.c.toplam>0?"pay":"zero")+'"><td>'+(i+1)+'</td><td class="name">'+x.p.name+'</td><td class="tot">'+dash(x.c.toplam)+"</td></tr>";}).join("")+"</tbody><tfoot><tr><td></td><td>TOPLAM</td><td>"+tl(s.toplam)+"</td></tr></tfoot></table>";
   ayr.innerHTML='<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Ayrintili ozet</h2>'+bar("ozet-ayrinti")+'</div><p>'+s.all.length+" kisi \u00b7 "+s.pay.length+" odeme \u00b7 "+tl(s.toplam)+' TL</p><div class="table-wrap" style="max-height:62vh;padding:0"><table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai</th><th>HS adet</th><th>HS</th><th>Prim</th><th>Yol</th><th>Izin g</th><th>Izin</th><th>Yillik</th><th>Toplam</th></tr></thead><tbody>'+s.all.map(function(x,i){var p=x.p,c=x.c;return '<tr class="'+(c.toplam>0?"pay":"zero")+'"><td>'+(i+1)+'</td><td class="name">'+p.name+(p.kurye?" <small>K</small>":"")+"</td><td>"+(p.mesaiSaat||"-")+"</td><td>"+dash(c.mesai)+"</td><td>"+(p.hsSaat||"-")+"</td><td>"+dash(c.hs)+"</td><td>"+dash(c.prim)+"</td><td>"+dash(c.yol)+"</td><td>"+(p.izinGun||"-")+"</td><td>"+dash(c.izin)+"</td><td>"+dash(c.yillik)+'</td><td class="tot">'+dash(c.toplam)+"</td></tr>";}).join("")+"</tbody><tfoot><tr><td></td><td>TOPLAM</td><td></td><td>"+tl(s.mesai)+"</td><td></td><td>"+tl(s.hs)+"</td><td>"+tl(s.prim)+"</td><td>"+tl(s.yol)+"</td><td></td><td>"+tl(s.izin)+"</td><td>"+tl(s.yillik)+"</td><td>"+tl(s.toplam)+"</td></tr></tfoot></table></div>";
 };
 window.pagePdf=async function(kind,share){
@@ -51,7 +51,7 @@ window.pagePdf=async function(kind,share){
   }else if(kind==="ozet-kisa"){
     title="KISA OZET";
     head=[["No","Ad Soyad","Odenecek"]];
-    body=s.pay.map(function(x,i){return [String(i+1),x.p.name,dash(x.c.toplam)];});
+    body=s.all.map(function(x,i){return [String(i+1),x.p.name,dash(x.c.toplam)];});
     foot=[["","TOPLAM",tl(s.toplam)]];
     col={1:{halign:"left"},2:{fillColor:[243,232,210]}};
   }else if(kind==="kurye"){
