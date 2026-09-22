@@ -26,9 +26,9 @@ st.textContent=[
 "#sec-ozet table,#sec-rapor table,#sec-duzenle table{background:rgba(8,14,26,.55);color:#e8eef8;min-width:0;}",
 "#sec-ozet th,#sec-rapor th{background:rgba(37,99,235,.75);}",
 "#sec-ozet td,#sec-rapor td{border-color:rgba(255,255,255,.08);color:#e8eef8;}",
-"#asFab{position:fixed;right:16px;bottom:18px;z-index:30;width:52px;height:52px;border-radius:16px;border:1px solid rgba(255,255,255,.2);background:rgba(37,99,235,.7);color:#fff;backdrop-filter:blur(10px);box-shadow:0 10px 24px rgba(37,99,235,.35);}",
-"#asPanel{position:fixed;left:12px;right:12px;bottom:78px;z-index:31;border-radius:16px;background:rgba(14,20,34,.82);color:#e8eef8;backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.16);box-shadow:0 16px 40px rgba(0,0,0,.35);}",
+"#asFab,#asPanel{display:none!important;}",
 "}",
+".kmark{font-size:9px;font-weight:600;opacity:.65;margin-left:3px;vertical-align:super;}",
 ".mlist{display:flex;flex-direction:column;gap:8px;background:transparent;border:0;}",
 ".mrow{border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(255,255,255,.07);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 8px 22px rgba(0,0,0,.22);overflow:hidden;color:#e8eef8;}",
 ".mrow.pay{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.28);}",
@@ -72,7 +72,7 @@ function paintMob(){
     var tot=(typeof dash==="function")?dash(c.toplam):(Math.round(c.toplam)||0);
     html+="<div class='mrow "+(c.toplam>0?"pay":"")+(on?" on":"")+"'>";
     html+="<button type='button' class='mhead' onclick='toggleMob("+p.id+",event)'>";
-    html+="<span class='mno'>"+no+"</span><span class='mname'>"+p.name+(p.kurye?" K":"")+"</span><span class='mtot'>"+tot+"</span></button>";
+    html+="<span class='mno'>"+no+"</span><span class='mname'>"+p.name+(p.kurye?" <span class='kmark'>K</span>":"")+"</span><span class='mtot'>"+tot+"</span></button>";
     if(on){
       function field(lab,key,step){
         return "<label>"+lab+"<input type='number' step='"+step+"' value='"+(p[key]||"")+"' data-id='"+p.id+"' data-key='"+key+"'></label>";
