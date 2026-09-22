@@ -5,15 +5,12 @@
 <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta name="theme-color" content="#0b1220"/>
-<link rel="manifest" href="manifest.webmanifest"/>
 <title>Cadde Mesai Listesi</title>
 <script>
 if(navigator.serviceWorker){
   navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});
   if(window.caches){caches.keys().then(function(k){k.forEach(function(x){caches.delete(x);});});}
 }
-function __killGate(){var g=document.getElementById("pcGate");if(g)g.remove();}
-setInterval(__killGate,250);
 (function(){if(window.innerWidth<=900||('ontouchstart' in window)){document.documentElement.classList.add('night');}}());
 </script>
 <style>
@@ -42,25 +39,12 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 #q{min-width:140px;flex:1}
 #mobileList{display:none}
 #asFab,#asPanel{display:none!important}
-.kmark{font-size:9px;font-weight:600;opacity:.6;margin-left:3px;vertical-align:super;letter-spacing:0}
+.kmark{font-size:9px;font-weight:600;opacity:.6;margin-left:3px;vertical-align:super}
 @media(max-width:900px){
-html.night,html.night body{background:#0b1220!important;color:#e8eef8!important}
-html.night header.bar{position:sticky;top:0;z-index:20;background:rgba(12,18,32,.75)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.12)}
-html.night header.bar h1,html.night #pageSub,html.night .btn,html.night .tab,html.night .panel,html.night .stat,html.night .pcard,html.night .card{color:#e8eef8!important}
-html.night #pageSub{color:#9aa8c2!important}
-html.night header.bar #q,html.night header.bar .btn{background:rgba(255,255,255,.08)!important;border-color:rgba(255,255,255,.16)!important;color:#e8eef8!important}
-html.night .btn.primary{background:rgba(59,130,246,.6)!important;border-color:transparent!important}
-html.night .btn.sync{background:rgba(16,185,129,.45)!important}
-html.night nav.tabs{position:sticky;top:86px;z-index:19;background:rgba(12,18,32,.55)!important;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow-x:auto;flex-wrap:nowrap}
-html.night nav.tabs .tab{background:rgba(255,255,255,.08)!important;border-color:rgba(255,255,255,.14)!important;color:#d7e2f4!important;border-radius:999px}
-html.night nav.tabs .tab.on{background:rgba(59,130,246,.75)!important;color:#fff!important}
-html.night .stat,html.night .panel,html.night .card,html.night .pcard{background:rgba(255,255,255,.08)!important;border-color:rgba(255,255,255,.14)!important}
-html.night .table-wrap{display:none}
-html.night #mobileList{display:block!important;padding-bottom:40px}
-html.night .stats{grid-template-columns:1fr 1fr}
-html.night #sec-ozet .table-wrap,html.night #sec-duzenle .table-wrap,html.night #sec-devam .table-wrap{display:block!important}
-html.night #sec-rapor .table-wrap,html.night #sec-rapor table{display:none!important}
-html.night tr.pay td.tot,html.night td.tot{background:#fbbf24!important;color:#111!important}
+.table-wrap{display:none}
+#mobileList{display:block;padding-bottom:40px}
+.stats{grid-template-columns:1fr 1fr}
+#sec-ozet .table-wrap,#sec-duzenle .table-wrap,#sec-devam .table-wrap{display:block!important}
 }
 </style></head>
 <body>
@@ -111,14 +95,14 @@ html.night tr.pay td.tot,html.night td.tot{background:#fbbf24!important;color:#1
 <section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
-<script src="lock.js?v=84"></script>
+<script src="lock.js?v=85"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=84"></script>
-<script src="app.js?v=84"></script>
-<script src="gh.js?v=84"></script>
-<script src="plus.js?v=84"></script>
-<script src="page-extra.js?v=84"></script>
-<script src="mobile-fix.js?v=84"></script>
-<script src="ozet-all.js?v=84"></script>
+<script src="seed.js?v=85"></script>
+<script src="app.js?v=85"></script>
+<script src="gh.js?v=85"></script>
+<script src="plus.js?v=85"></script>
+<script src="page-extra.js?v=85"></script>
+<script src="mobile-fix.js?v=85"></script>
+<script src="ozet-all.js?v=85"></script>
 </body></html>
