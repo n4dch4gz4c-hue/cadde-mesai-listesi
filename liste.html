@@ -28,7 +28,7 @@ table.slim{min-width:0}
 th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0}
 td{border:1px solid #eadfd2;padding:3px 4px;text-align:center}
 td.name{text-align:left;font-weight:700}
-tr.pay td.tot,.pcard.pay .ptot{background:#f3e8d2;font-weight:700}
+tr.pay td.tot,.pcard.pay .ptot{background:#f3e8d2;font-weight:700;color:#111}
 tfoot td{background:#222;color:#fff}
 input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16px}
 .sheet input{width:64px;text-align:center;font-size:14px}
@@ -54,17 +54,13 @@ html.night .btn.sync{background:rgba(16,185,129,.45)!important}
 html.night nav.tabs{position:sticky;top:86px;z-index:19;background:rgba(12,18,32,.55)!important;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow-x:auto;flex-wrap:nowrap}
 html.night nav.tabs .tab{background:rgba(255,255,255,.08)!important;border-color:rgba(255,255,255,.14)!important;color:#d7e2f4!important;border-radius:999px}
 html.night nav.tabs .tab.on{background:rgba(59,130,246,.75)!important;color:#fff!important}
-html.night .stat,html.night .panel,html.night .card,html.night .pcard{background:rgba(255,255,255,.08)!important;border-color:rgba(255,255,255,.14)!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+html.night .stat,html.night .panel,html.night .card,html.night .pcard{background:rgba(255,255,255,.08)!important;border-color:rgba(255,255,255,.14)!important}
 html.night .table-wrap{display:none}
-html.night #mobileList{display:block!important;padding-bottom:88px}
+html.night #mobileList{display:block!important;padding-bottom:40px}
 html.night .stats{grid-template-columns:1fr 1fr}
-html.night #sec-ozet .table-wrap,html.night #sec-rapor .table-wrap,html.night #sec-duzenle .table-wrap,html.night #sec-devam .table-wrap{display:block!important}
-html.night .mrow{background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.14)!important;color:#e8eef8!important;border-radius:16px;backdrop-filter:blur(16px)}
-html.night .mrow.pay{background:rgba(251,191,36,.12)!important;border-color:rgba(251,191,36,.3)!important}
-html.night .mtot{color:#93c5fd!important}
-html.night .mrow.pay .mtot{color:#fbbf24!important}
-html.night .mfields input{background:rgba(0,0,0,.3)!important;color:#e8eef8!important;border-color:rgba(255,255,255,.14)!important}
-html.night .kmark{color:#93c5fd;opacity:.8}
+html.night #sec-ozet .table-wrap,html.night #sec-duzenle .table-wrap,html.night #sec-devam .table-wrap{display:block!important}
+html.night #sec-rapor .table-wrap,html.night #sec-rapor table{display:none!important}
+html.night tr.pay td.tot,html.night td.tot{background:#fbbf24!important;color:#111!important}
 }
 </style></head>
 <body>
@@ -115,15 +111,14 @@ html.night .kmark{color:#93c5fd;opacity:.8}
 <section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
-<script src="lock.js?v=83"></script>
+<script src="lock.js?v=84"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=83"></script>
-<script src="app.js?v=83"></script>
-<script src="gh.js?v=83"></script>
-<script src="plus.js?v=83"></script>
-<script src="page-extra.js?v=83"></script>
-<script src="mobile-fix.js?v=83"></script>
-<script src="puter-ai.js?v=83"></script>
-<script src="ozet-all.js?v=83"></script>
+<script src="seed.js?v=84"></script>
+<script src="app.js?v=84"></script>
+<script src="gh.js?v=84"></script>
+<script src="plus.js?v=84"></script>
+<script src="page-extra.js?v=84"></script>
+<script src="mobile-fix.js?v=84"></script>
+<script src="ozet-all.js?v=84"></script>
 </body></html>
