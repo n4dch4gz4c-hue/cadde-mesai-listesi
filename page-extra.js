@@ -83,8 +83,55 @@ window.pagePdf=async function(kind,share){
   if(share && typeof outPdf==="function") await outPdf(r.doc,r.name);
   else { r.doc.save(r.name); toast("PDF indirildi"); }
 };
+function renderDuzenle(){
+  var box=document.getElementById("duzenleList");
+  if(!box)return;
+  var rows=state.people||[];
+  box.innerHTML='<div class="table-wrap" style="max-height:70vh;padding:0"><table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Kurye</th><th>Birim</th><th>Tasi</th><th></th></tr></thead><tbody>'+
+    rows.map(function(p,i){
+      return '<tr><td>'+(i+1)+'</td>'+
+        '<td class="name"><input style="width:100%;text-align:left;min-width:180px" value="'+String(p.name||"").replace(/"/g,""")+ '" onchange="editName('+p.id+',this.value)"></td>'+
+        '<td><input type="checkbox" '+(p.kurye?"checked":"")+' onchange="editKurye('+p.id+',this.checked)"></td>'+
+        '<td><input type="number" value="'+(p.mesaiBirim||300)+'" onchange="editBirim('+p.id+',this.value)"></td>'+
+        '<td><button class="btn" type="button" onclick="moveKisi('+p.id+',-1)">Yukari</button> <button class="btn" type="button" onclick="moveKisi('+p.id+',1)">Asagi</button></td>'+
+        '<td><button class="btn" type="button" onclick="silKisi('+p.id+');renderDuzenle()">Sil</button></td></tr>';
+    }).join("")+"</tbody></table></div>";
+}
+window.renderDuzenle=renderDuzenle;
+window.editName=function(id,val){
+  var p=state.people.find(function(x){return x.id===id;}); if(!p)return;
+  p.name=String(val||"").trim(); persist(); toast("Isim guncellendi");
+};
+window.editKurye=function(id,on){
+  var p=state.people.find(function(x){return x.id===id;}); if(!p)return;
+  p.kurye=!!on; persist(); renderAll(); renderDuzenle();
+};
+window.editBirim=function(id,val){
+  var p=state.people.find(function(x){return x.id===id;}); if(!p)return;
+  p.mesaiBirim=num(val,300); persist(); renderAll();
+};
+window.moveKisi=function(id,dir){
+  var i=state.people.findIndex(function(x){return x.id===id;});
+  var j=i+dir;
+  if(i<0||j<0||j>=state.people.length)return;
+  var t=state.people[i]; state.people[i]=state.people[j]; state.people[j]=t;
+  persist(); renderDuzenle(); renderAll();
+};
+window.tab=function(el){
+  document.querySelectorAll(".tab[data-tab]").forEach(function(t){t.classList.toggle("on",t===el);});
+  var id=el.dataset.tab;
+  ["liste","kurye","devam","ceza","ozet","rapor","duzenle"].forEach(function(s){
+    var e=document.getElementById("sec-"+s); if(e)e.classList.toggle("hide",s!==id);
+  });
+  if(id==="kurye") renderKurye();
+  if(id==="devam") renderDevam();
+  if(id==="ceza") renderCeza();
+  if(id==="ozet"){ renderOzet(); ozetMod((document.querySelector("[data-ozet].on")||{}).dataset.ozet||"kisa"); }
+  if(id==="rapor") renderRapor();
+  if(id==="duzenle") renderDuzenle();
+};
 var _ra=renderAll;
-renderAll=function(){ _ra(); attach(); };
+renderAll=function(){ _ra(); attach(); var d=document.getElementById("sec-duzenle"); if(d && !d.classList.contains("hide")) renderDuzenle(); };
 setTimeout(attach,400);
 setTimeout(attach,1200);
 })();
