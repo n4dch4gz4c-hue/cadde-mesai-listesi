@@ -22,22 +22,81 @@ function attach(){
     host.appendChild(d.firstChild);
   });
 }
-function _sums(){return typeof sums==="function"?sums():{all:[],pay:[],mesai:0,hs:0,prim:0,yol:0,izin:0,yillik:0,toplam:0};}
-renderOzet=function(){
-  var s=_sums();
-  var kisa=document.getElementById("ozetKisa");
-  var ayr=document.getElementById("ozetAyrinti");
-  if(!kisa||!ayr)return;
-  kisa.innerHTML='<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0;font-size:18px">Kisa ozet</h2>'+bar("ozet-kisa")+'</div><p style="margin:4px 0 8px;font-size:13px">'+s.pay.length+" odeme / "+s.all.length+" kisi \u00b7 <b>"+tl(s.toplam)+" TL</b></p><table class=\"sheet slim ozet-kisa\"><thead><tr><th>No</th><th>Ad Soyad</th><th>Odenecek</th></tr></thead><tbody>"+s.all.map(function(x,i){return '<tr class="'+(x.c.toplam>0?"pay":"zero")+'"><td>'+(i+1)+'</td><td class="name">'+x.p.name+'</td><td class="tot">'+dash(x.c.toplam)+"</td></tr>";}).join("")+"</tbody><tfoot><tr><td></td><td>TOPLAM</td><td>"+tl(s.toplam)+"</td></tr></tfoot></table>";
-  ayr.innerHTML='<div class="row" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Ayrintili ozet</h2>'+bar("ozet-ayrinti")+'</div><p>'+s.all.length+" kisi \u00b7 "+s.pay.length+" odeme \u00b7 "+tl(s.toplam)+' TL</p><div class="table-wrap" style="max-height:62vh;padding:0"><table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai</th><th>HS adet</th><th>HS</th><th>Prim</th><th>Yol</th><th>Izin g</th><th>Izin</th><th>Yillik</th><th>Toplam</th></tr></thead><tbody>'+s.all.map(function(x,i){var p=x.p,c=x.c;return '<tr class="'+(c.toplam>0?"pay":"zero")+'"><td>'+(i+1)+'</td><td class="name">'+p.name+(p.kurye?" <small>K</small>":"")+"</td><td>"+(p.mesaiSaat||"-")+"</td><td>"+dash(c.mesai)+"</td><td>"+(p.hsSaat||"-")+"</td><td>"+dash(c.hs)+"</td><td>"+dash(c.prim)+"</td><td>"+dash(c.yol)+"</td><td>"+(p.izinGun||"-")+"</td><td>"+dash(c.izin)+"</td><td>"+dash(c.yillik)+'</td><td class="tot">'+dash(c.c.toplam)+"</td></tr>";}).join("")+"</tbody><tfoot><tr><td></td><td>TOPLAM</td><td></td><td>"+tl(s.mesai)+"</td><td></td><td>"+tl(s.hs)+"</td><td>"+tl(s.prim)+"</td><td>"+tl(s.yol)+"</td><td></td><td>"+tl(s.izin)+"</td><td>"+tl(s.yillik)+"</td><td>"+tl(s.toplam)+"</td></tr></tfoot></table></div>";
-};
-function drawKisaOnePage(doc,font,s,now){
+function _sums(){return typeof sums==="function"?sums():{all:[],pay:[],mesai:0,hs:0,prim:0,yol:0,izin:0,yillik:0,dis:0,toplam:0};}
+function trimPages(doc,max){
+  var n=doc.getNumberOfPages();
+  while(n>max){ doc.deletePage(n); n--; }
+}
+function drawRaporMax2(doc,font,s,now){
   var W=doc.internal.pageSize.getWidth();
   var H=doc.internal.pageSize.getHeight();
   doc.setFillColor(11,18,32);
+  doc.rect(0,0,W,11,"F");
+  doc.setFont(font,"bold"); doc.setFontSize(11); doc.setTextColor(255,255,255);
+  doc.text("CADDE  \u00b7  AYLIK RAPOR",10,7.5);
+  doc.setFont(font,"normal"); doc.setFontSize(8);
+  doc.text(now,W-10,7.5,{align:"right"});
+  doc.setTextColor(31,75,143); doc.setFontSize(8);
+  doc.text(s.pay.length+" odeme / "+s.all.length+" kisi    TOPLAM  "+tl(s.toplam)+" TL",10,16);
+  var kalem=[
+    ["Mesai",tl(s.mesai)],["HS",tl(s.hs)],["Prim",tl(s.prim)],
+    ["Yol",tl(s.yol)],["Izin",tl(s.izin)],["Yillik",tl(s.yillik)]
+  ];
+  doc.autoTable({
+    startY:18,
+    head:[["Kalem","Tutar","Kalem","Tutar","Kalem","Tutar"]],
+    body:[[kalem[0][0],kalem[0][1],kalem[1][0],kalem[1][1],kalem[2][0],kalem[2][1]],[kalem[3][0],kalem[3][1],kalem[4][0],kalem[4][1],kalem[5][0],kalem[5][1]]],
+    theme:"grid",
+    styles:{font:font,fontSize:7,cellPadding:0.6,halign:"center"},
+    headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:7},
+    margin:{left:10,right:10},
+    pageBreak:"avoid"
+  });
+  var y=(doc.lastAutoTable&&doc.lastAutoTable.finalY||24)+3;
+  doc.autoTable({
+    startY:y,
+    head:[["No","Ad Soyad","Mesai","HS","Prim","Yol","Izin","Yillik","Diger","Odenecek"]],
+    body:s.all.map(function(x,i){
+      return [String(i+1),x.p.name+(x.p.kurye?" K":""),dash(x.c.mesai),dash(x.c.hs),dash(x.c.prim),dash(x.c.yol),dash(x.c.izin),dash(x.c.yillik),dash((x.c.dis||0)),dash(x.c.toplam)];
+    }),
+    foot:[["","TOPLAM",tl(s.mesai),tl(s.hs),tl(s.prim),tl(s.yol),tl(s.izin),tl(s.yillik),tl(s.dis||0),tl(s.toplam)]],
+    theme:"grid",
+    styles:{font:font,fontSize:6.2,cellPadding:0.42,halign:"center",overflow:"ellipsize",minCellHeight:3.8},
+    headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:6.4,cellPadding:0.5},
+    footStyles:{fillColor:[34,34,34],textColor:[255,255,255],fontSize:6.2},
+    columnStyles:{0:{cellWidth:8},1:{halign:"left",cellWidth:48},9:{fillColor:[243,232,210]}},
+    margin:{left:10,right:10,top:8,bottom:8},
+    pageBreak:"auto",
+    rowPageBreak:"avoid"
+  });
+  var cezalar=[];
+  try{ cezalar=(typeof state!=="undefined"&&state.cezalar)?state.cezalar:[]; }catch(e){}
+  if(cezalar.length){
+    var y2=(doc.lastAutoTable&&doc.lastAutoTable.finalY||40)+3;
+    if(y2>H-28){ doc.addPage(); y2=12; }
+    var ctot=0;
+    doc.autoTable({
+      startY:y2,
+      head:[["No","Ceza - Ad Soyad","Tutar","Neden"]],
+      body:cezalar.map(function(c,i){ ctot+=Number(c.tutar)||0; return [String(i+1),c.kisi||"",tl(c.tutar)+" TL",c.neden||"-"]; }),
+      foot:[["","TOPLAM",tl(ctot)+" TL",""]],
+      theme:"grid",
+      styles:{font:font,fontSize:6.2,cellPadding:0.45,overflow:"ellipsize"},
+      headStyles:{fillColor:[153,27,27],textColor:[255,255,255],fontSize:6.4},
+      footStyles:{fillColor:[34,34,34],textColor:[255,255,255]},
+      columnStyles:{1:{halign:"left"},3:{halign:"left"}},
+      margin:{left:10,right:10,bottom:8},
+      pageBreak:"auto"
+    });
+  }
+  trimPages(doc,2);
+}
+function drawKisaOnePage(doc,font,s,now){
+  var W=doc.internal.pageSize.getWidth();
+  doc.setFillColor(11,18,32);
   doc.rect(0,0,W,12,"F");
   doc.setFont(font,"bold"); doc.setFontSize(11); doc.setTextColor(255,255,255);
-  doc.text("CADDE  ·  KISA OZET",10,8);
+  doc.text("CADDE  \u00b7  KISA OZET",10,8);
   doc.setFont(font,"normal"); doc.setFontSize(8);
   doc.text(now,W-10,8,{align:"right"});
   doc.setTextColor(31,75,143); doc.setFontSize(9);
@@ -92,10 +151,16 @@ window.pagePdf=async function(kind,share){
     else { doc.save("cadde-ozet-kisa.pdf"); toast("PDF indirildi (1 sayfa)"); }
     return;
   }
+  if(kind==="rapor"){
+    drawRaporMax2(doc,font,s,now);
+    if(share && typeof outPdf==="function") await outPdf(doc,"cadde-aylik-rapor.pdf");
+    else { doc.save("cadde-aylik-rapor.pdf"); toast("PDF indirildi (en fazla 2 sayfa)"); }
+    return;
+  }
   if(typeof pdfDrawChrome==="function") pdfDrawChrome(doc,font,W,H,now,s.pay.length,s.all.length);
   var title="CADDE", head, body, foot=null, col={1:{halign:"left"}};
-  if(kind==="liste"||kind==="rapor"||kind==="ozet-ayrinti"){
-    title=kind==="liste"?"MESAI LISTESI":(kind==="rapor"?"AYLIK RAPOR":"AYRINTILI OZET");
+  if(kind==="liste"||kind==="ozet-ayrinti"){
+    title=kind==="liste"?"MESAI LISTESI":"AYRINTILI OZET";
     head=[["No","Ad Soyad","Mesai saat","Mesai","HS adet","HS","Prim","Yol","Izin g","Izin","Yillik","Odenecek"]];
     body=s.all.map(function(x,i){return [String(i+1),x.p.name+(x.p.kurye?" (K)":""),String(x.p.mesaiSaat||"-"),dash(x.c.mesai),String(x.p.hsSaat||"-"),dash(x.c.hs),dash(x.c.prim),dash(x.c.yol),String(x.p.izinGun||"-"),dash(x.c.izin),dash(x.c.yillik),dash(x.c.toplam)];});
     foot=[["","TOPLAM","",tl(s.mesai),"",tl(s.hs),tl(s.prim),tl(s.yol),"",tl(s.izin),tl(s.yillik),tl(s.toplam)]];
@@ -118,7 +183,7 @@ window.pagePdf=async function(kind,share){
     body=((typeof state!=="undefined"?state.cezalar:[])||[]).map(function(c,i){return [String(i+1),c.kisi,tl(c.tutar)+" TL",c.neden||"-"];});
   }
   doc.setFont(font,"normal"); doc.setFontSize(10); doc.setTextColor(31,75,143); doc.text(title,10,20);
-  var opt={startY:24,head:head,body:body,theme:"grid",styles:{font:font,fontSize:6.2,cellPadding:0.55,halign:"center",textColor:[31,41,51],lineColor:[232,223,210],overflow:"linebreak"},headStyles:{fillColor:[31,75,143],textColor:[255,255,255]},footStyles:{fillColor:[34,34,34],textColor:[255,255,255]},columnStyles:col,margin:{left:10,right:10,top:16,bottom:10},didDrawPage:function(){ if(typeof pdfDrawChrome==="function") pdfDrawChrome(doc,font,W,H,now,s.pay.length,s.all.length);}};
+  var opt={startY:24,head:head,body:body,theme:"grid",styles:{font:font,fontSize:6.2,cellPadding:0.55,halign:"center",textColor:[31,41,51],lineColor:[232,223,210],overflow:"linebreak"},headStyles:{fillColor:[31,75,143],textColor:[255,255,255]},footStyles:{fillColor:[34,34,34],textColor:[255,255,255]},columnStyles:col,margin:{left:10,right:10,top:16,bottom:10}};
   if(foot) opt.foot=foot;
   doc.autoTable(opt);
   if(share && typeof outPdf==="function") await outPdf(doc,"cadde-"+kind+".pdf");
