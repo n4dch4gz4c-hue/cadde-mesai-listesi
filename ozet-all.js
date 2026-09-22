@@ -1,6 +1,6 @@
 (function(){
 var cs=document.createElement("style");
-cs.textContent="#sec-ozet table,#kalemPanel table{background:#fff!important;color:#111!important}\n#sec-ozet td,#sec-ozet td.name,#kalemPanel td,#kalemPanel td.name{color:#111!important;background:#fff!important;-webkit-text-fill-color:#111!important}\n#sec-ozet td.tot,#kalemPanel td.tot{background:#f3e8d2!important;color:#111!important;-webkit-text-fill-color:#111!important}\n#sec-ozet tfoot td,#kalemPanel tfoot td{background:#222!important;color:#fff!important;-webkit-text-fill-color:#fff!important}";
+cs.textContent=["#sec-ozet table,#kalemPanel table{background:#fff!important;color:#111!important}","#sec-ozet td,#sec-ozet td.name,#kalemPanel td,#kalemPanel td.name{color:#111!important;background:#fff!important;-webkit-text-fill-color:#111!important}","#sec-ozet td.tot{background:#f3e8d2!important;color:#111!important}","#sec-ozet tfoot td{background:#222!important;color:#fff!important}","#ozetKisa table.kisa-tbl{width:100%;max-width:420px;font-size:12px}","#ozetKisa table.kisa-tbl th,#ozetKisa table.kisa-tbl td{padding:3px 6px;line-height:1.2}"].join("\n");
 document.head.appendChild(cs);
 function money(n){ n=Math.round(Number(n)||0); return n===0?"0":(typeof tl==="function"?tl(n):String(n)); }
 function dsh(n){ n=Math.round(Number(n)||0); return n===0?"-":money(n); }
@@ -29,19 +29,19 @@ function pdfBar(kind){
   return "<div class='row' style='gap:6px;margin:0'><button class='btn primary' type='button' onclick=\"pagePdf('"+kind+"',false)\">PDF indir</button><button class='btn' type='button' onclick=\"pagePdf('"+kind+"',true)\">Paylas</button></div>";
 }
 var MODE="kisa";
-var INK="color:#111;-webkit-text-fill-color:#111;font-weight:800";
+var INK="color:#111;-webkit-text-fill-color:#111;font-weight:700;padding:3px 6px";
 function htmlKisa(list){
   var i,p,c,tot=0,pay=0,h="";
-  h="<div class='row' style='justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px'><h2 style='margin:0;font-size:18px;color:#111'>Kisa ozet</h2>"+pdfBar("ozet-kisa")+"</div>";
+  h="<div class='row' style='justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px'><h2 style='margin:0;font-size:17px;color:#111'>Kisa ozet</h2>"+pdfBar("ozet-kisa")+"</div>";
   for(i=0;i<list.length;i++){ c=rowCalc(list[i]); tot+=c.toplam||0; if(c.toplam>0) pay++; }
-  h+="<p style='margin:8px 0;color:#111'>"+list.length+" kisi / "+pay+" odeme \u00b7 <b>"+money(tot)+" TL</b></p>";
-  h+="<div style='overflow:auto'><table class='sheet slim' style='min-width:0;width:100%;background:#fff;color:#111'>";
-  h+="<thead><tr><th style='width:44px'>No</th><th>Ad Soyad</th><th style='width:90px'>Odenecek</th></tr></thead><tbody>";
+  h+="<p style='margin:6px 0 8px;color:#111;font-size:13px'>"+list.length+" kisi / "+pay+" odeme \u00b7 <b>"+money(tot)+" TL</b></p>";
+  h+="<table class='sheet slim kisa-tbl'>";
+  h+="<thead><tr><th style='width:36px'>No</th><th>Ad Soyad</th><th style='width:78px'>Odenecek</th></tr></thead><tbody>";
   for(i=0;i<list.length;i++){
     p=list[i]; c=rowCalc(p);
     h+="<tr class='"+(c.toplam>0?"pay":"")+"'><td style='"+INK+"'>"+(i+1)+"</td><td class='name' style='"+INK+"'>"+(p.name||"")+"</td><td class='tot' style='"+INK+";background:#f3e8d2'>"+money(c.toplam)+"</td></tr>";
   }
-  h+="</tbody><tfoot><tr><td></td><td>TOPLAM</td><td>"+money(tot)+"</td></tr></tfoot></table></div>";
+  h+="</tbody><tfoot><tr><td></td><td>TOPLAM</td><td>"+money(tot)+"</td></tr></tfoot></table>";
   return h;
 }
 function htmlAyr(list){
@@ -55,12 +55,12 @@ function htmlAyr(list){
   h+="<thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai</th><th>HS adet</th><th>HS</th><th>Prim</th><th>Yol</th><th>Izin g</th><th>Izin</th><th>Yillik</th><th>Toplam</th></tr></thead><tbody>";
   for(i=0;i<list.length;i++){
     p=list[i]; c=rowCalc(p);
-    h+="<tr class='"+(c.toplam>0?"pay":"")+"'><td style='"+INK+"'>"+(i+1)+"</td><td class='name' style='"+INK+"'>"+(p.name||"")+(p.kurye?" K":"")+"</td>";
-    h+="<td style='"+INK+"'>"+(p.mesaiSaat||"-")+"</td><td style='"+INK+"'>"+dsh(c.mesai)+"</td>";
-    h+="<td style='"+INK+"'>"+(p.hsSaat||"-")+"</td><td style='"+INK+"'>"+dsh(c.hs)+"</td>";
-    h+="<td style='"+INK+"'>"+dsh(c.prim)+"</td><td style='"+INK+"'>"+dsh(c.yol)+"</td>";
-    h+="<td style='"+INK+"'>"+(p.izinGun||"-")+"</td><td style='"+INK+"'>"+dsh(c.izin)+"</td>";
-    h+="<td style='"+INK+"'>"+dsh(c.yillik)+"</td><td class='tot' style='"+INK+";background:#f3e8d2'>"+dsh(c.toplam)+"</td></tr>";
+    h+="<tr class='"+(c.toplam>0?"pay":"")+"'><td style='color:#111'>"+(i+1)+"</td><td class='name' style='color:#111;font-weight:700'>"+(p.name||"")+(p.kurye?" K":"")+"</td>";
+    h+="<td style='color:#111'>"+(p.mesaiSaat||"-")+"</td><td style='color:#111'>"+dsh(c.mesai)+"</td>";
+    h+="<td style='color:#111'>"+(p.hsSaat||"-")+"</td><td style='color:#111'>"+dsh(c.hs)+"</td>";
+    h+="<td style='color:#111'>"+dsh(c.prim)+"</td><td style='color:#111'>"+dsh(c.yol)+"</td>";
+    h+="<td style='color:#111'>"+(p.izinGun||"-")+"</td><td style='color:#111'>"+dsh(c.izin)+"</td>";
+    h+="<td style='color:#111'>"+dsh(c.yillik)+"</td><td class='tot' style='color:#111;background:#f3e8d2'>"+dsh(c.toplam)+"</td></tr>";
   }
   h+="</tbody><tfoot><tr><td></td><td>TOPLAM</td><td></td><td>"+money(mesai)+"</td><td></td><td>"+money(hs)+"</td><td>"+money(prim)+"</td><td>"+money(yol)+"</td><td></td><td>"+money(izin)+"</td><td>"+money(yillik)+"</td><td>"+money(tot)+"</td></tr></tfoot></table></div>";
   return h;
