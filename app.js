@@ -66,6 +66,7 @@ function setVal(id,field,val){
   if(field==="disiplinDk")p.disiplinDk=num(val,0);
   persist();renderListe();
 }
+function kTag(p){return p.kurye?' <span class="kmark">K</span>':'';}
 function renderListe(){
   const rows=visible();
   const all=state.people.map(p=>({p,c:calc(p)}));
@@ -76,7 +77,7 @@ function renderListe(){
   document.getElementById("tbody").innerHTML=rows.map(p=>{
     const c=calc(p);
     const cls=c.toplam>0?"pay":"zero";
-    return `<tr class="${cls}"><td>${state.people.findIndex(x=>x.id===p.id)+1}</td><td class="name">${p.name}${p.kurye?" <small>KURYE</small>":""}</td><td><input type="number" step="0.5" value="${p.mesaiSaat||""}" onchange="setVal(${p.id},'mesaiSaat',this.value)"/></td><td>${dash(c.mesai)}</td><td><input type="number" step="0.5" value="${p.hsSaat||""}" onchange="setVal(${p.id},'hsSaat',this.value)"/></td><td>${dash(c.hs)}</td><td>${p.kurye?dash(c.prim):"-"}</td><td><input class="wide" type="number" value="${p.yolTutar||""}" onchange="setVal(${p.id},'yolTutar',this.value)"/></td><td><input type="number" step="0.5" value="${p.izinGun||""}" onchange="setVal(${p.id},'izinGun',this.value)"/></td><td><input class="wide" type="number" value="${p.izinTutar||""}" onchange="setVal(${p.id},'izinTutar',this.value)"/></td><td><input class="wide" type="number" value="${p.yillikTutar||""}" onchange="setVal(${p.id},'yillikTutar',this.value)"/></td><td><input type="number" value="${p.disiplinDk||""}" onchange="setVal(${p.id},'disiplinDk',this.value)"/></td><td class="tot">${dash(c.toplam)}</td></tr>`;
+    return `<tr class="${cls}"><td>${state.people.findIndex(x=>x.id===p.id)+1}</td><td class="name">${p.name}${kTag(p)}</td><td><input type="number" step="0.5" value="${p.mesaiSaat||""}" onchange="setVal(${p.id},'mesaiSaat',this.value)"/></td><td>${dash(c.mesai)}</td><td><input type="number" step="0.5" value="${p.hsSaat||""}" onchange="setVal(${p.id},'hsSaat',this.value)"/></td><td>${dash(c.hs)}</td><td>${p.kurye?dash(c.prim):"-"}</td><td><input class="wide" type="number" value="${p.yolTutar||""}" onchange="setVal(${p.id},'yolTutar',this.value)"/></td><td><input type="number" step="0.5" value="${p.izinGun||""}" onchange="setVal(${p.id},'izinGun',this.value)"/></td><td><input class="wide" type="number" value="${p.izinTutar||""}" onchange="setVal(${p.id},'izinTutar',this.value)"/></td><td><input class="wide" type="number" value="${p.yillikTutar||""}" onchange="setVal(${p.id},'yillikTutar',this.value)"/></td><td><input type="number" value="${p.disiplinDk||""}" onchange="setVal(${p.id},'disiplinDk',this.value)"/></td><td class="tot">${dash(c.toplam)}</td></tr>`;
   }).join("");
   const vis=rows.map(calc);
   const add=k=>vis.reduce((a,c)=>a+c[k],0);
