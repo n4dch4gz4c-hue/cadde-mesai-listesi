@@ -91,30 +91,29 @@ function drawRaporMax2(doc,font,s,now){
   }
   trimPages(doc,2);
 }
-function drawKisaFull(doc,font,s,now){
+function drawKisaOne(doc,font,s,now,fs,pad){
   var W=doc.internal.pageSize.getWidth();
   doc.setFillColor(11,18,32);
-  doc.rect(0,0,W,12,"F");
-  doc.setFont(font,"bold"); doc.setFontSize(12); doc.setTextColor(255,255,255);
-  doc.text("CADDE  \u00b7  KISA OZET",10,8);
-  doc.setFont(font,"normal"); doc.setFontSize(8);
-  doc.text(now,W-10,8,{align:"right"});
-  doc.setTextColor(31,75,143); doc.setFontSize(9);
-  doc.text(s.pay.length+" odeme / "+s.all.length+" kisi   TOPLAM  "+tl(s.toplam)+" TL",10,18);
+  doc.rect(0,0,W,10,"F");
+  doc.setFont(font,"bold"); doc.setFontSize(11); doc.setTextColor(255,255,255);
+  doc.text("CADDE  \u00b7  KISA OZET",10,6.8);
+  doc.setFont(font,"normal"); doc.setFontSize(7.5);
+  doc.text(now,W-10,6.8,{align:"right"});
+  doc.setTextColor(31,75,143); doc.setFontSize(8);
+  doc.text(s.pay.length+" odeme / "+s.all.length+" kisi   TOPLAM  "+tl(s.toplam)+" TL",10,15);
   doc.autoTable({
-    startY:21,
+    startY:17,
     head:[["No","Ad Soyad","Odenecek"]],
     body:s.all.map(function(x,i){ return [String(i+1),x.p.name+(x.p.kurye?" K":""),dash(x.c.toplam)]; }),
     foot:[["","TOPLAM",tl(s.toplam)]],
     theme:"grid",
-    styles:{font:font,fontSize:9,cellPadding:1.1,halign:"center",textColor:[20,20,20],lineColor:[210,210,210]},
-    headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:9},
-    footStyles:{fillColor:[34,34,34],textColor:[255,255,255]},
-    columnStyles:{0:{cellWidth:16},1:{halign:"left"},2:{cellWidth:36,fillColor:[243,232,210]}},
-    margin:{left:10,right:10,top:16,bottom:12},
-    pageBreak:"auto",
-    rowPageBreak:"avoid",
-    showHead:"everyPage"
+    styles:{font:font,fontSize:fs,cellPadding:pad,halign:"center",textColor:[20,20,20],lineColor:[210,210,210],overflow:"ellipsize",minCellHeight:fs*0.55},
+    headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:fs,cellPadding:pad},
+    footStyles:{fillColor:[34,34,34],textColor:[255,255,255],fontSize:fs},
+    columnStyles:{0:{cellWidth:12},1:{halign:"left"},2:{cellWidth:32,fillColor:[243,232,210]}},
+    margin:{left:10,right:10,top:12,bottom:8},
+    pageBreak:"avoid",
+    rowPageBreak:"avoid"
   });
 }
 window.pagePdf=async function(kind,share){
@@ -124,16 +123,33 @@ window.pagePdf=async function(kind,share){
   var s=_sums();
   var now=new Date().toLocaleString("tr-TR",{day:"2-digit",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
   var land=kind==="liste"||kind==="ozet-ayrinti"||kind==="rapor";
-  var doc=new jsPDF({orientation:land?"landscape":"portrait",unit:"mm",format:"a4"});
-  var hasFont=await ensurePdfFont(doc);
-  var font=hasFont?"DejaVu":"helvetica";
-  var W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
+  var hasFont;
   if(kind==="ozet-kisa"){
-    drawKisaFull(doc,font,s,now);
+    var fs=s.all.length>70?6.2:s.all.length>55?6.8:7.4;
+    var pad=s.all.length>70?0.28:s.all.length>55?0.35:0.45;
+    var doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+    hasFont=await ensurePdfFont(doc);
+    var font=hasFont?"DejaVu":"helvetica";
+    drawKisaOne(doc,font,s,now,fs,pad);
+    var guard=0;
+    while(doc.getNumberOfPages()>1 && guard<5){
+      fs=Math.max(5.2,fs-0.5);
+      pad=Math.max(0.2,pad-0.05);
+      doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+      hasFont=await ensurePdfFont(doc);
+      font=hasFont?"DejaVu":"helvetica";
+      drawKisaOne(doc,font,s,now,fs,pad);
+      guard++;
+    }
+    trimPages(doc,1);
     if(share && typeof outPdf==="function") await outPdf(doc,"cadde-ozet-kisa.pdf");
-    else { doc.save("cadde-ozet-kisa.pdf"); toast("PDF indirildi"); }
+    else { doc.save("cadde-ozet-kisa.pdf"); toast("PDF 1 sayfa"); }
     return;
   }
+  var doc=new jsPDF({orientation:land?"landscape":"portrait",unit:"mm",format:"a4"});
+  hasFont=await ensurePdfFont(doc);
+  var font=hasFont?"DejaVu":"helvetica";
+  var W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
   if(kind==="rapor"){
     drawRaporMax2(doc,font,s,now);
     if(share && typeof outPdf==="function") await outPdf(doc,"cadde-aylik-rapor.pdf");
