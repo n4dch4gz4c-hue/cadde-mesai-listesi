@@ -107,8 +107,30 @@ function renderRapor(){
   const box=document.getElementById("raporBox");
   if(!box)return;
   const s=sums();
-  const kalem=[["Hafta sonu",s.hs],["Izin",s.izin],["Yillik izin",s.yillik],["Mesai",s.mesai],["Kurye prim",s.prim],["Yol",s.yol],["Disiplin",s.dis]];
+  const colors=["#1f4b8f","#0f7b4c","#c45c26","#7c3aed","#0891b2","#b45309","#991b1b"];
+  const kalem=[
+    ["Hafta sonu",s.hs,colors[0]],
+    ["Mesai",s.mesai,colors[1]],
+    ["Yol",s.yol,colors[2]],
+    ["Izin",s.izin,colors[3]],
+    ["Yillik izin",s.yillik,colors[4]],
+    ["Kurye prim",s.prim,colors[5]],
+    ["Disiplin",s.dis,colors[6]]
+  ];
+  const maxV=Math.max.apply(null,kalem.map(x=>x[1]).concat([1]));
   const devam=state.devamsizlik||[];
+  const chartHtml=kalem.map(([k,v,col])=>{
+    const pct=s.toplam?((v/s.toplam)*100):0;
+    const barW=Math.max(2,(v/maxV)*100);
+    return `<div class="kbar-row" style="display:flex;align-items:center;gap:8px;margin:6px 0;font-size:13px;color:#111">
+      <div style="width:90px;flex:none;font-weight:600;text-align:right">${k}</div>
+      <div style="flex:1;background:#eef2f7;border-radius:6px;height:22px;overflow:hidden;position:relative">
+        <div style="width:${barW}%;height:100%;background:${col};border-radius:6px;min-width:${v>0?4:0}px;transition:width .3s"></div>
+      </div>
+      <div style="width:88px;flex:none;text-align:right;font-weight:700">${dash(v)}</div>
+      <div style="width:48px;flex:none;text-align:right;color:#64748b;font-size:12px">${pct.toFixed(1)}%</div>
+    </div>`;
+  }).join("");
   box.innerHTML=`
     <div class="rapor-head">
       <div>
@@ -129,6 +151,7 @@ function renderRapor(){
     </div>
     <div class="panel" id="kalemPanel">
       <h3>Kalem dagilimi</h3>
+      <div class="kchart" style="padding:4px 0 12px">${chartHtml}</div>
       <table class="sheet slim kalem-table"><thead><tr><th>Kalem</th><th>Tutar</th><th>Pay</th></tr></thead>
       <tbody>${kalem.map(([k,v])=>`<tr><td class="name">${k}</td><td>${dash(v)}</td><td>${s.toplam?((v/s.toplam)*100).toFixed(1):"0"}%</td></tr>`).join("")}</tbody>
       <tfoot><tr><td>GENEL TOPLAM</td><td>${tl(s.toplam)}</td><td>100%</td></tr></tfoot></table>
