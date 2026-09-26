@@ -72,7 +72,7 @@ function drawRaporMax2(doc,font,s,now){
     y+=barH+gap;
   });
   y+=2;
-  // Personel listesi - sadece No, Ad, Odenecek (kisa ozet tarzi, dar)
+  // Personel listesi - sabit genislik, bosluk yok
   var fs=s.all.length>70?5.8:s.all.length>55?6.4:7;
   var pad=s.all.length>70?0.22:s.all.length>55?0.3:0.4;
   doc.autoTable({
@@ -83,13 +83,14 @@ function drawRaporMax2(doc,font,s,now){
     }),
     foot:[["","TOPLAM",tl(s.toplam)]],
     theme:"grid",
+    tableWidth:95,
     styles:{font:font,fontSize:fs,cellPadding:pad,halign:"center",overflow:"ellipsize",minCellHeight:fs*0.5,textColor:[20,20,20]},
     headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:fs,cellPadding:pad},
     footStyles:{fillColor:[34,34,34],textColor:[255,255,255],fontSize:fs},
     columnStyles:{
-      0:{cellWidth:12},
-      1:{halign:"left"},
-      2:{cellWidth:32,fillColor:[243,232,210]}
+      0:{cellWidth:10},
+      1:{halign:"left",cellWidth:58},
+      2:{cellWidth:27,fillColor:[243,232,210]}
     },
     margin:{left:8,right:8,top:6,bottom:6},
     pageBreak:"auto",
@@ -109,9 +110,10 @@ function drawRaporMax2(doc,font,s,now){
       head:[["No","Ad Soyad","Gun","Not"]],
       body:devam.map(function(d,i){ return [String(i+1),d.kisi||"",String(d.gun||""),d.not||"-"]; }),
       theme:"grid",
+      tableWidth:120,
       styles:{font:font,fontSize:6.2,cellPadding:0.4,overflow:"ellipsize",minCellHeight:3.6},
       headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:6.4,cellPadding:0.4},
-      columnStyles:{1:{halign:"left"},3:{halign:"left"}},
+      columnStyles:{0:{cellWidth:10},1:{halign:"left",cellWidth:45},2:{cellWidth:12},3:{halign:"left",cellWidth:53}},
       margin:{left:8,right:8,bottom:6},
       pageBreak:"auto"
     });
@@ -132,10 +134,11 @@ function drawRaporMax2(doc,font,s,now){
       body:cezalar.map(function(c,i){ ctot+=Number(c.tutar)||0; return [String(i+1),c.kisi||"",tl(c.tutar)+" TL",c.neden||"-"]; }),
       foot:[["","TOPLAM",tl(ctot)+" TL",""]],
       theme:"grid",
+      tableWidth:120,
       styles:{font:font,fontSize:6.2,cellPadding:0.4,overflow:"ellipsize",minCellHeight:3.6},
       headStyles:{fillColor:[153,27,27],textColor:[255,255,255],fontSize:6.4,cellPadding:0.4},
       footStyles:{fillColor:[34,34,34],textColor:[255,255,255]},
-      columnStyles:{1:{halign:"left"},3:{halign:"left"}},
+      columnStyles:{0:{cellWidth:10},1:{halign:"left",cellWidth:45},2:{cellWidth:25},3:{halign:"left",cellWidth:40}},
       margin:{left:8,right:8,bottom:6},
       pageBreak:"auto"
     });
@@ -158,10 +161,11 @@ function drawKisaOne(doc,font,s,now,fs,pad){
     body:s.all.map(function(x,i){ return [String(i+1),x.p.name+(x.p.kurye?" K":""),dash(x.c.toplam)]; }),
     foot:[["","TOPLAM",tl(s.toplam)]],
     theme:"grid",
+    tableWidth:100,
     styles:{font:font,fontSize:fs,cellPadding:pad,halign:"center",textColor:[20,20,20],lineColor:[210,210,210],overflow:"ellipsize",minCellHeight:fs*0.55},
     headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:fs,cellPadding:pad},
     footStyles:{fillColor:[34,34,34],textColor:[255,255,255],fontSize:fs},
-    columnStyles:{0:{cellWidth:12},1:{halign:"left"},2:{cellWidth:32,fillColor:[243,232,210]}},
+    columnStyles:{0:{cellWidth:12},1:{halign:"left",cellWidth:60},2:{cellWidth:28,fillColor:[243,232,210]}},
     margin:{left:10,right:10,top:12,bottom:8},
     pageBreak:"avoid",
     rowPageBreak:"avoid"
