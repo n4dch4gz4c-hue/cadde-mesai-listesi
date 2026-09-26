@@ -158,15 +158,12 @@ function renderRapor(){
       <tfoot><tr><td>GENEL TOPLAM</td><td>${tl(s.toplam)}</td><td>100%</td></tr></tfoot></table>
     </div>
     <div class="panel" id="kisiPanel">
-      <h3 style="color:#111">Kisi kisi odeme listesi</h3>
-      <table class="sheet slim kisi-table"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai</th><th>HS</th><th>Izin+Yillik</th><th>Diger</th><th>Odenecek</th></tr></thead>
+      <h3 style="color:#111;margin:0 0 8px">Personel odeme listesi</h3>
+      <table class="sheet slim kisi-table" style="max-width:420px"><thead><tr><th style="width:40px">No</th><th>Ad Soyad</th><th style="width:90px">Odenecek</th></tr></thead>
       <tbody>${s.all.map((x,i)=>`<tr class="${x.c.toplam>0?"pay":"zero"}">
         <td>${i+1}</td><td class="name">${x.p.name}${x.p.kurye?" <span class='kmark'>K</span>":""}</td>
-        <td>${dash(x.c.mesai)}</td><td>${dash(x.c.hs)}</td>
-        <td>${dash(x.c.izin+x.c.yillik)}</td>
-        <td>${dash(x.c.prim+x.c.yol+x.c.dis)}</td>
         <td class="tot">${dash(x.c.toplam)}</td></tr>`).join("")}</tbody>
-      <tfoot><tr><td colspan="2">TOPLAM</td><td>${tl(s.mesai)}</td><td>${tl(s.hs)}</td><td>${tl(s.izin+s.yillik)}</td><td>${tl(s.prim+s.yol+s.dis)}</td><td>${tl(s.toplam)}</td></tr></tfoot></table>
+      <tfoot><tr><td></td><td>TOPLAM</td><td>${tl(s.toplam)}</td></tr></tfoot></table>
     </div>
     <div class="panel">
       <h3 style="color:#111">Devamsizlik</h3>
