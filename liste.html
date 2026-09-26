@@ -44,7 +44,6 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 .mfields{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 12px 14px}
 .mfields label{font-size:11px;color:#6b6258;display:flex;flex-direction:column;gap:4px}
 .mfields input{width:100%;box-sizing:border-box;font-size:16px;padding:9px 8px;border:1px solid #d7cfc3;border-radius:10px}
-/* Kalem grafik */
 .kchart{padding:4px 0 8px}
 .kbar-row{margin:0 0 10px}
 .kbar-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;gap:8px}
@@ -56,6 +55,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 .rapor-head{padding:12px 16px}
 .rapor-title{margin:4px 0;color:#111}
 .rapor-sub,.rapor-muted{color:#64748b}
+#kisiPanel table.kisi-table{max-width:420px;min-width:0!important}
 @media(max-width:900px){
 html,body{background:#0b1220!important}
 header.bar{position:sticky;top:0;z-index:20;background:#121a2b!important}
@@ -78,12 +78,11 @@ nav.tabs .tab.on{background:#2563eb!important;color:#fff!important}
 #sec-ozet td.tot,#kisiPanel td.tot{background:#f3e8d2!important;color:#111!important}
 #sec-duzenle .table-wrap,#sec-devam .table-wrap,#sec-ozet .table-wrap,#sec-rapor .table-wrap{display:block!important;overflow:auto;padding:0 12px 24px}
 #kisiPanel{overflow:auto}
-#kisiPanel table.kisi-table{min-width:520px!important}
+#kisiPanel table.kisi-table{min-width:0!important;max-width:100%!important}
 .mrow{background:#fff!important;color:#111!important}
 .mrow.pay{background:#fff3d0!important}
 .mname,.mhead{color:#111!important}
 #duzenleList input.nm{color:#111;background:#fff}
-/* Mobil rapor baslik - koyu tema okunabilir */
 .rapor-head{padding:12px}
 .rapor-title{color:#fff!important}
 .rapor-sub,.rapor-muted{color:#9aa8c2!important}
@@ -140,14 +139,14 @@ nav.tabs .tab.on{background:#2563eb!important;color:#fff!important}
 <section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
-<script src="lock.js?v=96"></script>
+<script src="lock.js?v=97"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=96"></script>
-<script src="app.js?v=96"></script>
-<script src="gh.js?v=96"></script>
-<script src="plus.js?v=96"></script>
-<script src="page-extra.js?v=96"></script>
-<script src="mobile-fix.js?v=96"></script>
-<script src="ozet-all.js?v=96"></script>
+<script src="seed.js?v=97"></script>
+<script src="app.js?v=97"></script>
+<script src="gh.js?v=97"></script>
+<script src="plus.js?v=97"></script>
+<script src="page-extra.js?v=97"></script>
+<script src="mobile-fix.js?v=97"></script>
+<script src="ozet-all.js?v=97"></script>
 </body></html>
