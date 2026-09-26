@@ -30,62 +30,110 @@ function trimPages(doc,max){
 function drawRaporMax2(doc,font,s,now){
   var W=doc.internal.pageSize.getWidth();
   var H=doc.internal.pageSize.getHeight();
+  // ust baslik
   doc.setFillColor(11,18,32);
-  doc.rect(0,0,W,11,"F");
+  doc.rect(0,0,W,10,"F");
   doc.setFont(font,"bold"); doc.setFontSize(11); doc.setTextColor(255,255,255);
-  doc.text("CADDE  \u00b7  AYLIK RAPOR",10,7.5);
-  doc.setFont(font,"normal"); doc.setFontSize(8);
-  doc.text(now,W-10,7.5,{align:"right"});
+  doc.text("CADDE  \u00b7  AYLIK RAPOR",8,6.8);
+  doc.setFont(font,"normal"); doc.setFontSize(7.5);
+  doc.text(now,W-8,6.8,{align:"right"});
+  // ozet satir
   doc.setTextColor(31,75,143); doc.setFontSize(8);
-  doc.text(s.pay.length+" odeme / "+s.all.length+" kisi    TOPLAM  "+tl(s.toplam)+" TL",10,16);
+  doc.text(s.pay.length+" odeme / "+s.all.length+" kisi    TOPLAM  "+tl(s.toplam)+" TL",8,14.5);
+  // Kalem dagilimi (3 sutun, sikisik)
   var kalem=[
     ["Mesai",tl(s.mesai)],["HS",tl(s.hs)],["Prim",tl(s.prim)],
     ["Yol",tl(s.yol)],["Izin",tl(s.izin)],["Yillik",tl(s.yillik)]
   ];
   doc.autoTable({
-    startY:18,
+    startY:16.5,
     head:[["Kalem","Tutar","Kalem","Tutar","Kalem","Tutar"]],
-    body:[[kalem[0][0],kalem[0][1],kalem[1][0],kalem[1][1],kalem[2][0],kalem[2][1]],[kalem[3][0],kalem[3][1],kalem[4][0],kalem[4][1],kalem[5][0],kalem[5][1]]],
+    body:[
+      [kalem[0][0],kalem[0][1],kalem[1][0],kalem[1][1],kalem[2][0],kalem[2][1]],
+      [kalem[3][0],kalem[3][1],kalem[4][0],kalem[4][1],kalem[5][0],kalem[5][1]]
+    ],
     theme:"grid",
-    styles:{font:font,fontSize:7,cellPadding:0.6,halign:"center"},
-    headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:7},
-    margin:{left:10,right:10},
+    styles:{font:font,fontSize:6.5,cellPadding:0.4,halign:"center",minCellHeight:3.5},
+    headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:6.5,cellPadding:0.4},
+    margin:{left:8,right:8},
     pageBreak:"avoid"
   });
-  var y=(doc.lastAutoTable&&doc.lastAutoTable.finalY||24)+3;
+  var y=(doc.lastAutoTable&&doc.lastAutoTable.finalY||22)+2;
+  // Kisi listesi - kisa ozet tarzi (sadece odenecek > 0 olanlar da olabilir ama hepsi)
+  var fs=s.all.length>60?5.8:s.all.length>45?6.2:6.6;
+  var pad=s.all.length>60?0.28:s.all.length>45?0.35:0.42;
   doc.autoTable({
     startY:y,
-    head:[["No","Ad Soyad","Mesai","HS","Prim","Yol","Izin","Yillik","Diger","Odenecek"]],
+    head:[["No","Ad Soyad","Mesai","HS","Prim","Yol","Izin","Yillik","Odenecek"]],
     body:s.all.map(function(x,i){
-      return [String(i+1),x.p.name+(x.p.kurye?" K":""),dash(x.c.mesai),dash(x.c.hs),dash(x.c.prim),dash(x.c.yol),dash(x.c.izin),dash(x.c.yillik),dash((x.c.dis||0)),dash(x.c.toplam)];
+      return [
+        String(i+1),
+        (x.p.name||"")+(x.p.kurye?" K":""),
+        dash(x.c.mesai),
+        dash(x.c.hs),
+        dash(x.c.prim),
+        dash(x.c.yol),
+        dash(x.c.izin),
+        dash(x.c.yillik),
+        dash(x.c.toplam)
+      ];
     }),
-    foot:[["","TOPLAM",tl(s.mesai),tl(s.hs),tl(s.prim),tl(s.yol),tl(s.izin),tl(s.yillik),tl(s.dis||0),tl(s.toplam)]],
+    foot:[["","TOPLAM",tl(s.mesai),tl(s.hs),tl(s.prim),tl(s.yol),tl(s.izin),tl(s.yillik),tl(s.toplam)]],
     theme:"grid",
-    styles:{font:font,fontSize:6.2,cellPadding:0.42,halign:"center",overflow:"ellipsize",minCellHeight:3.8},
-    headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:6.4,cellPadding:0.5},
-    footStyles:{fillColor:[34,34,34],textColor:[255,255,255],fontSize:6.2},
-    columnStyles:{0:{cellWidth:8},1:{halign:"left",cellWidth:48},9:{fillColor:[243,232,210]}},
-    margin:{left:10,right:10,top:8,bottom:8},
+    styles:{font:font,fontSize:fs,cellPadding:pad,halign:"center",overflow:"ellipsize",minCellHeight:fs*0.5,textColor:[20,20,20]},
+    headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:fs,cellPadding:pad},
+    footStyles:{fillColor:[34,34,34],textColor:[255,255,255],fontSize:fs},
+    columnStyles:{
+      0:{cellWidth:8},
+      1:{halign:"left",cellWidth:42},
+      8:{fillColor:[243,232,210],cellWidth:22}
+    },
+    margin:{left:8,right:8,top:6,bottom:6},
     pageBreak:"auto",
     rowPageBreak:"avoid"
   });
+  // Devamsizlik
+  var devam=[];
+  try{ devam=(typeof state!=="undefined"&&state.devamsizlik)?state.devamsizlik:[]; }catch(e){}
+  var y2=(doc.lastAutoTable&&doc.lastAutoTable.finalY||40)+3;
+  if(devam.length){
+    if(y2>H-35){ doc.addPage(); y2=12; }
+    doc.setFont(font,"bold"); doc.setFontSize(8); doc.setTextColor(31,75,143);
+    doc.text("DEVAMSIZLIK",8,y2);
+    y2+=2;
+    doc.autoTable({
+      startY:y2,
+      head:[["No","Ad Soyad","Gun","Not"]],
+      body:devam.map(function(d,i){ return [String(i+1),d.kisi||"",String(d.gun||""),d.not||"-"]; }),
+      theme:"grid",
+      styles:{font:font,fontSize:6.2,cellPadding:0.4,overflow:"ellipsize",minCellHeight:3.6},
+      headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:6.4,cellPadding:0.4},
+      columnStyles:{1:{halign:"left"},3:{halign:"left"}},
+      margin:{left:8,right:8,bottom:6},
+      pageBreak:"auto"
+    });
+    y2=(doc.lastAutoTable&&doc.lastAutoTable.finalY||y2)+3;
+  }
+  // Cezalar
   var cezalar=[];
   try{ cezalar=(typeof state!=="undefined"&&state.cezalar)?state.cezalar:[]; }catch(e){}
   if(cezalar.length){
-    var y2=(doc.lastAutoTable&&doc.lastAutoTable.finalY||40)+3;
-    if(y2>H-28){ doc.addPage(); y2=12; }
+    if(y2>H-30){ doc.addPage(); y2=12; }
     var ctot=0;
+    doc.setFont(font,"bold"); doc.setFontSize(8); doc.setTextColor(153,27,27);
+    doc.text("CEZALAR",8,y2);
+    y2+=2;
     doc.autoTable({
       startY:y2,
-      head:[["No","Ceza - Ad Soyad","Tutar","Neden"]],
+      head:[["No","Ad Soyad","Tutar","Neden"]],
       body:cezalar.map(function(c,i){ ctot+=Number(c.tutar)||0; return [String(i+1),c.kisi||"",tl(c.tutar)+" TL",c.neden||"-"]; }),
       foot:[["","TOPLAM",tl(ctot)+" TL",""]],
       theme:"grid",
-      styles:{font:font,fontSize:6.2,cellPadding:0.45,overflow:"ellipsize"},
-      headStyles:{fillColor:[153,27,27],textColor:[255,255,255],fontSize:6.4},
+      styles:{font:font,fontSize:6.2,cellPadding:0.4,overflow:"ellipsize",minCellHeight:3.6},
+      headStyles:{fillColor:[153,27,27],textColor:[255,255,255],fontSize:6.4,cellPadding:0.4},
       footStyles:{fillColor:[34,34,34],textColor:[255,255,255]},
       columnStyles:{1:{halign:"left"},3:{halign:"left"}},
-      margin:{left:10,right:10,bottom:8},
+      margin:{left:8,right:8,bottom:6},
       pageBreak:"auto"
     });
   }
@@ -122,7 +170,8 @@ window.pagePdf=async function(kind,share){
   var jsPDF=window.jspdf.jsPDF;
   var s=_sums();
   var now=new Date().toLocaleString("tr-TR",{day:"2-digit",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
-  var land=kind==="liste"||kind==="ozet-ayrinti"||kind==="rapor";
+  // rapor artik dikey (portrait)
+  var land=kind==="liste"||kind==="ozet-ayrinti";
   var hasFont;
   if(kind==="ozet-kisa"){
     var fs=s.all.length>70?6.2:s.all.length>55?6.8:7.4;
@@ -146,16 +195,19 @@ window.pagePdf=async function(kind,share){
     else { doc.save("cadde-ozet-kisa.pdf"); toast("PDF 1 sayfa"); }
     return;
   }
+  if(kind==="rapor"){
+    var doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+    hasFont=await ensurePdfFont(doc);
+    var font=hasFont?"DejaVu":"helvetica";
+    drawRaporMax2(doc,font,s,now);
+    if(share && typeof outPdf==="function") await outPdf(doc,"cadde-aylik-rapor.pdf");
+    else { doc.save("cadde-aylik-rapor.pdf"); toast("PDF indirildi (dikey, en fazla 2 sayfa)"); }
+    return;
+  }
   var doc=new jsPDF({orientation:land?"landscape":"portrait",unit:"mm",format:"a4"});
   hasFont=await ensurePdfFont(doc);
   var font=hasFont?"DejaVu":"helvetica";
   var W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight();
-  if(kind==="rapor"){
-    drawRaporMax2(doc,font,s,now);
-    if(share && typeof outPdf==="function") await outPdf(doc,"cadde-aylik-rapor.pdf");
-    else { doc.save("cadde-aylik-rapor.pdf"); toast("PDF indirildi (en fazla 2 sayfa)"); }
-    return;
-  }
   if(typeof pdfDrawChrome==="function") pdfDrawChrome(doc,font,W,H,now,s.pay.length,s.all.length);
   var title="CADDE", head, body, foot=null, col={1:{halign:"left"}};
   if(kind==="liste"||kind==="ozet-ayrinti"){
