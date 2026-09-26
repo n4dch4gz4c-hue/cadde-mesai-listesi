@@ -30,38 +30,51 @@ function trimPages(doc,max){
 function drawRaporMax2(doc,font,s,now){
   var W=doc.internal.pageSize.getWidth();
   var H=doc.internal.pageSize.getHeight();
-  // ust baslik
   doc.setFillColor(11,18,32);
   doc.rect(0,0,W,10,"F");
   doc.setFont(font,"bold"); doc.setFontSize(11); doc.setTextColor(255,255,255);
   doc.text("CADDE  \u00b7  AYLIK RAPOR",8,6.8);
   doc.setFont(font,"normal"); doc.setFontSize(7.5);
   doc.text(now,W-8,6.8,{align:"right"});
-  // ozet satir
   doc.setTextColor(31,75,143); doc.setFontSize(8);
   doc.text(s.pay.length+" odeme / "+s.all.length+" kisi    TOPLAM  "+tl(s.toplam)+" TL",8,14.5);
-  // Kalem dagilimi (3 sutun, sikisik)
-  var kalem=[
-    ["Mesai",tl(s.mesai)],["HS",tl(s.hs)],["Prim",tl(s.prim)],
-    ["Yol",tl(s.yol)],["Izin",tl(s.izin)],["Yillik",tl(s.yillik)]
+  // Kalem cubuk grafik
+  var kalemData=[
+    ["HS",s.hs,[31,75,143]],
+    ["Mesai",s.mesai,[15,123,76]],
+    ["Yol",s.yol,[196,92,38]],
+    ["Izin",s.izin,[124,58,237]],
+    ["Yillik",s.yillik,[8,145,178]],
+    ["Prim",s.prim,[180,83,9]],
+    ["Disiplin",s.dis||0,[153,27,27]]
   ];
-  doc.autoTable({
-    startY:16.5,
-    head:[["Kalem","Tutar","Kalem","Tutar","Kalem","Tutar"]],
-    body:[
-      [kalem[0][0],kalem[0][1],kalem[1][0],kalem[1][1],kalem[2][0],kalem[2][1]],
-      [kalem[3][0],kalem[3][1],kalem[4][0],kalem[4][1],kalem[5][0],kalem[5][1]]
-    ],
-    theme:"grid",
-    styles:{font:font,fontSize:6.5,cellPadding:0.4,halign:"center",minCellHeight:3.5},
-    headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:6.5,cellPadding:0.4},
-    margin:{left:8,right:8},
-    pageBreak:"avoid"
+  var maxV=1;
+  kalemData.forEach(function(k){ if(k[1]>maxV) maxV=k[1]; });
+  var barLeft=42, barMaxW=W-8-barLeft-48, barH=4.2, gap=1.8;
+  var y=17;
+  doc.setFont(font,"bold"); doc.setFontSize(7.5); doc.setTextColor(31,75,143);
+  doc.text("KALEM DAGILIMI",8,y);
+  y+=3;
+  kalemData.forEach(function(k){
+    var label=k[0], val=k[1], col=k[2];
+    var pct=s.toplam?((val/s.toplam)*100):0;
+    var bw=Math.max(val>0?2:0,(val/maxV)*barMaxW);
+    doc.setFont(font,"normal"); doc.setFontSize(6.5); doc.setTextColor(40,40,40);
+    doc.text(label,barLeft-2,y+3,{align:"right"});
+    doc.setFillColor(238,242,247);
+    doc.roundedRect(barLeft,y,barMaxW,barH,1,1,"F");
+    if(bw>0){
+      doc.setFillColor(col[0],col[1],col[2]);
+      doc.roundedRect(barLeft,y,bw,barH,1,1,"F");
+    }
+    doc.setFontSize(6); doc.setTextColor(30,30,30);
+    doc.text(tl(val)+"  "+pct.toFixed(0)+"%",barLeft+barMaxW+2,y+3);
+    y+=barH+gap;
   });
-  var y=(doc.lastAutoTable&&doc.lastAutoTable.finalY||22)+2;
-  // Kisi listesi - kisa ozet tarzi (sadece odenecek > 0 olanlar da olabilir ama hepsi)
-  var fs=s.all.length>60?5.8:s.all.length>45?6.2:6.6;
-  var pad=s.all.length>60?0.28:s.all.length>45?0.35:0.42;
+  y+=2;
+  // Kisi listesi
+  var fs=s.all.length>60?5.6:s.all.length>45?6.0:6.4;
+  var pad=s.all.length>60?0.25:s.all.length>45?0.32:0.38;
   doc.autoTable({
     startY:y,
     head:[["No","Ad Soyad","Mesai","HS","Prim","Yol","Izin","Yillik","Odenecek"]],
@@ -80,12 +93,12 @@ function drawRaporMax2(doc,font,s,now){
     }),
     foot:[["","TOPLAM",tl(s.mesai),tl(s.hs),tl(s.prim),tl(s.yol),tl(s.izin),tl(s.yillik),tl(s.toplam)]],
     theme:"grid",
-    styles:{font:font,fontSize:fs,cellPadding:pad,halign:"center",overflow:"ellipsize",minCellHeight:fs*0.5,textColor:[20,20,20]},
+    styles:{font:font,fontSize:fs,cellPadding:pad,halign:"center",overflow:"ellipsize",minCellHeight:fs*0.48,textColor:[20,20,20]},
     headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:fs,cellPadding:pad},
     footStyles:{fillColor:[34,34,34],textColor:[255,255,255],fontSize:fs},
     columnStyles:{
       0:{cellWidth:8},
-      1:{halign:"left",cellWidth:42},
+      1:{halign:"left",cellWidth:40},
       8:{fillColor:[243,232,210],cellWidth:22}
     },
     margin:{left:8,right:8,top:6,bottom:6},
@@ -170,7 +183,6 @@ window.pagePdf=async function(kind,share){
   var jsPDF=window.jspdf.jsPDF;
   var s=_sums();
   var now=new Date().toLocaleString("tr-TR",{day:"2-digit",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
-  // rapor artik dikey (portrait)
   var land=kind==="liste"||kind==="ozet-ayrinti";
   var hasFont;
   if(kind==="ozet-kisa"){
