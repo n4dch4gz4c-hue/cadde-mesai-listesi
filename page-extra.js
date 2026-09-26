@@ -3,7 +3,7 @@ function css(){
   if(document.getElementById("pagePdfCss"))return;
   var st=document.createElement("style");
   st.id="pagePdfCss";
-  st.textContent=".page-pdf{gap:6px;margin:6px 0}#duzenleList input.nm{width:100%;text-align:left;min-width:180px}#asFab,#asPanel{display:none!important}#ozetKisa table{width:100%!important;max-width:none!important;min-width:0!important}";
+  st.textContent=".page-pdf{gap:6px;margin:6px 0}#duzenleList input.nm{width:100%;text-align:left;min-width:180px}#asFab,#asPanel{display:none!important}#ozetKisa table{width:100%!important;max-width:none!important;min-width:0!important}#kisiPanel table.kisi-table{max-width:420px!important;min-width:0!important}";
   document.head.appendChild(st);
 }
 function bar(kind){
@@ -72,34 +72,24 @@ function drawRaporMax2(doc,font,s,now){
     y+=barH+gap;
   });
   y+=2;
-  // Kisi listesi
-  var fs=s.all.length>60?5.6:s.all.length>45?6.0:6.4;
-  var pad=s.all.length>60?0.25:s.all.length>45?0.32:0.38;
+  // Personel listesi - sadece No, Ad, Odenecek (kisa ozet tarzi, dar)
+  var fs=s.all.length>70?5.8:s.all.length>55?6.4:7;
+  var pad=s.all.length>70?0.22:s.all.length>55?0.3:0.4;
   doc.autoTable({
     startY:y,
-    head:[["No","Ad Soyad","Mesai","HS","Prim","Yol","Izin","Yillik","Odenecek"]],
+    head:[["No","Ad Soyad","Odenecek"]],
     body:s.all.map(function(x,i){
-      return [
-        String(i+1),
-        (x.p.name||"")+(x.p.kurye?" K":""),
-        dash(x.c.mesai),
-        dash(x.c.hs),
-        dash(x.c.prim),
-        dash(x.c.yol),
-        dash(x.c.izin),
-        dash(x.c.yillik),
-        dash(x.c.toplam)
-      ];
+      return [String(i+1),(x.p.name||"")+(x.p.kurye?" K":""),dash(x.c.toplam)];
     }),
-    foot:[["","TOPLAM",tl(s.mesai),tl(s.hs),tl(s.prim),tl(s.yol),tl(s.izin),tl(s.yillik),tl(s.toplam)]],
+    foot:[["","TOPLAM",tl(s.toplam)]],
     theme:"grid",
-    styles:{font:font,fontSize:fs,cellPadding:pad,halign:"center",overflow:"ellipsize",minCellHeight:fs*0.48,textColor:[20,20,20]},
+    styles:{font:font,fontSize:fs,cellPadding:pad,halign:"center",overflow:"ellipsize",minCellHeight:fs*0.5,textColor:[20,20,20]},
     headStyles:{fillColor:[31,75,143],textColor:[255,255,255],fontSize:fs,cellPadding:pad},
     footStyles:{fillColor:[34,34,34],textColor:[255,255,255],fontSize:fs},
     columnStyles:{
-      0:{cellWidth:8},
-      1:{halign:"left",cellWidth:40},
-      8:{fillColor:[243,232,210],cellWidth:22}
+      0:{cellWidth:12},
+      1:{halign:"left"},
+      2:{cellWidth:32,fillColor:[243,232,210]}
     },
     margin:{left:8,right:8,top:6,bottom:6},
     pageBreak:"auto",
