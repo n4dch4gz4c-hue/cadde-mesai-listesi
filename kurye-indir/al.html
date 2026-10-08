@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8"><title>Kurye dosya</title></head>
+<body style="font-family:system-ui;background:#0b1220;color:#fff;padding:28px">
+<h1>Dosyalar iniyor</h1>
+<p id="m">Bekle...</p>
+<script>
+const base="https://raw.githubusercontent.com/n4dch4gz4c-hue/cadde-mesai-listesi/main/kurye-indir/";
+async function al(name){
+  const r=await fetch(base+name);
+  if(!r.ok) throw new Error(name+" "+r.status);
+  const b=await r.blob();
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(b);
+  a.download=name;
+  document.body.appendChild(a);
+  a.click();
+}
+(async()=>{
+  try{
+    await al("havuz2.ps1");
+    await al("kurye-ui.html");
+    document.getElementById("m").textContent="Iki dosya Indirilenler klasorune indi.";
+  }catch(e){
+    document.getElementById("m").textContent="Hata: "+e.message;
+  }
+})();
+</script>
+</body></html>
