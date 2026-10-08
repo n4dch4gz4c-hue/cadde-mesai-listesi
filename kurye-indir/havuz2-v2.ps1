@@ -499,8 +499,8 @@ function ReadBody($req) {
     return ,$o
   } catch { return ,@{} }
 }
-function HasKey($o, [string]$k) {
-  if (-not ($o -is [System.Collections.IDictionary])) { return $false }
+function HasKey([System.Collections.IDictionary]$o, [string]$k) {
+  if ($null -eq $o) { return $false }
   foreach ($key in @($o.Keys)) {
     if ([string]$key -eq $k) { return $true }
   }
@@ -561,56 +561,72 @@ function MonthCount([string]$who) {
 
 $script:caddePeople = $null
 $script:caddeAt = (Get-Date).AddHours(-1)
-function DictStr($o, [string]$k) {
+function DictStr([System.Collections.IDictionary]$o, [string]$k) {
   if (-not (HasKey $o $k) -or $null -eq $o[$k]) { return "" }
   return [string]$o[$k]
 }
-function DictNum($o, [string]$k) {
-  $s = DictStr $o $k
-  if (-not $s) { return 0.0 }
+function DictNum([System.Collections.IDictionary]$o, [string]$k) {
+  if (-not (HasKey $o $k) -or $null -eq $o[$k]) { return 0.0 }
+  $v = $o[$k]
+  if ($v -is [int] -or $v -is [long] -or $v -is [double] -or $v -is [decimal] -or $v -is [float]) { return [double]$v }
+  $s = ([string]$v).Replace(",", ".")
   $n = 0.0
   if ([double]::TryParse($s, [Globalization.NumberStyles]::Any, [Globalization.CultureInfo]::InvariantCulture, [ref]$n)) { return $n }
   return 0.0
 }
-function DictBool($o, [string]$k) {
-  if (-not ($o -is [System.Collections.IDictionary])) { return $false }
+function DictBool([System.Collections.IDictionary]$o, [string]$k) {
+  if ($null -eq $o) { return $false }
   if (-not (HasKey $o $k) -or $null -eq $o[$k]) { return $false }
   $v = $o[$k]
   if ($v -is [bool]) { return [bool]$v }
   return ([string]$v).ToLower() -eq "true"
 }
+function DownloadText([string]$url) {
+  [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+  $rq = [Net.HttpWebRequest]::Create($url)
+  $rq.Method = "GET"
+  $rq.UserAgent = "KuryeHavuz"
+  $rq.Accept = "*/*"
+  $rq.Timeout = 20000
+  $rq.ReadWriteTimeout = 20000
+  $resp = $rq.GetResponse()
+  $sr = New-Object IO.StreamReader($resp.GetResponseStream())
+  $txt = $sr.ReadToEnd()
+  $sr.Close()
+  $resp.Close()
+  return $txt
+}
 function GetCaddePeople {
   try {
     $now = Get-Date
-    if ($script:caddePeople -and (($now - $script:caddeAt).TotalSeconds -lt 120)) { return ,$script:caddePeople }
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $rq = [Net.HttpWebRequest]::Create("https://api.github.com/repos/n4dch4gz4c-hue/cadde-mesai-listesi/contents/cadde-data.json")
-    $rq.Method = "GET"
-    $rq.UserAgent = "KuryeHavuz"
-    $rq.Accept = "application/vnd.github+json"
-    $rq.Timeout = 4000
-    $rq.ReadWriteTimeout = 4000
-    $resp = $rq.GetResponse()
-    $sr = New-Object IO.StreamReader($resp.GetResponseStream())
-    $metaRaw = $sr.ReadToEnd()
-    $sr.Close()
-    $resp.Close()
-    $meta = $ser.DeserializeObject($metaRaw)
-    $b64 = ([string]$meta["content"]) -replace "\s",""
-    $raw = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($b64))
+    if ($script:caddePeople -and $script:caddePeople.Count -gt 0 -and (($now - $script:caddeAt).TotalSeconds -lt 120)) { return ,$script:caddePeople }
+    $raw = ""
+    foreach ($url in @(
+      "https://raw.githubusercontent.com/n4dch4gz4c-hue/cadde-mesai-listesi/main/cadde-data.json",
+      "https://api.github.com/repos/n4dch4gz4c-hue/cadde-mesai-listesi/contents/cadde-data.json"
+    )) {
+      try {
+        $got = DownloadText $url
+        if ($url -like "*api.github.com*") {
+          $meta = $ser.DeserializeObject($got)
+          $b64 = ([string]$meta["content"]) -replace "\s",""
+          $got = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($b64))
+        }
+        if ($got -like "*""people""*") { $raw = $got; break }
+      } catch {}
+    }
+    if (-not $raw) { return ,$script:caddePeople }
     $obj = $ser.DeserializeObject($raw)
     $list = New-Object System.Collections.ArrayList
-    if ($obj -and (HasKey $obj "people") -and $null -ne $obj["people"]) {
-      foreach ($person in @($obj["people"])) { [void]$list.Add($person) }
+    $arr = $obj["people"]
+    foreach ($person in @($arr)) { if ($person) { [void]$list.Add($person) } }
+    if ($list.Count -gt 0) {
+      $script:caddePeople = $list
+      $script:caddeAt = $now
     }
-    $script:caddePeople = $list
-    $script:caddeAt = $now
-    return ,$list
+    return ,$script:caddePeople
   } catch {
-    $empty = New-Object System.Collections.ArrayList
-    $script:caddePeople = $empty
-    $script:caddeAt = Get-Date
-    return ,$empty
+    return ,$script:caddePeople
   }
 }
 function FindCaddePerson($people, [string]$name) {
@@ -627,6 +643,7 @@ function UcretHash([string]$name, [int]$paket, $person, [int]$maas) {
     $saat = DictNum $person "mesaiSaat"
     $birim = DictNum $person "mesaiBirim"
     $hs = DictNum $person "hsSaat"
+    if ($hs -le 0 -and (DictBool $person "hsVar")) { $hs = 1 }
   }
   $paketTl = $paket * 7
   $mesaiTl = [int][math]::Round($saat * $birim)
