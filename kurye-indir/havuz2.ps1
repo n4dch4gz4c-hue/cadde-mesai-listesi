@@ -397,7 +397,7 @@ function SameKur([string]$a, [string]$b) {
   $x = NormKur $a
   $y = NormKur $b
   if (-not $x -or -not $y) { return $false }
-  if ($x -eq $y -or $x.Contains($y) -or $y.Contains($x)) { return $true }
+  if ($x -eq $y -or $x.IndexOf($y) -ge 0 -or $y.IndexOf($x) -ge 0) { return $true }
   if ((TokenKey $a) -eq (TokenKey $b)) { return $true }
   return (NearPerson $a $b)
 }
@@ -711,6 +711,7 @@ function BuildUcretJson($sess) {
 $htmlFile = Join-Path $PSScriptRoot "kurye-ui.html"
 if (-not (Test-Path $htmlFile)) { Write-Host "kurye-ui.html yok. Masaustune koy."; throw "kurye-ui.html eksik" }
 $html = Get-Content -Path $htmlFile -Raw -Encoding UTF8
+$html = $html.Replace("<h1>Kurye Havuz</h1>", "<h1>Kurye Havuz 2</h1>")
 
 $http = New-Object System.Net.HttpListener
 $http.Prefixes.Add($listen)
@@ -892,7 +893,7 @@ while ($http.IsListening) {
       }
     } catch {
       $msg = $_.Exception.Message.Replace('"',' ')
-      $buf = [Text.Encoding]::UTF8.GetBytes(('{"ok":false,"error":"' + $msg + '"}'))
+      $buf = [Text.Encoding]::UTF8.GetBytes(('{"ok":false,"error":"v2 ' + $msg + '"}'))
       try { $res.StatusCode = 500 } catch {}
       $res.ContentType = "application/json; charset=utf-8"
     }
