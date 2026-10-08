@@ -636,29 +636,18 @@ function FindCaddePerson($people, [string]$name) {
   return $null
 }
 function UcretHash([string]$name, [int]$paket, $person, [int]$maas) {
-  $saat = 0.0
-  $birim = 0.0
-  $hs = 0.0
-  if ($person) {
-    $saat = DictNum $person "mesaiSaat"
-    $birim = DictNum $person "mesaiBirim"
-    $hs = DictNum $person "hsSaat"
-    if ($hs -le 0 -and (DictBool $person "hsVar")) { $hs = 1 }
-  }
   $paketTl = $paket * 7
-  $mesaiTl = [int][math]::Round($saat * $birim)
-  $hsTl = [int][math]::Round($hs * 2500)
   $h = @{
     name = $name
     paket = $paket
     paketTl = $paketTl
-    mesaiSaat = $saat
-    mesaiBirim = [int][math]::Round($birim)
-    mesaiTl = $mesaiTl
-    hsSaat = $hs
-    hsTl = $hsTl
+    mesaiSaat = 0
+    mesaiBirim = 0
+    mesaiTl = 0
+    hsSaat = 0
+    hsTl = 0
     maas = $maas
-    eline = ($paketTl + $mesaiTl + $hsTl + $maas)
+    eline = ($paketTl + $maas)
   }
   return ,$h
 }
@@ -705,30 +694,10 @@ function MaasOf($book, [string]$name, [string]$id) {
   return 0
 }
 function BuildUcretJson($sess) {
-  $months = @(GetMonthRows)
-  $people = @(GetCaddePeople)
+  $null = GetMonthRows
   $book = LoadMaas
-  if ($sess.full) {
-    $out = New-Object System.Collections.ArrayList
-    foreach ($row in $months) {
-      $nm = [string]$row.name
-      if (-not $nm) { continue }
-      $person = FindCaddePerson $people $nm
-      [void]$out.Add((UcretHash $nm ([int]$row.adet) $person (MaasOf $book $nm "")))
-    }
-    foreach ($person in $people) {
-      if (-not (DictBool $person "kurye")) { continue }
-      $nm = DictStr $person "name"
-      $already = $false
-      foreach ($row in $months) { if (SameKur ([string]$row.name) $nm) { $already = $true } }
-      if ($already) { continue }
-      [void]$out.Add((UcretHash $nm 0 $person (MaasOf $book $nm "")))
-    }
-    return JsonOf @{ ok = $true; people = $out.ToArray() }
-  }
   $n = MonthCount ([string]$sess.name)
-  $person = FindCaddePerson $people $sess.name
-  $one = UcretHash $sess.name $n $person (MaasOf $book $sess.name ([string]$sess.id))
+  $one = UcretHash $sess.name $n $null (MaasOf $book $sess.name ([string]$sess.id))
   $one.ok = $true
   return JsonOf $one
 }
@@ -738,6 +707,11 @@ if (-not (Test-Path $htmlFile)) { Write-Host "kurye-ui.html yok. Masaustune koy.
 $html = Get-Content -Path $htmlFile -Raw -Encoding UTF8
 $html = $html.Replace("<h1>Kurye Havuz</h1>", "<h1>Kurye Havuz 2</h1>")
 $html = $html.Replace("Son 30 gun teslim", "Bu ay")
+$html = $html.Replace('if (isShelAli(me)) passMode = "none";', '')
+$html = $html.Replace('if (isShelAli(selectedName())) return;', '')
+$html = [regex]::Replace($html, 'if \(isShelAli\(name\)\) \{\s*showPassMode\("none"\);\s*return;\s*\}', '')
+$html = [regex]::Replace($html, '\+"<div class=''saat''>Mesai basi[\s\S]*?</div>"', '')
+$html = [regex]::Replace($html, '\+"<div class=''saat''>Hafta sonu[\s\S]*?</div>"', '')
 
 $http = New-Object System.Net.HttpListener
 $http.Prefixes.Add($listen)
@@ -770,7 +744,7 @@ while ($http.IsListening) {
         $cid = [string]$req.QueryString["id"]
         $c = CourierById $cid
         $has = $false
-        if ($c -and -not (IsAliName $c.name)) { $has = HasPw $cid }
+        if ($c) { $has = HasPw $cid }
         $buf = [Text.Encoding]::UTF8.GetBytes((JsonOf @{ ok = $true; hasPassword = [bool]$has }))
         $res.ContentType = "application/json; charset=utf-8"
       } elseif ($path -eq "/api/set-password") {
@@ -779,7 +753,6 @@ while ($http.IsListening) {
         $pw = BodyVal $body "password"
         $c = CourierById $cid
         if (-not $c) { $buf = [Text.Encoding]::UTF8.GetBytes('{"ok":false,"error":"Kurye yok"}') }
-        elseif (IsAliName $c.name) { $buf = [Text.Encoding]::UTF8.GetBytes('{"ok":false,"error":"Ali sifresiz girer"}') }
         elseif ($pw.Length -lt 4) { $buf = [Text.Encoding]::UTF8.GetBytes('{"ok":false,"error":"Parola en az 4 karakter"}') }
         else { SetPw $cid $pw; $buf = [Text.Encoding]::UTF8.GetBytes('{"ok":true}') }
         $res.ContentType = "application/json; charset=utf-8"
@@ -790,9 +763,6 @@ while ($http.IsListening) {
         $c = CourierById $cid
         if (-not $c) {
           $buf = [Text.Encoding]::UTF8.GetBytes('{"ok":false,"error":"Kurye yok"}')
-        } elseif (IsAliName $c.name) {
-          $tok = IssueToken $c $false
-          $buf = [Text.Encoding]::UTF8.GetBytes((JsonOf @{ ok = $true; token = $tok; name = $c.name }))
         } elseif (-not (HasPw $cid)) {
           $buf = [Text.Encoding]::UTF8.GetBytes('{"ok":false,"needSetup":true,"error":"Ilk giris"}')
         } elseif (-not (CheckPw $cid $pw)) {
@@ -813,8 +783,6 @@ while ($http.IsListening) {
           $res.StatusCode = 403
         } elseif (-not $c) {
           $buf = [Text.Encoding]::UTF8.GetBytes('{"ok":false,"error":"Kurye yok"}')
-        } elseif (IsAliName $c.name) {
-          $buf = [Text.Encoding]::UTF8.GetBytes('{"ok":false,"error":"Ali sifresiz girer"}')
         } elseif ($pw.Length -lt 4) {
           $buf = [Text.Encoding]::UTF8.GetBytes('{"ok":false,"error":"Parola en az 4 karakter"}')
         } else {
