@@ -499,22 +499,27 @@ function ReadBody($req) {
     return ,$o
   } catch { return ,@{} }
 }
-function BodyVal($body, [string]$key) {
-  if ($null -eq $body) { return "" }
-  if ($body -is [System.Collections.IDictionary] -and $body.Contains($key) -and $null -ne $body[$key]) {
-    return [string]$body[$key]
+function HasKey($o, [string]$k) {
+  if (-not ($o -is [System.Collections.IDictionary])) { return $false }
+  foreach ($key in @($o.Keys)) {
+    if ([string]$key -eq $k) { return $true }
   }
-  return ""
+  return $false
+}
+function BodyVal($body, [string]$key) {
+  if (-not (HasKey $body $key)) { return "" }
+  if ($null -eq $body[$key]) { return "" }
+  return [string]$body[$key]
 }
 function JsonOf($obj) { return $ser.Serialize($obj) }
 function FilterOrders([string]$json, [string]$name) {
   $obj = $ser.DeserializeObject($json)
   $mine = New-Object System.Collections.ArrayList
   $arr = @()
-  if ($obj -and $obj.Contains("orders") -and $null -ne $obj["orders"]) { $arr = @($obj["orders"]) }
+  if ($obj -and (HasKey $obj "orders") -and $null -ne $obj["orders"]) { $arr = @($obj["orders"]) }
   foreach ($o in $arr) {
     $cn = ""
-    if ($o -is [System.Collections.IDictionary] -and $o.Contains("courierName") -and $null -ne $o["courierName"]) {
+    if ((HasKey $o "courierName") -and $null -ne $o["courierName"]) {
       $cn = [string]$o["courierName"]
     }
     if (SameKur $cn $name) { [void]$mine.Add($o) }
@@ -548,8 +553,7 @@ GROUP BY LTRIM(RTRIM(Deliverer))
 $script:caddePeople = $null
 $script:caddeAt = (Get-Date).AddHours(-1)
 function DictStr($o, [string]$k) {
-  if (-not ($o -is [System.Collections.IDictionary])) { return "" }
-  if (-not $o.Contains($k) -or $null -eq $o[$k]) { return "" }
+  if (-not (HasKey $o $k) -or $null -eq $o[$k]) { return "" }
   return [string]$o[$k]
 }
 function DictNum($o, [string]$k) {
@@ -561,7 +565,7 @@ function DictNum($o, [string]$k) {
 }
 function DictBool($o, [string]$k) {
   if (-not ($o -is [System.Collections.IDictionary])) { return $false }
-  if (-not $o.Contains($k) -or $null -eq $o[$k]) { return $false }
+  if (-not (HasKey $o $k) -or $null -eq $o[$k]) { return $false }
   $v = $o[$k]
   if ($v -is [bool]) { return [bool]$v }
   return ([string]$v).ToLower() -eq "true"
@@ -587,7 +591,7 @@ function GetCaddePeople {
     $raw = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($b64))
     $obj = $ser.DeserializeObject($raw)
     $list = New-Object System.Collections.ArrayList
-    if ($obj -and ($obj -is [System.Collections.IDictionary]) -and $obj.Contains("people") -and $null -ne $obj["people"]) {
+    if ($obj -and (HasKey $obj "people") -and $null -ne $obj["people"]) {
       foreach ($person in @($obj["people"])) { [void]$list.Add($person) }
     }
     $script:caddePeople = $list
