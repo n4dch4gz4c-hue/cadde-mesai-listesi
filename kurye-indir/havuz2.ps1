@@ -397,9 +397,17 @@ function SameKur([string]$a, [string]$b) {
   $x = NormKur $a
   $y = NormKur $b
   if (-not $x -or -not $y) { return $false }
-  if ($x -eq $y -or $x.IndexOf($y) -ge 0 -or $y.IndexOf($x) -ge 0) { return $true }
+  if ($x -eq $y) { return $true }
   if ((TokenKey $a) -eq (TokenKey $b)) { return $true }
   return (NearPerson $a $b)
+}
+function RowName($row) {
+  if ($row -is [System.Collections.IDictionary] -and (HasKey $row "name")) { return [string]$row["name"] }
+  return ""
+}
+function RowCnt($row) {
+  if ($row -is [System.Collections.IDictionary] -and (HasKey $row "count")) { return [int]$row["count"] }
+  return 0
 }
 function PwPath { Join-Path $PSScriptRoot "sifre.json" }
 function LoadPw {
@@ -686,23 +694,23 @@ function BuildUcretJson($sess) {
   if ($sess.full) {
     $out = New-Object System.Collections.ArrayList
     foreach ($row in $months) {
-      $nm = [string]$row.name
+      $nm = RowName $row
       if (-not $nm) { continue }
       $person = FindCaddePerson $people $nm
-      [void]$out.Add((UcretHash $nm ([int]$row.count) $person (MaasOf $book $nm "")))
+      [void]$out.Add((UcretHash $nm (RowCnt $row) $person (MaasOf $book $nm "")))
     }
     foreach ($person in $people) {
       if (-not (DictBool $person "kurye")) { continue }
       $nm = DictStr $person "name"
       $already = $false
-      foreach ($row in $months) { if (SameKur ([string]$row.name) $nm) { $already = $true } }
+      foreach ($row in $months) { if (SameKur (RowName $row) $nm) { $already = $true } }
       if ($already) { continue }
       [void]$out.Add((UcretHash $nm 0 $person (MaasOf $book $nm "")))
     }
     return JsonOf @{ ok = $true; people = $out.ToArray() }
   }
   $n = 0
-  foreach ($row in $months) { if (SameKur ([string]$row.name) $sess.name) { $n += [int]$row.count } }
+  foreach ($row in $months) { if (SameKur (RowName $row) $sess.name) { $n += (RowCnt $row) } }
   $person = FindCaddePerson $people $sess.name
   $one = UcretHash $sess.name $n $person (MaasOf $book $sess.name ([string]$sess.id))
   $one.ok = $true
@@ -810,7 +818,7 @@ while ($http.IsListening) {
             } else {
               $n = 0
               foreach ($row in $rows) {
-                if (SameKur $row.name $sess.name) { $n += [int]$row.count }
+                if (SameKur (RowName $row) $sess.name) { $n += (RowCnt $row) }
               }
               $buf = [Text.Encoding]::UTF8.GetBytes((JsonOf @{ ok = $true; count = $n }))
             }
