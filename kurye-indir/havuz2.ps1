@@ -534,7 +534,8 @@ function GetMonthRows {
   $cmd.CommandText = @"
 SELECT LTRIM(RTRIM(Deliverer)) AS Name, COUNT(*) AS Cnt
 FROM PhoneOrderHeader
-WHERE CreationTime >= DATEADD(day, -30, GETDATE())
+WHERE CreationTime >= DATEADD(month, DATEDIFF(month, 0, GETDATE()), 0)
+AND CreationTime < DATEADD(month, DATEDIFF(month, 0, GETDATE()) + 1, 0)
 AND Deliverer IS NOT NULL AND LTRIM(RTRIM(Deliverer)) <> ''
 GROUP BY LTRIM(RTRIM(Deliverer))
 "@
@@ -712,6 +713,7 @@ $htmlFile = Join-Path $PSScriptRoot "kurye-ui.html"
 if (-not (Test-Path $htmlFile)) { Write-Host "kurye-ui.html yok. Masaustune koy."; throw "kurye-ui.html eksik" }
 $html = Get-Content -Path $htmlFile -Raw -Encoding UTF8
 $html = $html.Replace("<h1>Kurye Havuz</h1>", "<h1>Kurye Havuz 2</h1>")
+$html = $html.Replace("Son 30 gun teslim", "Bu ay")
 
 $http = New-Object System.Net.HttpListener
 $http.Prefixes.Add($listen)
