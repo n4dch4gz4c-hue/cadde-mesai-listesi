@@ -401,14 +401,6 @@ function SameKur([string]$a, [string]$b) {
   if ((TokenKey $a) -eq (TokenKey $b)) { return $true }
   return (NearPerson $a $b)
 }
-function RowName($row) {
-  if ($row -is [System.Collections.IDictionary] -and (HasKey $row "name")) { return [string]$row["name"] }
-  return ""
-}
-function RowCnt($row) {
-  if ($row -is [System.Collections.IDictionary] -and (HasKey $row "count")) { return [int]$row["count"] }
-  return 0
-}
 function PwPath { Join-Path $PSScriptRoot "sifre.json" }
 function LoadPw {
   $h = @{}
@@ -550,13 +542,21 @@ GROUP BY LTRIM(RTRIM(Deliverer))
   $rd = $cmd.ExecuteReader()
   $list = New-Object System.Collections.ArrayList
   while ($rd.Read()) {
-    [void]$list.Add(@{ name = [string]$rd.GetValue(0); count = [int]$rd.GetValue(1) })
+    $item = New-Object psobject -Property @{ name = [string]$rd.GetValue(0); adet = [int]$rd.GetValue(1) }
+    [void]$list.Add($item)
   }
   $rd.Close()
   $cn.Close()
-  $script:monthRows = $list
+  $script:monthRows = @($list.ToArray())
   $script:monthAt = $now
-  return ,$list
+  return ,$script:monthRows
+}
+function MonthCount([string]$who) {
+  $n = 0
+  foreach ($row in @($script:monthRows)) {
+    if (SameKur ([string]$row.name) $who) { $n += [int]$row.adet }
+  }
+  return $n
 }
 
 $script:caddePeople = $null
@@ -694,23 +694,22 @@ function BuildUcretJson($sess) {
   if ($sess.full) {
     $out = New-Object System.Collections.ArrayList
     foreach ($row in $months) {
-      $nm = RowName $row
+      $nm = [string]$row.name
       if (-not $nm) { continue }
       $person = FindCaddePerson $people $nm
-      [void]$out.Add((UcretHash $nm (RowCnt $row) $person (MaasOf $book $nm "")))
+      [void]$out.Add((UcretHash $nm ([int]$row.adet) $person (MaasOf $book $nm "")))
     }
     foreach ($person in $people) {
       if (-not (DictBool $person "kurye")) { continue }
       $nm = DictStr $person "name"
       $already = $false
-      foreach ($row in $months) { if (SameKur (RowName $row) $nm) { $already = $true } }
+      foreach ($row in $months) { if (SameKur ([string]$row.name) $nm) { $already = $true } }
       if ($already) { continue }
       [void]$out.Add((UcretHash $nm 0 $person (MaasOf $book $nm "")))
     }
     return JsonOf @{ ok = $true; people = $out.ToArray() }
   }
-  $n = 0
-  foreach ($row in $months) { if (SameKur (RowName $row) $sess.name) { $n += (RowCnt $row) } }
+  $n = MonthCount ([string]$sess.name)
   $person = FindCaddePerson $people $sess.name
   $one = UcretHash $sess.name $n $person (MaasOf $book $sess.name ([string]$sess.id))
   $one.ok = $true
@@ -812,16 +811,9 @@ while ($http.IsListening) {
           if (-not $sess -or $sess -eq $false) {
             $buf = [Text.Encoding]::UTF8.GetBytes('{"ok":false}')
           } else {
-            $rows = @(GetMonthRows)
-            if ($sess.full) {
-              $buf = [Text.Encoding]::UTF8.GetBytes((JsonOf @{ ok = $true; couriers = $rows }))
-            } else {
-              $n = 0
-              foreach ($row in $rows) {
-                if (SameKur (RowName $row) $sess.name) { $n += (RowCnt $row) }
-              }
-              $buf = [Text.Encoding]::UTF8.GetBytes((JsonOf @{ ok = $true; count = $n }))
-            }
+            $null = GetMonthRows
+            $n = MonthCount ([string]$sess.name)
+            $buf = [Text.Encoding]::UTF8.GetBytes((JsonOf @{ ok = $true; count = $n }))
           }
         } catch {
           $buf = [Text.Encoding]::UTF8.GetBytes('{"ok":false}')
