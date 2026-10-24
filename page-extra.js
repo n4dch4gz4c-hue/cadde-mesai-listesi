@@ -201,4 +201,5 @@ renderAll=function(){
 };
 setTimeout(attach,400);
 setTimeout(attach,1200);
+window.pagePdf = pagePdf;
 })();
