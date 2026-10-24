@@ -106,7 +106,7 @@ async function drawRaporPro(doc, font, s, now) {
     doc.autoTable({
       startY: y + 2,
       head: [["No", "Ad Soyad", "Gün", "Not", "Tarih"]],
-      body: devam.map((d, i) => [String(i + 1), d.kisi, String(d.gun), d.not || "-", (d.eklenme||d.tarih||d.date||"").toString().slice(0,10)]),
+      body: devam.map((d, i) => [String(i + 1), d.kisi, String(d.gun), d.not || "-", String(d.eklenme||d.tarih||d.date||"").slice(0,10)]),
       theme: "grid",
       styles: { font: font, fontSize: 6, cellPadding: 0.6 },
       headStyles: { fillColor: [234, 88, 12], textColor: 255 },
@@ -123,7 +123,7 @@ async function drawRaporPro(doc, font, s, now) {
     doc.autoTable({
       startY: y + 2,
       head: [["No", "Ad Soyad", "Tutar", "Neden", "Tarih"]],
-      body: cezalar.map((c, i) => [String(i + 1), c.kisi, tl(c.tutar) + " TL", c.neden || "-", (c.eklenme||c.tarih||c.date||"").toString().slice(0,10)]),
+      body: cezalar.map((c, i) => [String(i + 1), c.kisi, tl(c.tutar) + " TL", c.neden || "-", String(c.eklenme||c.tarih||c.date||"").slice(0,10)]),
       theme: "grid",
       styles: { font: font, fontSize: 6, cellPadding: 0.6 },
       headStyles: { fillColor: [234, 88, 12], textColor: 255 },
@@ -184,10 +184,16 @@ async function pagePdf(kind,share){
       showHead:"everyPage"
     });
   }else if(kind==="rapor"){
-    doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
-    hasFont=await ensurePdfFont(doc);
-    font=hasFont?"DejaVu":"helvetica";
-    await drawRaporPro(doc,font,s,now);
+    try {
+      doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
+      hasFont=await ensurePdfFont(doc);
+      font=hasFont?"DejaVu":"helvetica";
+      await drawRaporPro(doc,font,s,now);
+    } catch(err) {
+      console.error("Rapor PDF hatası:", err);
+      toast("PDF hatası: " + (err.message||err));
+      return;
+    }
   }else{
     doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
     hasFont=await ensurePdfFont(doc);
