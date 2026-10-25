@@ -3,33 +3,6 @@ const GH_DEFAULT_REPO="n4dch4gz4c-hue/cadde-mesai-listesi";
 const GH_DEFAULT_PATH="cadde-data.json";
 const GH_RAW="https://raw.githubusercontent.com/n4dch4gz4c-hue/cadde-mesai-listesi/main/cadde-data.json";
 const XAI_KEY="cadde_xai_key";
-let _taps=0,_tapT=null;
-function secretTap(){
-  _taps++;
-  clearTimeout(_tapT);
-  _tapT=setTimeout(function(){_taps=0;},900);
-  if(_taps>=3){ _taps=0; toggleGhBox(); }
-}
-function toggleGhBox(forceOpen){
-  var box=document.getElementById("ghBox");
-  if(!box)return;
-  if(forceOpen===true) box.classList.remove("hide");
-  else if(forceOpen===false) box.classList.add("hide");
-  else box.classList.toggle("hide");
-  ghLoadCfg();
-}
-function ghSaveCfg(){
-  localStorage.setItem(GH_KEY,JSON.stringify({
-    token:(document.getElementById("ghToken")||{}).value||"",
-    repo:(document.getElementById("ghRepo")||{}).value||GH_DEFAULT_REPO,
-    path:(document.getElementById("ghPath")||{}).value||GH_DEFAULT_PATH
-  }));
-  var x=(document.getElementById("xaiKey")||{}).value||"";
-  if(x) localStorage.setItem(XAI_KEY,x.trim());
-  if(typeof xaiSave==="function") xaiSave(x);
-  toast("Anahtar kaydedildi");
-  toggleGhBox(false);
-}
 function ghLoadCfg(){
   try{
     var c=JSON.parse(localStorage.getItem(GH_KEY)||"{}");
@@ -57,8 +30,7 @@ async function ghPush(){
   var repo=(ghCfg().repo||GH_DEFAULT_REPO).trim();
   var path=(ghCfg().path||GH_DEFAULT_PATH).trim();
   if(!token){
-    toggleGhBox(true);
-    toast("Senkron butonundan anahtar yaz");
+    toast("Kaydedildi (yerel). Sunucuya yazmak için token gerekli.");
     return false;
   }
   state.updatedAt=new Date().toISOString();
@@ -78,11 +50,11 @@ async function ghPush(){
   return put.ok;
 }
 async function applyRemote(data,msg){
-  if(!data||!data.people||!data.people.length){toast("Sunucu bos");return false;}
+  if(!data||!data.people||!data.people.length){return false;}
   state=hydrate(data);
   persist();
   renderAll();
-  toast(msg||"Sunucudan cekildi");
+  if(msg) toast(msg);
   return true;
 }
 async function ghPullPublic(){
@@ -92,41 +64,18 @@ async function ghPullPublic(){
       var r=await fetch(urls[i],{cache:"no-store"});
       if(!r.ok) continue;
       var data=await r.json();
-      if(await applyRemote(data,"Sunucudan cekildi")) return true;
+      if(await applyRemote(data,"Güncel veri yüklendi")) return true;
     }catch(e){}
   }
-  toast("Cekilemedi");
   return false;
-}
-async function ghPull(){
-  var token=ghToken();
-  var repo=(ghCfg().repo||GH_DEFAULT_REPO).trim();
-  var path=(ghCfg().path||GH_DEFAULT_PATH).trim();
-  if(token){
-    try{
-      var headers={Accept:"application/vnd.github+json",Authorization:"Bearer "+token};
-      var get=await fetch("https://api.github.com/repos/"+repo+"/contents/"+path+"?t="+Date.now(),{headers:headers,cache:"no-store"});
-      if(get.ok){
-        var j=await get.json();
-        var data=JSON.parse(fromB64((j.content||"").replace(/\n/g,"")));
-        return applyRemote(data,"Sunucudan cekildi");
-      }
-    }catch(e){}
-  }
-  return ghPullPublic();
 }
 async function save(){
   state.updatedAt=new Date().toISOString();
   persist();
-  toast("Yaziliyor...");
+  toast("Kaydediliyor...");
   await ghPush();
-}
-async function yenileSunucu(){
-  toast("Cekiliyor...");
-  await ghPull();
 }
 document.addEventListener("DOMContentLoaded",function(){
   ghLoadCfg();
-  var box=document.getElementById("ghBox");
-  if(box) box.classList.add("hide");
+  setTimeout(function(){ ghPullPublic(); }, 300);
 });
