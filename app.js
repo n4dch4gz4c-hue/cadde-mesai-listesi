@@ -30,8 +30,19 @@ function hydrate(s){
 }
 function loadLocal(){
   try{
-    const raw=localStorage.getItem(KEY);
-    if(raw){const s=hydrate(JSON.parse(raw));if(s.people.length)return s;}
+    var raw=localStorage.getItem(KEY);
+    if(raw){var s=hydrate(JSON.parse(raw));if(s.people.length)return s;}
+    // Eski Cadde verisini taşı
+    if(KEY==="mesai_Cadde"){
+      var old=localStorage.getItem("cadde_bordro_v4");
+      if(old){
+        var os=hydrate(JSON.parse(old));
+        if(os.people.length){
+          localStorage.setItem(KEY,old);
+          return os;
+        }
+      }
+    }
   }catch(e){}
   var seed={};
   if(typeof getSeedForBranch==="function" && typeof currentBranch!=="undefined"){
