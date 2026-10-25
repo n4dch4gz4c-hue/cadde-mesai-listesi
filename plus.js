@@ -30,13 +30,18 @@ function sums(){
   const add=k=>all.reduce((a,x)=>a+x.c[k],0);
   return {all,pay,add,toplam:add("toplam"),mesai:add("mesai"),hs:add("hs"),prim:add("prim"),yol:add("yol"),izin:add("izin"),yillik:add("yillik"),dis:add("dis")};
 }
-function forceTotalColor(){
-  document.querySelectorAll("tfoot td,tfoot tr").forEach(function(el){
-    el.style.background="#e8f5e9";
-    el.style.color="#1b5e20";
-    el.style.fontWeight="700";
-  });
-}
+(function(){
+  var st=document.createElement("style");
+  st.id="totalFix";
+  st.textContent="tfoot,tfoot tr,tfoot td,tfoot th{background:#e8f5e9!important;color:#1b5e20!important;font-weight:700!important}";
+  document.head.appendChild(st);
+  setInterval(function(){
+    document.querySelectorAll("tfoot td,tfoot tr").forEach(function(el){
+      el.style.setProperty("background","#e8f5e9","important");
+      el.style.setProperty("color","#1b5e20","important");
+    });
+  },500);
+})();
 async function outPdf(doc,name){
   const blob=doc.output("blob");
   const file=new File([blob],name,{type:"application/pdf"});
@@ -85,7 +90,6 @@ renderListe=function(){
       </div>`:""}
     </div>`;
   }).join("")+`</div>`;
-  setTimeout(forceTotalColor,50);
 };
 const _renderOzet=renderOzet;
 renderOzet=function(){
@@ -106,7 +110,6 @@ renderOzet=function(){
       <td>${dash(x.c.prim)}</td><td>${dash(x.c.yol)}</td><td>${dash(x.c.izin)}</td>
       <td>${dash(x.c.yillik)}</td><td>${dash(x.c.toplam)}</td></tr>`).join("")}</tbody>
     <tfoot><tr><td></td><td>TOPLAM</td><td>${tl(s.mesai)}</td><td>${tl(s.hs)}</td><td>${tl(s.prim)}</td><td>${tl(s.yol)}</td><td>${tl(s.izin)}</td><td>${tl(s.yillik)}</td><td>${tl(s.toplam)}</td></tr></tfoot></table>`;
-  setTimeout(forceTotalColor,50);
 };
 function periodLabel(){
   const d=new Date();
@@ -178,7 +181,6 @@ function renderRapor(){
       <h3 style="color:#111">Devamsizlik</h3>
       ${devam.length?`<table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Gun</th><th>Not</th></tr></thead><tbody>${devam.map((d,i)=>`<tr><td>${i+1}</td><td class="name">${d.kisi}</td><td>${d.gun}</td><td class="name">${d.not||"-"}</td></tr>`).join("")}</tbody></table>`:"<p class='muted' style='color:#666'>Kayit yok</p>"}
     </div>`;
-  setTimeout(forceTotalColor,50);
 }
 const _tab=tab;
 tab=function(el){
@@ -198,5 +200,4 @@ tab=function(el){
 const _renderAll=renderAll;
 renderAll=function(){
   _renderAll();
-  setTimeout(forceTotalColor,100);
 };
