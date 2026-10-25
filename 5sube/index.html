@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5 Şube Mesai Listesi — Taslak</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1e3a5f">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>5 Şube Mesai Listesi <small>(Taslak)</small></h1>
+  <div class="branch-bar" id="branchBar"></div>
+</header>
+
+<main>
+  <section class="controls">
+    <button onclick="addPerson()">+ Kişi Ekle</button>
+    <button onclick="exportCSV()">CSV İndir</button>
+    <button onclick="resetCurrent()">Bu Şubeyi Sıfırla</button>
+    <span id="summary" class="summary"></span>
+  </section>
+
+  <div class="table-wrap">
+    <table id="table">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Ad Soyad</th>
+          <th>Mesai Saat</th>
+          <th>Mesai Tutar</th>
+          <th>HS Adet</th>
+          <th>HS Tutar</th>
+          <th>Prim</th>
+          <th>Yol</th>
+          <th>Toplam</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</main>
+
+<script src="app.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+</script>
+</body>
+</html>
