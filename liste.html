@@ -99,7 +99,7 @@ renderBranchBar();
 <script src="lock.js?v=106"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=116"></script>
+<script src="seed.js?v=117"></script>
 <script src="app.js?v=115"></script>
 <script src="gh.js?v=106"></script>
 <script src="plus.js?v=112"></script>
@@ -108,10 +108,11 @@ renderBranchBar();
 <script src="ozet-all.js?v=106"></script>
 <script>
 if(typeof KEY!=="undefined") KEY="mesai_"+currentBranch;
-// Cadde yedek yükle (bir kerelik)
-if(currentBranch==="Cadde" && !localStorage.getItem("cadde_restored_v116")){
+// Zorla Cadde yedek yükle
+if(!localStorage.getItem("cadde_force_v117")){
   localStorage.removeItem("mesai_Cadde");
-  localStorage.setItem("cadde_restored_v116","1");
+  localStorage.setItem("cadde_force_v117","1");
+  if(typeof load==="function") load();
 }
 </script>
 </body></html>
