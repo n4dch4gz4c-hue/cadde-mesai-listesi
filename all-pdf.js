@@ -82,31 +82,31 @@
     });
     
     doc.setFont(fontName,"normal");
-    var y=15;
-    doc.setFontSize(18);
+    var y=12;
+    doc.setFontSize(16);
     doc.setFont(fontName,"bold");
     doc.text("AYLIK MESAİ RAPORU",105,y,{align:"center"});
-    y+=8;
-    doc.setFontSize(10);
+    y+=6;
+    doc.setFontSize(9);
     doc.setFont(fontName,"normal");
     doc.text(new Date().toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}),105,y,{align:"center"});
-    y+=15;
+    y+=12;
     
     doc.setFillColor(31,75,143);
-    doc.rect(20,y-5,170,20,"F");
+    doc.rect(20,y-4,170,16,"F");
     doc.setTextColor(255);
-    doc.setFontSize(14);
-    doc.setFont(fontName,"bold");
-    doc.text("GENEL TOPLAM",105,y+2,{align:"center"});
-    doc.setFontSize(16);
-    doc.text(tl(grandTotal)+" TL",105,y+10,{align:"center"});
-    doc.setTextColor(0);
-    y+=25;
-    
     doc.setFontSize(12);
     doc.setFont(fontName,"bold");
+    doc.text("GENEL TOPLAM",105,y+1,{align:"center"});
+    doc.setFontSize(14);
+    doc.text(tl(grandTotal)+" TL",105,y+8,{align:"center"});
+    doc.setTextColor(0);
+    y+=20;
+    
+    doc.setFontSize(11);
+    doc.setFont(fontName,"bold");
     doc.text("GİDER DAĞILIMI",14,y);
-    y+=8;
+    y+=6;
     
     var giderRows=[
       ["Mesai",tl(giderler.mesai)],
@@ -124,9 +124,9 @@
       head:[["Kalem","Tutar (TL)"]],
       body:giderRows,
       theme:"grid",
-      styles:{fontSize:9,cellPadding:3,font:fontName},
+      styles:{fontSize:8,cellPadding:2,font:fontName},
       headStyles:{fillColor:[31,75,143],textColor:255,font:fontName},
-      columnStyles:{0:{cellWidth:80},1:{cellWidth:50,halign:"right"}},
+      columnStyles:{0:{cellWidth:70},1:{cellWidth:45,halign:"right"}},
       margin:{left:14},
       didParseCell:function(data){
         if(data.row.index===giderRows.length-1){
@@ -135,12 +135,12 @@
         }
       }
     });
-    y=doc.lastAutoTable.finalY+15;
+    y=doc.lastAutoTable.finalY+10;
     
-    doc.setFontSize(12);
+    doc.setFontSize(11);
     doc.setFont(fontName,"bold");
     doc.text("ŞUBE BAZLI ÖZET",14,y);
-    y+=8;
+    y+=6;
     
     var subeRows=allData.map(function(d){
       return [d.branch,d.payCount+"/"+d.count,tl(d.total)];
@@ -152,9 +152,9 @@
       head:[["Şube","Ödeme","Toplam (TL)"]],
       body:subeRows,
       theme:"grid",
-      styles:{fontSize:9,cellPadding:3,font:fontName},
+      styles:{fontSize:8,cellPadding:2,font:fontName},
       headStyles:{fillColor:[196,92,38],textColor:255,font:fontName},
-      columnStyles:{0:{cellWidth:60},1:{cellWidth:40,halign:"center"},2:{cellWidth:50,halign:"right"}},
+      columnStyles:{0:{cellWidth:55},1:{cellWidth:35,halign:"center"},2:{cellWidth:45,halign:"right"}},
       margin:{left:14},
       didParseCell:function(data){
         if(data.row.index===subeRows.length-1){
@@ -166,36 +166,40 @@
     
     allData.forEach(function(d){
       doc.addPage();
-      var y=15;
+      var y=10;
       
       doc.setFont(fontName,"bold");
-      doc.setFontSize(16);
+      doc.setFontSize(14);
       doc.text(d.branch.toUpperCase(),105,y,{align:"center"});
-      y+=8;
+      y+=6;
       
       doc.setFillColor(31,75,143);
-      doc.rect(14,y-4,182,12,"F");
+      doc.rect(14,y-3,182,8,"F");
       doc.setTextColor(255);
-      doc.setFontSize(11);
-      doc.text("TOPLAM: "+tl(d.total)+" TL  |  "+d.payCount+"/"+d.count+" kişi",105,y+3,{align:"center"});
+      doc.setFontSize(9);
+      doc.text("TOPLAM: "+tl(d.total)+" TL  |  "+d.payCount+"/"+d.count+" kişi",105,y+2,{align:"center"});
       doc.setTextColor(0);
       doc.setFont(fontName,"normal");
-      y+=14;
+      y+=8;
       
       var rows=d.people.map(function(p,i){
         return [i+1,p.name,tl(p.c.toplam)];
       });
       rows.push(["","TOPLAM",tl(d.total)]);
       
+      var rowH=d.people.length>50?0.6:1;
+      var fSize=d.people.length>50?6:7;
+      
       doc.autoTable({
         startY:y,
         head:[["No","Ad Soyad","Ay Sonu (TL)"]],
         body:rows,
         theme:"grid",
-        styles:{fontSize:8,cellPadding:1.5,font:fontName},
-        headStyles:{fillColor:[196,92,38],textColor:255,fontSize:8,font:fontName},
-        columnStyles:{0:{cellWidth:12},1:{cellWidth:110},2:{cellWidth:40,halign:"right"}},
-        margin:{left:14,right:14},
+        styles:{fontSize:fSize,cellPadding:rowH,font:fontName,overflow:"ellipsize"},
+        headStyles:{fillColor:[196,92,38],textColor:255,fontSize:fSize,font:fontName},
+        columnStyles:{0:{cellWidth:10},1:{cellWidth:115},2:{cellWidth:35,halign:"right"}},
+        margin:{left:14,right:14,top:5,bottom:5},
+        pageBreak:"avoid",
         didParseCell:function(data){
           if(data.row.index===rows.length-1){
             data.cell.styles.fontStyle="bold";
