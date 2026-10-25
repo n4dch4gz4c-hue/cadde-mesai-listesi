@@ -56,10 +56,10 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:14
   </div>
 </header>
 
-<nav class="tabs">
+<nav class="tabs" id="tabs">
   <button class="tab on" data-tab="liste" onclick="tab(this)">Liste</button>
   <button class="tab" data-tab="duzenle" onclick="tab(this)">Düzenleme</button>
-  <button class="tab" data-tab="kurye" onclick="tab(this)">Kurye</button>
+  <button class="tab" data-tab="kurye" id="tab-kurye" onclick="tab(this)">Kurye</button>
   <button class="tab" data-tab="devam" onclick="tab(this)">Devamsızlık</button>
   <button class="tab" data-tab="ceza" onclick="tab(this)">Ceza</button>
   <button class="tab" data-tab="ozet" onclick="tab(this)">Özet</button>
@@ -72,7 +72,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:14
     <table>
       <thead>
         <tr>
-          <th>No</th><th>Ad Soyad</th><th>Tip</th>
+          <th>No</th><th>Ad Soyad</th>
           <th>Mesai saat</th><th>Mesai tutar</th>
           <th>HS adet</th><th>HS tutar</th>
           <th>Prim</th><th>Yol</th>
@@ -86,22 +86,22 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:14
   <div id="mobileList"></div>
 </section>
 
-<section id="sec-duzenle" class="hide"><div class="panel" style="margin:16px;padding:16px;background:#fff;border-radius:12px">Düzenleme sekmesi (şube bazlı kişi ekle/sil/sırala) hazırlanıyor.</div></section>
-<section id="sec-kurye" class="hide"><div class="panel" style="margin:16px;padding:16px;background:#fff;border-radius:12px">Kurye primleri sekmesi hazırlanıyor.</div></section>
-<section id="sec-devam" class="hide"><div class="panel" style="margin:16px;padding:16px;background:#fff;border-radius:12px">Devamsızlık sekmesi hazırlanıyor.</div></section>
-<section id="sec-ceza" class="hide"><div class="panel" style="margin:16px;padding:16px;background:#fff;border-radius:12px">Ceza sekmesi hazırlanıyor.</div></section>
-<section id="sec-ozet" class="hide"><div class="panel" style="margin:16px;padding:16px;background:#fff;border-radius:12px">Özet sekmesi hazırlanıyor.</div></section>
-<section id="sec-rapor" class="hide"><div class="panel" style="margin:16px;padding:16px;background:#fff;border-radius:12px">Aylık rapor sekmesi hazırlanıyor.</div></section>
+<section id="sec-duzenle" class="hide"><div class="panel" style="margin:16px;padding:16px;background:#fff;border-radius:12px">Düzenleme: kişi ekle/sil/sırala buradan yapılabilir.</div></section>
+<section id="sec-kurye" class="hide"><div class="panel" style="margin:16px;padding:16px;background:#fff;border-radius:12px">Kurye primleri (sadece Cadde).</div></section>
+<section id="sec-devam" class="hide"><div class="panel" style="margin:16px;padding:16px;background:#fff;border-radius:12px">Devamsızlık sekmesi.</div></section>
+<section id="sec-ceza" class="hide"><div class="panel" style="margin:16px;padding:16px;background:#fff;border-radius:12px">Ceza sekmesi.</div></section>
+<section id="sec-ozet" class="hide"><div class="panel" style="margin:16px;padding:16px;background:#fff;border-radius:12px">Özet sekmesi.</div></section>
+<section id="sec-rapor" class="hide"><div class="panel" style="margin:16px;padding:16px;background:#fff;border-radius:12px">Aylık rapor sekmesi.</div></section>
 
 <div id="toast"></div>
 
 <script>
 var BRANCHES=["Kadıköy","Cadde","Cengelkoy"];
-var KEY="3sube_mesai_v4";
+var KEY="3sube_mesai_v5";
 var RATES={
-  "Kadıköy":{A:{saat:320,izin:2900,hs:2500},B:{saat:300,izin:2700,hs:2500},C:{saat:270,izin:2400,hs:2500},D:{saat:220,izin:1900,hs:2500}},
-  "Cadde":{A:{saat:320,izin:2900,hs:2500},B:{saat:300,izin:2700,hs:2500},C:{saat:270,izin:2400,hs:2500},D:{saat:220,izin:1900,hs:2500}},
-  "Cengelkoy":{A:{saat:280,izin:2800,hs:2000},B:{saat:250,izin:2500,hs:2000},C:{saat:230,izin:2300,hs:2000},D:{saat:190,izin:1900,hs:2000}}
+  "Kadıköy":{saat:320,izin:2900,hs:2500},
+  "Cadde":{saat:320,izin:2900,hs:2500},
+  "Cengelkoy":{saat:280,izin:2800,hs:2000}
 };
 var SEED={
   "Kadıköy":["ÖZAY ALSAN","ABDULKADİR AKYÜZ","MUHAMMED AKYÜZ","SEDAT KIZILKAYA","MAHMUT TEKER","İSRAFİL ÖZTÜRK","CAFER KOCA","İSA AKYILDIZ","MUHSİN IŞIK","RAMAZAN KURAL","RAMAZAN UZUNALP","GÜRKAN EYÜPOĞLU","VEDAT ÖZTÜRK","BİLAL DENERİ","VEPA","GÖKHAN YEŞİLBAŞ","EREN YILMAZ","İSMAİL ALBAYRAK","MURAT KAYA","MUHSİN ÖZMERT","EMİRHAN KANDEMİR","AZAT ASLANGRİ","RIZVAN FINDIK","K. ENDER KIZILKAYA","ERAY SOFUOĞLU","FURKAN ARDA","FERAT GÜNDÜZ","İBRAHİM KARAMAN","YİĞİT ASLANGRİ","TUNCAY ÇAĞLAYAN","ABDULSAMET SEYAR","BATUHAN SEYAR","ALİ BİNGÖL","ALTAN BULUT","YASİN TERCANLI","İSMAİL YAZICI","EMİR ÇAPAR","OĞUZHAN ÇAVUŞOĞLU","TAHSİN CERAN","MUHAMMED ONUR SAMUR","İSMAİL BURAK AKYOL"],
@@ -111,17 +111,27 @@ var SEED={
 var current=BRANCHES[0];
 var state=load();
 
-function load(){try{var r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}var s={};BRANCHES.forEach(b=>s[b]={people:(SEED[b]||[]).map(n=>({name:n,tip:"A",ms:0,hs:0,izin:0,yol:0,yillik:0,ceza:0,prim:0,dis:0}))});return s;}
+function load(){try{var r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}var s={};BRANCHES.forEach(b=>s[b]={people:(SEED[b]||[]).map(n=>({name:n,ms:0,hs:0,izin:0,yol:0,yillik:0,ceza:0,prim:0,dis:0}))});return s;}
 function save(){localStorage.setItem(KEY,JSON.stringify(state));toast("Kaydedildi");}
-function rates(b,t){return (RATES[b]||RATES.Kadıköy)[t]||(RATES[b]||RATES.Kadıköy).A;}
-function calc(p,b){var r=rates(b,p.tip||"A");var mesai=(p.ms||0)*r.saat,hs=(p.hs||0)*r.hs,izin=(p.izin||0)*r.izin;return {mesai,hs,izin,yol:p.yol||0,yillik:p.yillik||0,ceza:p.ceza||0,prim:p.prim||0,dis:p.dis||0,toplam:mesai+hs+izin+(p.yol||0)+(p.yillik||0)+(p.prim||0)+(p.dis||0)-(p.ceza||0)};}
+function calc(p,b){
+  var r=RATES[b]||RATES.Kadıköy;
+  var mesai=(p.ms||0)*r.saat, hs=(p.hs||0)*r.hs, izin=(p.izin||0)*r.izin;
+  return {mesai,hs,izin,yol:p.yol||0,yillik:p.yillik||0,ceza:p.ceza||0,prim:p.prim||0,dis:p.dis||0,toplam:mesai+hs+izin+(p.yol||0)+(p.yillik||0)+(p.prim||0)+(p.dis||0)-(p.ceza||0)};
+}
 function tl(n){return Math.round(n||0).toLocaleString("tr-TR");}
 function dash(n){return Math.round(n||0)===0?"-":tl(n);}
 function toast(t){var e=document.getElementById("toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",1800);}
 
-function renderBar(){var h="";BRANCHES.forEach(b=>h+='<button class="'+(b===current?"active":"")+'" onclick="selectBranch(\''+b+'\')">'+b+'</button>');h+='<button onclick="selectBranch(\'ALL\')">Tüm Şubeler</button>';document.getElementById("bar").innerHTML=h;}
+function renderBar(){
+  var h="";
+  BRANCHES.forEach(b=>h+='<button class="'+(b===current?"active":"")+'" onclick="selectBranch(\''+b+'\')">'+b+'</button>');
+  h+='<button onclick="selectBranch(\'ALL\')">Tüm Şubeler</button>';
+  document.getElementById("bar").innerHTML=h;
+  var kuryeTab=document.getElementById("tab-kurye");
+  if(kuryeTab) kuryeTab.style.display=(current==="Cadde")?"":"none";
+}
 function selectBranch(b){current=b;render();}
-function tab(el){document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t===el));var id=el.dataset.tab;["liste","duzenle","kurye","devam","ceza","ozet","rapor"].forEach(s=>document.getElementById("sec-"+s).classList.toggle("hide",s!==id));}
+function tab(el){document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t===el));var id=el.dataset.tab;["liste","duzenle","kurye","devam","ceza","ozet","rapor"].forEach(s=>{var e=document.getElementById("sec-"+s);if(e)e.classList.toggle("hide",s!==id);});}
 
 function render(){
   renderBar();
@@ -132,7 +142,7 @@ function render(){
   var sub=document.getElementById("pageSub");
   if(current==="ALL"){
     var grand=0,rows="",mrows="";
-    BRANCHES.forEach(b=>{var p=state[b].people||[];var s=p.reduce((a,x)=>a+calc(x,b).toplam,0);grand+=s;rows+='<tr><td colspan="14" style="text-align:left;font-weight:700;padding:8px">'+b+' — '+p.length+' kişi — '+tl(s)+' TL</td></tr>';mrows+='<div class="mrow"><b>'+b+'</b> · '+tl(s)+' TL</div>';});
+    BRANCHES.forEach(b=>{var p=state[b].people||[];var s=p.reduce((a,x)=>a+calc(x,b).toplam,0);grand+=s;rows+='<tr><td colspan="13" style="text-align:left;font-weight:700;padding:8px">'+b+' — '+p.length+' kişi — '+tl(s)+' TL</td></tr>';mrows+='<div class="mrow"><b>'+b+'</b> · '+tl(s)+' TL</div>';});
     tbody.innerHTML=rows;mobile.innerHTML=mrows;stats.innerHTML='<div class="stat"><span>Genel Toplam</span><b>'+tl(grand)+' TL</b></div>';sub.textContent="Tüm şubeler · "+tl(grand)+" TL";return;
   }
   var people=(state[current].people||[]).filter(p=>!q||(p.name||"").toLocaleLowerCase("tr-TR").includes(q));
@@ -142,8 +152,7 @@ function render(){
   var rows="",mrows="";
   people.forEach((p,i)=>{
     var c=calc(p,current);
-    var tip='<select onchange="setTip('+i+',this.value)"><option'+(p.tip==="A"?" selected":"")+'>A</option><option'+(p.tip==="B"?" selected":"")+'>B</option><option'+(p.tip==="C"?" selected":"")+'>C</option><option'+(p.tip==="D"?" selected":"")+'>D</option></select>';
-    rows+='<tr class="'+(c.toplam>0?"pay":"")+'"><td>'+(i+1)+'</td><td class="name">'+p.name+'</td><td>'+tip+'</td>'+
+    rows+='<tr class="'+(c.toplam>0?"pay":"")+'"><td>'+(i+1)+'</td><td class="name">'+p.name+'</td>'+
       '<td><input type="number" value="'+(p.ms||"")+'" onchange="setVal('+i+',\'ms\',this.value)"></td><td>'+dash(c.mesai)+'</td>'+
       '<td><input type="number" value="'+(p.hs||"")+'" onchange="setVal('+i+',\'hs\',this.value)"></td><td>'+dash(c.hs)+'</td>'+
       '<td>'+dash(c.prim)+'</td><td><input type="number" value="'+(p.yol||"")+'" onchange="setVal('+i+',\'yol\',this.value)"></td>'+
@@ -151,14 +160,13 @@ function render(){
       '<td><input type="number" value="'+(p.yillik||"")+'" onchange="setVal('+i+',\'yillik\',this.value)"></td>'+
       '<td><input type="number" value="'+(p.dis||"")+'" onchange="setVal('+i+',\'dis\',this.value)"></td>'+
       '<td class="tot">'+dash(c.toplam)+'</td></tr>';
-    mrows+='<div class="mrow"><b>'+p.name+'</b> '+tip+' · '+tl(c.toplam)+' TL</div>';
+    mrows+='<div class="mrow"><b>'+p.name+'</b> · '+tl(c.toplam)+' TL</div>';
   });
-  tbody.innerHTML=rows||'<tr><td colspan="14">Kayıt yok</td></tr>';
+  tbody.innerHTML=rows||'<tr><td colspan="13">Kayıt yok</td></tr>';
   mobile.innerHTML=mrows||'<div class="mrow">Kayıt yok</div>';
 }
 function setVal(i,f,v){if(current==="ALL")return;state[current].people[i][f]=v===""?0:+v||0;save();render();}
-function setTip(i,t){if(current==="ALL")return;state[current].people[i].tip=t;save();render();}
-function exportCSV(){toast("CSV indiriliyor...");}
+function exportCSV(){toast("CSV hazırlanıyor...");}
 function backup(){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:"application/json"}));a.download="3sube-yedek.json";a.click();}
 render();
 </script>
