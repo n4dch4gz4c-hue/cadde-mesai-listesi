@@ -6,10 +6,6 @@ function hydratePerson(p){
   const hs=num(p.hsSaat??p.hsAdet??p.hs,0);
   const yol=num(p.yolGun??p.yol,0);
   let name=p.name||"";
-  if(typeof SEED!=="undefined" && SEED.people){
-    const off=SEED.people.find(x=>x.id===p.id);
-    if(off&&off.name)name=off.name;
-  }
   return {
     id:p.id,name,kurye:!!p.kurye,
     mesaiSaat:num(p.mesaiSaat??p.saat,0),
@@ -37,7 +33,13 @@ function loadLocal(){
     const raw=localStorage.getItem(KEY);
     if(raw){const s=hydrate(JSON.parse(raw));if(s.people.length)return s;}
   }catch(e){}
-  return hydrate(JSON.parse(JSON.stringify(typeof SEED!=="undefined"?SEED:{})));
+  var seed={};
+  if(typeof getSeedForBranch==="function" && typeof currentBranch!=="undefined"){
+    seed=getSeedForBranch(currentBranch);
+  }else if(typeof SEED!=="undefined"){
+    seed=SEED;
+  }
+  return hydrate(JSON.parse(JSON.stringify(seed)));
 }
 let state=loadLocal();
 function persist(){localStorage.setItem(KEY,JSON.stringify(state));}
@@ -161,6 +163,10 @@ function tab(el){
   if(id==="ceza")renderCeza();
   if(id==="ozet")renderOzet();
 }
+function load(){
+  state=loadLocal();
+  renderAll();
+}
 async function save(){
   state.updatedAt=new Date().toISOString();
   persist();
@@ -176,9 +182,9 @@ async function yenileSunucu(){
   if(typeof ghPullPublic==="function") await ghPullPublic();
 }
 function resetData(){
-  if(!confirm("PDF listesi yüklensin mi?"))return;
+  if(!confirm("Liste yüklensin mi?"))return;
   localStorage.removeItem(KEY);
-  state=hydrate(JSON.parse(JSON.stringify(SEED)));
+  state=loadLocal();
   persist();renderAll();toast("Yüklendi");
 }
 function exportCSV(){
@@ -186,7 +192,7 @@ function exportCSV(){
   const rows=state.people.map((p,i)=>{const c=calc(p);return [i+1,p.name,p.mesaiSaat||0,Math.round(c.mesai),p.hsSaat||0,Math.round(c.hs),Math.round(c.prim),Math.round(c.yol),p.izinGun||0,Math.round(c.izin),Math.round(c.yillik),p.disiplinDk||0,Math.round(c.toplam)].join(";");});
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob(["\ufeff"+head.join(";")+"\n"+rows.join("\n")],{type:"text/csv;charset=utf-8"}));
-  a.download="cadde-bordro.csv";a.click();
+  a.download="bordro.csv";a.click();
 }
 let _pdfFontB64=null;
 let _pdfFontBoldB64=null;
@@ -214,51 +220,24 @@ async function ensurePdfFont(doc){
         try{
           _pdfFontB64=await loadFontB64(url);
           loaded=true;
-          console.log("PDF font loaded from",url);
           break;
-        }catch(e){ console.warn("PDF font load failed",url,e); }
+        }catch(e){}
       }
       if(!loaded) return false;
     }
     doc.addFileToVFS("DejaVuSans.ttf",_pdfFontB64);
     doc.addFont("DejaVuSans.ttf","DejaVu","normal");
-    if(!_pdfFontBoldB64){
-      try{
-        _pdfFontBoldB64=await loadFontB64("https://cdn.jsdelivr.net/npm/dejavu-fonts-ttf@2.37.3/ttf/DejaVuSans-Bold.ttf");
-      }catch(e){ console.warn("Bold font load failed",e); }
-    }
-    if(_pdfFontBoldB64){
-      doc.addFileToVFS("DejaVuSans-Bold.ttf",_pdfFontBoldB64);
-      doc.addFont("DejaVuSans-Bold.ttf","DejaVu","bold");
-    }
     return true;
   }catch(e){
-    console.error("ensurePdfFont error",e);
     return false;
   }
-}
-function pdfDrawChrome(doc,font,W,H,now,payLen,allLen){
-  doc.setFillColor(31,75,143);
-  doc.rect(0,0,W,14,"F");
-  doc.setFillColor(196,92,38);
-  doc.rect(0,14,W,1.4,"F");
-  doc.setTextColor(255,255,255);
-  doc.setFont(font,"normal");
-  doc.setFontSize(12);
-  doc.text("CADDE MESAI LISTESI",10,7);
-  doc.setFontSize(7.5);
-  doc.text(now+"  ·  "+payLen+" odeme / "+allLen+" kayit",10,12);
-  doc.setFillColor(31,75,143);
-  doc.rect(0,H-7,W,7,"F");
-  doc.setFontSize(7);
-  doc.text("Cadde Mesai Listesi  ·  gizli personel belgesi",10,H-2.6);
 }
 function yedekAl(){
   const data = JSON.stringify(state, null, 2);
   const blob = new Blob([data], {type:"application/json"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "cadde-yedek-" + new Date().toISOString().slice(0,10) + ".json";
+  a.download = "yedek-" + new Date().toISOString().slice(0,10) + ".json";
   a.click();
   toast("Yedek indirildi", true);
 }
