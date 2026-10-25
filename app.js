@@ -33,7 +33,6 @@ function loadLocal(){
     var raw=localStorage.getItem(KEY);
     if(raw){
       var s=hydrate(JSON.parse(raw));
-      // Cadde eksikse seed kullan
       if(KEY==="mesai_Cadde" && (s.people.length<60 || !s.cezalar.length)){
         raw=null;
       }else if(s.people.length){
@@ -122,7 +121,7 @@ function renderDevam(){
   fillSel("dKisi");
   compactDevam();
   const rows=state.devamsizlik||[];
-  document.getElementById("devamList").innerHTML=`<div class="table-wrap"><table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Gün</th><th>Not</th><th></th></tr></thead><tbody>${rows.length?rows.map((d,i)=>`<tr><td>${i+1}</td><td class="name">${d.kisi}${d.eklenme?`<div style="font-size:11px;color:#888;font-weight:400;margin-top:2px">${d.eklenme}</div>`:""}</td><td>${d.gun}</td><td class="name">${d.not||"-"}</td><td><button class="btn" onclick="state.devamsizlik.splice(${i},1);persist();renderDevam()">Sil</button></td></tr>`).join(""):`<tr><td colspan="5">Kayıt yok</td></tr>`}</tbody></table></div>`;
+  document.getElementById("devamList").innerHTML=`<div class="table-wrap"><table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Gün</th><th>Not</th><th>Tarih</th><th></th></tr></thead><tbody>${rows.length?rows.map((d,i)=>`<tr><td>${i+1}</td><td class="name">${d.kisi}</td><td>${d.gun}</td><td class="name">${d.not||"-"}</td><td>${d.eklenme||"-"}</td><td><button class="btn" onclick="state.devamsizlik.splice(${i},1);persist();renderDevam()">Sil</button></td></tr>`).join(""):`<tr><td colspan="6">Kayıt yok</td></tr>`}</tbody></table></div>`;
 }
 function addDevam(){
   const kisi=document.getElementById("dKisi").value;if(!kisi){toast("Kişi seç");return;}
@@ -148,7 +147,7 @@ function addDevam(){
 function renderCeza(){
   fillSel("cKisi");
   const rows=state.cezalar||[];
-  document.getElementById("cezaList").innerHTML=`<div class="table-wrap"><table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Tutar</th><th>Neden</th><th></th></tr></thead><tbody>${rows.length?rows.map((c,i)=>`<tr><td>${i+1}</td><td class="name">${c.kisi}${c.eklenme?`<div style="font-size:11px;color:#888;font-weight:400;margin-top:2px">${c.eklenme}</div>`:""}</td><td>${tl(c.tutar)} TL</td><td class="name">${c.neden||"-"}</td><td><button class="btn" onclick="state.cezalar.splice(${i},1);persist();renderCeza()">Sil</button></td></tr>`).join(""):`<tr><td colspan="5">Kayıt yok</td></tr>`}</tbody></table></div>`;
+  document.getElementById("cezaList").innerHTML=`<div class="table-wrap"><table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Tutar</th><th>Neden</th><th>Tarih</th><th></th></tr></thead><tbody>${rows.length?rows.map((c,i)=>`<tr><td>${i+1}</td><td class="name">${c.kisi}</td><td>${tl(c.tutar)} TL</td><td class="name">${c.neden||"-"}</td><td>${c.eklenme||"-"}</td><td><button class="btn" onclick="state.cezalar.splice(${i},1);persist();renderCeza()">Sil</button></td></tr>`).join(""):`<tr><td colspan="6">Kayıt yok</td></tr>`}</tbody></table></div>`;
 }
 function addCeza(){
   const kisi=document.getElementById("cKisi").value;if(!kisi){toast("Kişi seç");return;}
