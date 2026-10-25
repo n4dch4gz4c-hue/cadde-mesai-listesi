@@ -1,4 +1,4 @@
-const SEED={period:"PERSONEL LISTESI CADDE Eylul PDF",people:[
+const SEED_CADDE={period:"PERSONEL LISTESI CADDE",people:[
 {id:1,name:"CEMAL ÇELİK",mesaiBirim:320,yillikTutar:8000},
 {id:2,name:"ABDULLAH AVCI",mesaiBirim:300,hsSaat:1},
 {id:3,name:"CUMHUR YİĞİT",mesaiBirim:320},
@@ -65,11 +65,38 @@ const SEED={period:"PERSONEL LISTESI CADDE Eylul PDF",people:[
 {id:47,name:"MUHİTTİN ÖZÇELİK",mesaiBirim:270,mesaiSaat:4,hsSaat:2},
 {id:38,name:"MUHAMMET SOFUOĞLU",mesaiBirim:320,hsSaat:2},
 {id:65,name:"MUHAMMED MÜMİN ILGAR",mesaiBirim:220,izinBirim:1900}
-],cezalar:[],devamsizlik:[
-{kisi:"HAKAN ATMACA",gun:2,not:"İzin dönüşü işe gelmedi"},
-{kisi:"HASAN KOÇALAN",gun:1,not:"2 gün raporlu, 1 gün yazılacak"},
-{kisi:"ERHAN SOFUOĞLU",gun:1,not:"Raporlu"},
-{kisi:"YUNUS EMRE ÇELİK",gun:5,not:"Ücretsiz izin"},
-{kisi:"ABDULLAH AVCI",gun:3,not:"Rapor"},
-{kisi:"OSMAN CEYLAN",gun:2,not:"Ücretsiz izin"}
-]};
+],cezalar:[],devamsizlik:[]};
+
+const SEED_CENGEL={period:"ÇENGELKÖY MESAİ",people:[
+{id:101,name:"EMRE BULUT",mesaiBirim:250},
+{id:102,name:"MURAT GÜNEY",mesaiBirim:250},
+{id:103,name:"AHMET ÖZÇELİK",mesaiBirim:280},
+{id:104,name:"TOLGA BULUT",mesaiBirim:250},
+{id:105,name:"GÜLEN OTAÇ",mesaiBirim:190},
+{id:106,name:"VEYSEL YILMAZ",mesaiBirim:230},
+{id:107,name:"MUSTAFA YILDIRIM",mesaiBirim:230},
+{id:108,name:"BEYTULLAH ÖMER YAĞMUR",mesaiBirim:230},
+{id:109,name:"ŞEYMA KARA",mesaiBirim:230},
+{id:110,name:"KEMAL KÖRPE",mesaiBirim:280},
+{id:111,name:"BİLAL KAHVECİ",mesaiBirim:230},
+{id:112,name:"ALİ ÖMER YILMAZ",mesaiBirim:230},
+{id:113,name:"FATİH İPEK",mesaiBirim:250},
+{id:114,name:"İSMAİL ŞİMŞEK",mesaiBirim:280},
+{id:115,name:"TAHİR ŞAHBAZ",mesaiBirim:230},
+{id:116,name:"SEMİH DÜNDAR",mesaiBirim:230},
+{id:117,name:"ABDULSAMET YAPRAK",mesaiBirim:190},
+{id:118,name:"METİN BULUT",mesaiBirim:190},
+{id:119,name:"OSMAN KAPLAN",mesaiBirim:280,yillikTutar:4000},
+{id:120,name:"RAMAZAN KOÇAL",mesaiBirim:250},
+{id:121,name:"YAŞAR KEMAL HAN",mesaiBirim:250},
+{id:122,name:"UĞUR YILMAZ",mesaiBirim:230},
+{id:123,name:"NECMETTİN AKYILDIZ",mesaiBirim:230},
+{id:124,name:"AZİM RECEBİ",mesaiBirim:220},
+{id:125,name:"AZİMYAR SHAHABUDDİN",mesaiBirim:220}
+],cezalar:[],devamsizlik:[]};
+
+const SEED=SEED_CADDE;
+function getSeedForBranch(b){
+  if(b==="Çengelköy") return SEED_CENGEL;
+  return SEED_CADDE;
+}
