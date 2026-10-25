@@ -30,6 +30,13 @@ function sums(){
   const add=k=>all.reduce((a,x)=>a+x.c[k],0);
   return {all,pay,add,toplam:add("toplam"),mesai:add("mesai"),hs:add("hs"),prim:add("prim"),yol:add("yol"),izin:add("izin"),yillik:add("yillik"),dis:add("dis")};
 }
+function forceTotalColor(){
+  document.querySelectorAll("tfoot td,tfoot tr").forEach(function(el){
+    el.style.background="#e8f5e9";
+    el.style.color="#1b5e20";
+    el.style.fontWeight="700";
+  });
+}
 async function outPdf(doc,name){
   const blob=doc.output("blob");
   const file=new File([blob],name,{type:"application/pdf"});
@@ -78,6 +85,7 @@ renderListe=function(){
       </div>`:""}
     </div>`;
   }).join("")+`</div>`;
+  setTimeout(forceTotalColor,50);
 };
 const _renderOzet=renderOzet;
 renderOzet=function(){
@@ -89,7 +97,7 @@ renderOzet=function(){
     <p>${s.all.length} kisi · ${s.pay.length} odeme · <b>${tl(s.toplam)} TL</b></p>
     <table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Toplam</th></tr></thead>
     <tbody>${s.all.map((x,i)=>`<tr class="${x.c.toplam>0?"pay":"zero"}"><td>${i+1}</td><td class="name">${x.p.name}</td><td class="tot">${dash(x.c.toplam)}</td></tr>`).join("")}</tbody>
-    <tfoot><tr style="background:#e8f5e9!important"><td style="background:#e8f5e9!important;color:#1b5e20!important"></td><td style="background:#e8f5e9!important;color:#1b5e20!important">TOPLAM</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.toplam)}</td></tr></tfoot></table>`;
+    <tfoot><tr><td></td><td>TOPLAM</td><td>${tl(s.toplam)}</td></tr></tfoot></table>`;
   ayr.innerHTML=`<div class="row" style="justify-content:space-between;padding:0 0 10px"><h2 style="margin:0">Ayrintili ozet</h2><button class="btn primary" onclick="pagePdf('ozet-ayrinti',false)">PDF indir</button></div>
     <p>${s.all.length} kisi · ${s.pay.length} odeme · ${tl(s.toplam)} TL</p>
     <table class="sheet slim"><thead><tr><th>No</th><th>Ad</th><th>Mesai</th><th>HS</th><th>Prim</th><th>Yol</th><th>Izin</th><th>Yillik</th><th>Toplam</th></tr></thead>
@@ -97,7 +105,8 @@ renderOzet=function(){
       <td>${i+1}</td><td class="name">${x.p.name}</td><td>${dash(x.c.mesai)}</td><td>${dash(x.c.hs)}</td>
       <td>${dash(x.c.prim)}</td><td>${dash(x.c.yol)}</td><td>${dash(x.c.izin)}</td>
       <td>${dash(x.c.yillik)}</td><td>${dash(x.c.toplam)}</td></tr>`).join("")}</tbody>
-    <tfoot><tr style="background:#e8f5e9!important"><td style="background:#e8f5e9!important;color:#1b5e20!important"></td><td style="background:#e8f5e9!important;color:#1b5e20!important">TOPLAM</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.mesai)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.hs)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.prim)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.yol)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.izin)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.yillik)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.toplam)}</td></tr></tfoot></table>`;
+    <tfoot><tr><td></td><td>TOPLAM</td><td>${tl(s.mesai)}</td><td>${tl(s.hs)}</td><td>${tl(s.prim)}</td><td>${tl(s.yol)}</td><td>${tl(s.izin)}</td><td>${tl(s.yillik)}</td><td>${tl(s.toplam)}</td></tr></tfoot></table>`;
+  setTimeout(forceTotalColor,50);
 };
 function periodLabel(){
   const d=new Date();
@@ -155,7 +164,7 @@ function renderRapor(){
       <div style="padding:8px 0">${chartHtml}</div>
       <table class="sheet slim kalem-table" style="margin-top:12px"><thead><tr><th>Kalem</th><th>Tutar</th><th>Pay</th></tr></thead>
       <tbody>${kalem.map(([k,v])=>`<tr><td class="name">${k}</td><td>${dash(v)}</td><td>${s.toplam?((v/s.toplam)*100).toFixed(1):"0"}%</td></tr>`).join("")}</tbody>
-      <tfoot><tr style="background:#e8f5e9!important"><td style="background:#e8f5e9!important;color:#1b5e20!important">GENEL TOPLAM</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.toplam)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">100%</td></tr></tfoot></table>
+      <tfoot><tr><td>GENEL TOPLAM</td><td>${tl(s.toplam)}</td><td>100%</td></tr></tfoot></table>
     </div>
     <div class="panel" id="kisiPanel">
       <h3 style="color:#111;margin:0 0 8px">Personel odeme listesi</h3>
@@ -163,12 +172,13 @@ function renderRapor(){
       <tbody>${s.all.map((x,i)=>`<tr class="${x.c.toplam>0?"pay":"zero"}">
         <td>${i+1}</td><td class="name">${x.p.name}${x.p.kurye?" <span class='kmark'>K</span>":""}</td>
         <td class="tot">${dash(x.c.toplam)}</td></tr>`).join("")}</tbody>
-      <tfoot><tr style="background:#e8f5e9!important"><td style="background:#e8f5e9!important;color:#1b5e20!important"></td><td style="background:#e8f5e9!important;color:#1b5e20!important">TOPLAM</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.toplam)}</td></tr></tfoot></table>
+      <tfoot><tr><td></td><td>TOPLAM</td><td>${tl(s.toplam)}</td></tr></tfoot></table>
     </div>
     <div class="panel">
       <h3 style="color:#111">Devamsizlik</h3>
       ${devam.length?`<table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Gun</th><th>Not</th></tr></thead><tbody>${devam.map((d,i)=>`<tr><td>${i+1}</td><td class="name">${d.kisi}</td><td>${d.gun}</td><td class="name">${d.not||"-"}</td></tr>`).join("")}</tbody></table>`:"<p class='muted' style='color:#666'>Kayit yok</p>"}
     </div>`;
+  setTimeout(forceTotalColor,50);
 }
 const _tab=tab;
 tab=function(el){
@@ -188,4 +198,5 @@ tab=function(el){
 const _renderAll=renderAll;
 renderAll=function(){
   _renderAll();
+  setTimeout(forceTotalColor,100);
 };
