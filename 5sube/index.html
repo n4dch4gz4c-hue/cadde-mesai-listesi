@@ -9,58 +9,44 @@
 <meta http-equiv="Expires" content="0">
 <title>5 Şube Mesai</title>
 <style>
-:root {
-  --bg: #f8fafc;
-  --card: #ffffff;
-  --text: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --primary: #1d4ed8;
-  --accent: #0f172a;
-  --danger: #dc2626;
-  --radius: 12px;
-}
-* { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); }
-header { background: var(--accent); color: #fff; padding: 14px 16px 10px; position: sticky; top: 0; z-index: 40; }
-header h1 { margin: 0; font-size: 1.25rem; }
-header .sub { font-size: 0.8rem; opacity: 0.75; margin-top: 2px; }
-.branch-bar { display: flex; gap: 6px; overflow-x: auto; padding: 10px 0 4px; scrollbar-width: none; }
-.branch-bar::-webkit-scrollbar { display: none; }
-.branch-bar button { flex: none; background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 7px 14px; border-radius: 999px; font-size: 0.85rem; }
-.branch-bar button.active { background: #fff; color: var(--accent); font-weight: 700; }
-.toolbar { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 16px; background: #fff; border-bottom: 1px solid var(--border); }
-.toolbar input[type="search"] { flex: 1; min-width: 140px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px; }
-.btn { border: 1px solid var(--border); background: #fff; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; }
-.btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
-.btn.danger { background: var(--danger); color: #fff; border-color: var(--danger); }
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding: 12px 16px; }
-.stat { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
-.stat span { display: block; font-size: 0.75rem; color: var(--muted); }
-.stat b { font-size: 1.15rem; }
-.tabs { display: flex; gap: 4px; padding: 0 16px 8px; overflow-x: auto; background: #fff; border-bottom: 1px solid var(--border); }
-.tabs button { flex: none; background: transparent; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; color: var(--muted); }
-.tabs button.on { background: #eff6ff; color: var(--primary); font-weight: 600; }
-.panel { display: none; padding: 12px 16px 40px; }
-.panel.show { display: block; }
-.table-wrap { overflow-x: auto; background: #fff; border-radius: var(--radius); border: 1px solid var(--border); }
-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid var(--border); }
-th { background: #f1f5f9; }
-input[type="number"] { width: 70px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 16px; }
-td.name { font-weight: 600; }
-.mobile-list { display: none; }
-.card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; margin-bottom: 10px; }
-.card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.card-fields { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-.card-fields label { font-size: 0.75rem; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
-.card-fields input { width: 100%; }
-#toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #0f172a; color: #fff; padding: 10px 16px; border-radius: 999px; font-size: 0.85rem; display: none; z-index: 100; }
-@media (max-width: 768px) {
-  .table-wrap { display: none; }
-  .mobile-list { display: block; }
-  .stats { grid-template-columns: 1fr 1fr; }
-}
+:root { --bg:#f8fafc; --card:#fff; --text:#0f172a; --muted:#64748b; --border:#e2e8f0; --primary:#1d4ed8; --accent:#0f172a; --danger:#dc2626; --radius:12px; }
+* { box-sizing:border-box; }
+body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); }
+header { background:var(--accent); color:#fff; padding:14px 16px 10px; position:sticky; top:0; z-index:40; }
+header h1 { margin:0; font-size:1.25rem; }
+header .sub { font-size:0.8rem; opacity:0.75; margin-top:2px; }
+.branch-bar { display:flex; gap:6px; overflow-x:auto; padding:10px 0 4px; scrollbar-width:none; }
+.branch-bar::-webkit-scrollbar { display:none; }
+.branch-bar button { flex:none; background:rgba(255,255,255,0.12); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:7px 14px; border-radius:999px; font-size:0.85rem; }
+.branch-bar button.active { background:#fff; color:var(--accent); font-weight:700; }
+.toolbar { display:flex; gap:8px; flex-wrap:wrap; padding:12px 16px; background:#fff; border-bottom:1px solid var(--border); }
+.toolbar input[type="search"] { flex:1; min-width:140px; padding:8px 12px; border:1px solid var(--border); border-radius:8px; font-size:16px; }
+.btn { border:1px solid var(--border); background:#fff; padding:8px 12px; border-radius:8px; font-size:0.85rem; }
+.btn.primary { background:var(--primary); color:#fff; border-color:var(--primary); }
+.btn.danger { background:var(--danger); color:#fff; border-color:var(--danger); }
+.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; padding:12px 16px; }
+.stat { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:12px; }
+.stat span { display:block; font-size:0.75rem; color:var(--muted); }
+.stat b { font-size:1.15rem; }
+.tabs { display:flex; gap:4px; padding:0 16px 8px; overflow-x:auto; background:#fff; border-bottom:1px solid var(--border); }
+.tabs button { flex:none; background:transparent; border:none; padding:8px 12px; border-radius:8px; font-size:0.85rem; color:var(--muted); }
+.tabs button.on { background:#eff6ff; color:var(--primary); font-weight:600; }
+.panel { display:none; padding:12px 16px 40px; }
+.panel.show { display:block; }
+.table-wrap { overflow-x:auto; background:#fff; border-radius:var(--radius); border:1px solid var(--border); }
+table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+th, td { padding:8px 6px; text-align:left; border-bottom:1px solid var(--border); }
+th { background:#f1f5f9; }
+input[type="number"] { width:70px; padding:6px 8px; border:1px solid var(--border); border-radius:6px; font-size:16px; }
+td.name { font-weight:600; }
+.mobile-list { display:none; }
+.card { background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:12px; margin-bottom:10px; }
+.card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.card-fields { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.card-fields label { font-size:0.75rem; color:var(--muted); display:flex; flex-direction:column; gap:4px; }
+.card-fields input { width:100%; }
+#toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; padding:10px 16px; border-radius:999px; font-size:0.85rem; display:none; z-index:100; }
+@media (max-width:768px) { .table-wrap { display:none; } .mobile-list { display:block; } .stats { grid-template-columns:1fr 1fr; } }
 </style>
 </head>
 <body>
@@ -126,12 +112,11 @@ td.name { font-weight: 600; }
 </section>
 
 <section id="ozet" class="panel"><div id="ozetBox"></div></section>
-
 <div id="toast"></div>
 
 <script>
 const BRANCHES = ["Kadıköy", "Bağdat Caddesi", "Çengelköy", "Taksim Büfe", "Taksim Pide"];
-const KEY = "bes_sube_v5";
+const KEY = "bes_sube_v6";
 const RATES = { mesai: 300, hs: 1250 };
 
 let state = load();
@@ -142,9 +127,7 @@ function load() {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const s = JSON.parse(raw);
-      BRANCHES.forEach(b => {
-        if (!s[b]) s[b] = { people: [], devam: [], ceza: [] };
-      });
+      BRANCHES.forEach(b => { if (!s[b]) s[b] = { people: [], devam: [], ceza: [] }; });
       return s;
     }
   } catch(e) {}
@@ -164,7 +147,9 @@ function toast(m) {
   setTimeout(() => e.style.display = "none", 2000);
 }
 function esc(s) {
-  return String(s||"").replace(/[&<>"']/g, c => ({ "&":"&", "<":"<", ">":">", '"':""", "'":"&#39;" }[c]));
+  return String(s||"").replace(/[&<>"']/g, function(c) {
+    return {"&":"&","<":"<",">":">",'"':""","'":"&#39;"}[c];
+  });
 }
 
 function calc(p) {
@@ -177,9 +162,9 @@ function calc(p) {
 
 function renderBranchBar() {
   const bar = document.getElementById("branchBar");
-  bar.innerHTML = BRANCHES.map(b =>
-    `<button class="${b===current?'active':''}" onclick="switchBranch('${b}')">${b}</button>`
-  ).join("") + `<button class="${current==='ALL'?'active':''}" onclick="switchBranch('ALL')">Tüm Şubeler</button>`;
+  bar.innerHTML = BRANCHES.map(function(b) {
+    return '<button class="' + (b===current?'active':'') + '" onclick="switchBranch(\'' + b + '\')">' + b + '</button>';
+  }).join('') + '<button class="' + (current==='ALL'?'active':'') + '" onclick="switchBranch(\'ALL\')">Tüm Şubeler</button>';
 }
 
 function switchBranch(b) { current = b; render(); }
@@ -189,8 +174,8 @@ function render() {
   if (current === "ALL") { renderAll(); return; }
   const b = getB();
   const q = (document.getElementById("q").value || "").toLocaleLowerCase("tr-TR");
-  const people = b.people.filter(p => !q || (p.name||"").toLocaleLowerCase("tr-TR").includes(q));
-  const sums = people.reduce((a,p) => {
+  const people = b.people.filter(function(p) { return !q || (p.name||"").toLocaleLowerCase("tr-TR").includes(q); });
+  const sums = people.reduce(function(a,p) {
     const c = calc(p);
     a.mesai += c.mesai; a.hs += c.hs; a.toplam += c.toplam;
     return a;
@@ -198,53 +183,53 @@ function render() {
 
   document.getElementById("headerSub").textContent = current + " · " + people.length + " kişi · " + tl(sums.toplam);
   document.getElementById("stats").innerHTML =
-    `<div class="stat"><span>Toplam</span><b>${tl(sums.toplam)}</b></div>` +
-    `<div class="stat"><span>Mesai</span><b>${tl(sums.mesai)}</b></div>` +
-    `<div class="stat"><span>HS</span><b>${tl(sums.hs)}</b></div>` +
-    `<div class="stat"><span>Kişi</span><b>${people.length}</b></div>`;
+    '<div class="stat"><span>Toplam</span><b>' + tl(sums.toplam) + '</b></div>' +
+    '<div class="stat"><span>Mesai</span><b>' + tl(sums.mesai) + '</b></div>' +
+    '<div class="stat"><span>HS</span><b>' + tl(sums.hs) + '</b></div>' +
+    '<div class="stat"><span>Kişi</span><b>' + people.length + '</b></div>';
 
-  document.getElementById("tbody").innerHTML = people.map((p,i) => {
+  document.getElementById("tbody").innerHTML = people.map(function(p,i) {
     const c = calc(p);
-    return `<tr>
-      <td>${i+1}</td>
-      <td class="name" contenteditable="true" onblur="updateName(${i},this.textContent)">${esc(p.name)}</td>
-      <td><input type="number" step="0.5" value="${p.mesai||''}" onchange="update(${i},'mesai',this.value)"></td>
-      <td>${tl(c.mesai)}</td>
-      <td><input type="number" step="0.5" value="${p.hs||''}" onchange="update(${i},'hs',this.value)"></td>
-      <td>${tl(c.hs)}</td>
-      <td><input type="number" value="${p.prim||''}" onchange="update(${i},'prim',this.value)"></td>
-      <td><input type="number" value="${p.yol||''}" onchange="update(${i},'yol',this.value)"></td>
-      <td><b>${tl(c.toplam)}</b></td>
-      <td><button class="btn danger" onclick="remove(${i})">Sil</button></td>
-    </tr>`;
-  }).join("");
+    return '<tr>' +
+      '<td>' + (i+1) + '</td>' +
+      '<td class="name" contenteditable="true" onblur="updateName(' + i + ',this.textContent)">' + esc(p.name) + '</td>' +
+      '<td><input type="number" step="0.5" value="' + (p.mesai||'') + '" onchange="update(' + i + ',\'mesai\',this.value)"></td>' +
+      '<td>' + tl(c.mesai) + '</td>' +
+      '<td><input type="number" step="0.5" value="' + (p.hs||'') + '" onchange="update(' + i + ',\'hs\',this.value)"></td>' +
+      '<td>' + tl(c.hs) + '</td>' +
+      '<td><input type="number" value="' + (p.prim||'') + '" onchange="update(' + i + ',\'prim\',this.value)"></td>' +
+      '<td><input type="number" value="' + (p.yol||'') + '" onchange="update(' + i + ',\'yol\',this.value)"></td>' +
+      '<td><b>' + tl(c.toplam) + '</b></td>' +
+      '<td><button class="btn danger" onclick="remove(' + i + ')">Sil</button></td>' +
+      '</tr>';
+  }).join('');
 
-  document.getElementById("mobileList").innerHTML = people.map((p,i) => {
+  document.getElementById("mobileList").innerHTML = people.map(function(p,i) {
     const c = calc(p);
-    return `<div class="card">
-      <div class="card-head"><b>${esc(p.name)}</b><span>${tl(c.toplam)}</span></div>
-      <div class="card-fields">
-        <label>Mesai Saat<input type="number" step="0.5" value="${p.mesai||''}" onchange="update(${i},'mesai',this.value)"></label>
-        <label>HS<input type="number" step="0.5" value="${p.hs||''}" onchange="update(${i},'hs',this.value)"></label>
-        <label>Prim<input type="number" value="${p.prim||''}" onchange="update(${i},'prim',this.value)"></label>
-        <label>Yol<input type="number" value="${p.yol||''}" onchange="update(${i},'yol',this.value)"></label>
-      </div>
-      <button class="btn danger" style="margin-top:8px;width:100%" onclick="remove(${i})">Sil</button>
-    </div>`;
-  }).join("");
+    return '<div class="card">' +
+      '<div class="card-head"><b>' + esc(p.name) + '</b><span>' + tl(c.toplam) + '</span></div>' +
+      '<div class="card-fields">' +
+        '<label>Mesai Saat<input type="number" step="0.5" value="' + (p.mesai||'') + '" onchange="update(' + i + ',\'mesai\',this.value)"></label>' +
+        '<label>HS<input type="number" step="0.5" value="' + (p.hs||'') + '" onchange="update(' + i + ',\'hs\',this.value)"></label>' +
+        '<label>Prim<input type="number" value="' + (p.prim||'') + '" onchange="update(' + i + ',\'prim\',this.value)"></label>' +
+        '<label>Yol<input type="number" value="' + (p.yol||'') + '" onchange="update(' + i + ',\'yol\',this.value)"></label>' +
+      '</div>' +
+      '<button class="btn danger" style="margin-top:8px;width:100%" onclick="remove(' + i + ')">Sil</button>' +
+      '</div>';
+  }).join('');
 
   fillSelects();
 }
 
 function renderAll() {
   let grand = 0, rows = "";
-  BRANCHES.forEach((b,i) => {
-    const sub = state[b].people.reduce((s,p) => s + calc(p).toplam, 0);
+  BRANCHES.forEach(function(b,i) {
+    const sub = state[b].people.reduce(function(s,p) { return s + calc(p).toplam; }, 0);
     grand += sub;
-    rows += `<tr><td>${i+1}</td><td colspan="7"><b>${b}</b> (${state[b].people.length})</td><td>${tl(sub)}</td><td></td></tr>`;
+    rows += '<tr><td>' + (i+1) + '</td><td colspan="7"><b>' + b + '</b> (' + state[b].people.length + ')</td><td>' + tl(sub) + '</td><td></td></tr>';
   });
   document.getElementById("headerSub").textContent = "Tüm Şubeler · " + tl(grand);
-  document.getElementById("stats").innerHTML = `<div class="stat"><span>Genel Toplam</span><b>${tl(grand)}</b></div>`;
+  document.getElementById("stats").innerHTML = '<div class="stat"><span>Genel Toplam</span><b>' + tl(grand) + '</b></div>';
   document.getElementById("tbody").innerHTML = rows;
   document.getElementById("mobileList").innerHTML = "";
 }
@@ -278,8 +263,8 @@ function remove(i) {
 }
 
 function fillSelects() {
-  const opts = '<option value="">Kişi seç</option>' + getB().people.map(p => `<option>${esc(p.name)}</option>`).join("");
-  ["dKisi","cKisi"].forEach(id => {
+  const opts = '<option value="">Kişi seç</option>' + getB().people.map(function(p) { return '<option>' + esc(p.name) + '</option>'; }).join('');
+  ["dKisi","cKisi"].forEach(function(id) {
     const el = document.getElementById(id);
     if (el) el.innerHTML = opts;
   });
@@ -297,9 +282,9 @@ function addDevam() {
 }
 function renderDevam() {
   const list = getB().devam || [];
-  document.getElementById("devamList").innerHTML = list.map((d,i) =>
-    `<div class="card"><b>${esc(d.kisi)}</b> · ${d.gun} gün<br><small>${esc(d.not||"")}</small><br><button class="btn danger" onclick="delDevam(${i})">Sil</button></div>`
-  ).join("") || "<p>Kayıt yok</p>";
+  document.getElementById("devamList").innerHTML = list.map(function(d,i) {
+    return '<div class="card"><b>' + esc(d.kisi) + '</b> · ' + d.gun + ' gün<br><small>' + esc(d.not||"") + '</small><br><button class="btn danger" onclick="delDevam(' + i + ')">Sil</button></div>';
+  }).join('') || "<p>Kayıt yok</p>";
 }
 function delDevam(i) { const b = getB(); b.devam.splice(i,1); setB(b); renderDevam(); }
 
@@ -315,9 +300,9 @@ function addCeza() {
 }
 function renderCeza() {
   const list = getB().ceza || [];
-  document.getElementById("cezaList").innerHTML = list.map((c,i) =>
-    `<div class="card"><b>${esc(c.kisi)}</b> · ${tl(c.tutar)}<br><small>${esc(c.neden||"")}</small><br><button class="btn danger" onclick="delCeza(${i})">Sil</button></div>`
-  ).join("") || "<p>Kayıt yok</p>";
+  document.getElementById("cezaList").innerHTML = list.map(function(c,i) {
+    return '<div class="card"><b>' + esc(c.kisi) + '</b> · ' + tl(c.tutar) + '<br><small>' + esc(c.neden||"") + '</small><br><button class="btn danger" onclick="delCeza(' + i + ')">Sil</button></div>';
+  }).join('') || "<p>Kayıt yok</p>";
 }
 function delCeza(i) { const b = getB(); b.ceza.splice(i,1); setB(b); renderCeza(); }
 
@@ -327,16 +312,16 @@ function renderOzet() {
     return;
   }
   const people = getB().people;
-  const rows = people.map((p,i) => {
+  const rows = people.map(function(p,i) {
     const c = calc(p);
-    return `<tr><td>${i+1}</td><td>${esc(p.name)}</td><td>${tl(c.mesai)}</td><td>${tl(c.hs)}</td><td>${tl(c.toplam)}</td></tr>`;
-  }).join("");
-  document.getElementById("ozetBox").innerHTML = `<div class="table-wrap"><table><thead><tr><th>No</th><th>Ad</th><th>Mesai</th><th>HS</th><th>Toplam</th></tr></thead><tbody>${rows||"<tr><td colspan=5>Kayıt yok</td></tr>"}</tbody></table></div>`;
+    return '<tr><td>' + (i+1) + '</td><td>' + esc(p.name) + '</td><td>' + tl(c.mesai) + '</td><td>' + tl(c.hs) + '</td><td>' + tl(c.toplam) + '</td></tr>';
+  }).join('');
+  document.getElementById("ozetBox").innerHTML = '<div class="table-wrap"><table><thead><tr><th>No</th><th>Ad</th><th>Mesai</th><th>HS</th><th>Toplam</th></tr></thead><tbody>' + (rows||"<tr><td colspan=5>Kayıt yok</td></tr>") + '</tbody></table></div>';
 }
 
 function showTab(id) {
-  document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === id));
-  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("show", p.id === id));
+  document.querySelectorAll(".tabs button").forEach(function(b) { b.classList.toggle("on", b.dataset.tab === id); });
+  document.querySelectorAll(".panel").forEach(function(p) { p.classList.toggle("show", p.id === id); });
   if (id === "devam") renderDevam();
   if (id === "ceza") renderCeza();
   if (id === "ozet") renderOzet();
@@ -346,9 +331,9 @@ function exportCSV() {
   if (current === "ALL") { toast("Şube seç"); return; }
   const people = getB().people;
   let csv = "Ad;Mesai Saat;HS;Prim;Yol;Toplam\n";
-  people.forEach(p => {
+  people.forEach(function(p) {
     const c = calc(p);
-    csv += `"${p.name}";${num(p.mesai)};${num(p.hs)};${num(p.prim)};${num(p.yol)};${Math.round(c.toplam)}\n`;
+    csv += '"' + p.name + '";' + num(p.mesai) + ';' + num(p.hs) + ';' + num(p.prim) + ';' + num(p.yol) + ';' + Math.round(c.toplam) + '\n';
   });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob(["\ufeff"+csv], {type:"text/csv;charset=utf-8"}));
@@ -366,7 +351,7 @@ function importBackup(inp) {
   const f = inp.files[0];
   if (!f) return;
   const r = new FileReader();
-  r.onload = e => {
+  r.onload = function(e) {
     try {
       if (confirm("Üzerine yazılsın mı?")) {
         state = JSON.parse(e.target.result);
