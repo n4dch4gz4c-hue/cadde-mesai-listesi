@@ -18,6 +18,7 @@ th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0}
 td{border:1px solid #eadfd2;padding:3px 4px;text-align:center;color:#111}
 td.name{text-align:left;font-weight:700}
 tr.pay td.tot{background:#f3e8d2;font-weight:700}
+tfoot td,#ozetKisa tfoot td,#ozetAyrinti tfoot td,#raporBox tfoot td{background:#f3e8d2!important;color:#111!important;font-weight:700}
 input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16px}
 .sheet input{width:64px;text-align:center;font-size:14px}
 .hide{display:none!important}
@@ -67,7 +68,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 <section id="sec-devam" class="hide"><div class="panel"><h2>Devamsızlık</h2><div class="row"><select id="dKisi"></select><input id="dGun" type="number" value="1"/><input id="dNot" placeholder="Not"/><button class="btn primary" onclick="addDevam()">Ekle</button></div></div><div id="devamList"></div></section>
 <section id="sec-ceza" class="hide"><div class="panel"><h2>Cezalar</h2><div class="row"><select id="cKisi"></select><input id="cTutar" type="number" value="1000"/><input id="cNeden" placeholder="Neden"/><button class="btn primary" onclick="addCeza()">Ekle</button></div></div><div id="cezaList" class="cards"></div></section>
 <section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kısa özet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrıntılı özet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
-<section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
+<section id="sec-rapor" class="hide"><div class="panel" id="raporBox"></div></section>
 <div id="toast"></div>
 <script>
 var BRANCHES=["Kadıköy","Cadde","Çengelköy"];
