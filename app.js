@@ -86,7 +86,7 @@ function renderListe(){
 function renderKurye(){
   const list=state.people.filter(p=>p.kurye);
   const sum=list.reduce((a,p)=>a+(p.primAdet||0),0);
-  document.getElementById("kuryeList").innerHTML=list.map(p=>`<article class="card"><b>${p.name}</b><label>Prim adet<input type="number" value="${p.primAdet||0}" onchange="setPrim(${p.id},this.value)"/></label><div>${tl((p.primAdet||0)*PRIM_BIRIM)} TL</div></article>`).join("")+`<article class="card"><b>Toplam adet ${sum}</b><div>${tl(sum*PRIM_BIRIM)} TL</div></article>`;
+  document.getElementById("kuryeList").innerHTML=`<div class="table-wrap"><table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Prim adet</th><th>Prim tutar</th></tr></thead><tbody>${list.length?list.map((p,i)=>`<tr><td>${i+1}</td><td class="name">${p.name}</td><td><input type="number" value="${p.primAdet||0}" onchange="setPrim(${p.id},this.value)" style="width:80px"></td><td>${tl((p.primAdet||0)*PRIM_BIRIM)} TL</td></tr>`).join(""):`<tr><td colspan="4">Kurye yok</td></tr>`}</tbody><tfoot><tr><td></td><td>TOPLAM</td><td>${sum}</td><td>${tl(sum*PRIM_BIRIM)} TL</td></tr></tfoot></table></div>`;
 }
 function setPrim(id,v){const p=state.people.find(x=>x.id===id);if(!p)return;p.primAdet=num(v,0);persist();renderKurye();renderListe();}
 function fillSel(id){const sel=document.getElementById(id);if(!sel)return;const cur=sel.value;sel.innerHTML='<option value="">Kişi seç</option>'+state.people.map(p=>`<option value="${p.name}">${p.name}</option>`).join("");if(cur)sel.value=cur;}
