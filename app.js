@@ -31,16 +31,13 @@ function hydrate(s){
 function loadLocal(){
   try{
     var raw=localStorage.getItem(KEY);
-    if(raw){var s=hydrate(JSON.parse(raw));if(s.people.length)return s;}
-    // Eski Cadde verisini taşı
-    if(KEY==="mesai_Cadde"){
-      var old=localStorage.getItem("cadde_bordro_v4");
-      if(old){
-        var os=hydrate(JSON.parse(old));
-        if(os.people.length){
-          localStorage.setItem(KEY,old);
-          return os;
-        }
+    if(raw){
+      var s=hydrate(JSON.parse(raw));
+      // Cadde eksikse seed kullan
+      if(KEY==="mesai_Cadde" && (s.people.length<60 || !s.cezalar.length)){
+        raw=null;
+      }else if(s.people.length){
+        return s;
       }
     }
   }catch(e){}
@@ -50,7 +47,9 @@ function loadLocal(){
   }else if(typeof SEED!=="undefined"){
     seed=SEED;
   }
-  return hydrate(JSON.parse(JSON.stringify(seed||{})));
+  var result=hydrate(JSON.parse(JSON.stringify(seed||{})));
+  if(result.people.length) localStorage.setItem(KEY,JSON.stringify(result));
+  return result;
 }
 let state=loadLocal();
 function persist(){localStorage.setItem(KEY,JSON.stringify(state));}
