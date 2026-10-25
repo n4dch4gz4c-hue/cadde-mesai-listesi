@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3 Sube Mesai</title>
+<style>
+body{margin:0;font-family:system-ui,sans-serif;background:#f8fafc;color:#0f172a}
+header{background:#0f172a;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:10}
+h1{margin:0;font-size:1.2rem}
+.branch-bar{display:flex;gap:6px;overflow-x:auto;padding:8px 0}
+.branch-bar button{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:8px 14px;border-radius:20px;font-size:14px}
+.branch-bar button.active{background:#fff;color:#0f172a;font-weight:bold}
+.toolbar{padding:12px;background:#fff;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid #e2e8f0}
+.btn{padding:8px 12px;border:1px solid #ccc;border-radius:8px;background:#fff;font-size:14px}
+.btn.primary{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
+.person{background:#fff;margin:8px 12px;padding:12px;border-radius:12px;border:1px solid #e2e8f0}
+.person input,.person select{padding:6px;margin:2px;font-size:16px;width:70px}
+.managers{background:#fffbea;margin:8px 12px;padding:10px;border-radius:10px;border:1px solid #fde68a;font-size:14px}
+.stats{padding:8px 12px;font-weight:600}
+</style>
+</head>
+<body>
+<header>
+  <h1>3 Sube Mesai</h1>
+  <div class="branch-bar" id="bar"></div>
+</header>
+<div class="toolbar">
+  <button class="btn primary" onclick="addPerson()">+ Kisi</button>
+  <button class="btn" onclick="addManager()">+ Yetkili</button>
+  <button class="btn" onclick="backup()">Yedek Al</button>
+  <button class="btn" onclick="document.getElementById('imp').click()">Yedek Yukle</button>
+  <input type="file" id="imp" accept=".json" style="display:none" onchange="importBackup(this)">
+</div>
+<div class="stats" id="stats"></div>
+<div id="list"></div>
+<script>
+var BRANCHES = ["Kadikoy", "Cadde", "Cengelkoy"];
+var KEY = "3sube_mesai_v1";
+var RATES = {
+  Kadikoy: { A:{saat:320,izin:2900,hs:2500}, B:{saat:300,izin:2700,hs:2500}, C:{saat:270,izin:2400,hs:2500}, D:{saat:220,izin:1900,hs:2500} },
+  Cadde:   { A:{saat:320,izin:2900,hs:2500}, B:{saat:300,izin:2700,hs:2500}, C:{saat:270,izin:2400,hs:2500}, D:{saat:220,izin:1900,hs:2500} },
+  Cengelkoy:{ A:{saat:280,izin:2800,hs:2000}, B:{saat:250,izin:2500,hs:2000}, C:{saat:230,izin:2300,hs:2000}, D:{saat:190,izin:1900,hs:2000} }
+};
+var SEED = {
+  Kadikoy: ["OZAY ALSAN","ABDULKADIR AKYUZ","MUHAMMED AKYUZ","SEDAT KIZILKAYA","MAHMUT TEKER","ISRAFIL OZTURK","CAFER KOCA","ISA AKYILDIZ","MUHSIN ISIK","RAMAZAN KURAL","RAMAZAN UZUNALP","GURKAN EYUPOGLU","VEDAT OZTURK","BILAL DENERI","VEPA","GOKHAN YESILBAS","EREN YILMAZ","ISMAIL ALBAYRAK","MURAT KAYA","MUHSIN OZMERT","EMIRHAN KANDEMIR","AZAT ASLANGRI","RIZVAN FINDIK","K. ENDER KIZILKAYA","ERAY SOFUOGLU","FURKAN ARDA","FERAT GUNDUZ","IBRAHIM KARAMAN","YIGIT ASLANGRI","TUNCAY CAGLAYAN","ABDULSAMET SEYAR","BATUHAN SEYAR","ALI BINGOL","ALTAN BULUT","YASIN TERCANL","ISMAIL YAZICI","EMIR CAPAR","OGUZHAN CAVUSOGLU","TAHSIN CERAN","MUHAMMED ONUR SAMUR","ISMAIL BURAK AKYOL"],
+  Cadde: ["CEMAL CELIK","ABDULLAH AVCI","CUMHUR YIGIT","HUSAMETTIN KORPE","SALIH USTA","BURHAN BAYAKIR","ERDAL CAVDAR","OKTAY CELIK","HIKMET ERDOGDU","SELIM ORTAHISAR","MEHMET EMIN MUDERRISOGLU","KOKSAL SOYKAN","FERHAT AVCI","ERHAN SOFUOGLU","HASAN ALI GERZ","MUHAMMET CAN SARICA","BILAL SURIKLI","HASAN KOCALAN","UGUR GOKER K","BEDRETTIN AVCI","EMRE POLAT","SELAHATTIN AVCI","CANER AVCI","ALI AKKOCA K","AZAD MYRADOV","MURAT TORUN K","MEHMET CELIK","YILMAZ AVCI","RAMAZAN BAYAKIR","ONUR AVCI","MUHAMMET MUSTAFA BAYAKIR","CIHAN AVCI","FURKAN KAVAK","SEPIDEH MENATTI","MUHAMMET EREN CELIK","MURAT DAGIDIR","SEYFI CELIK K","FEVZI DOLAK K","AYDIN AVCI","HAKAN ATMACA K","ABDULLAH DENERI","HAMIT AKPINAR","ADIL EMIR CELIK","ABDURRAHMAN KAPAN K","SAYIM GUMUS K","YUNUS EMRE CELIK","RAMAZAN YAVUZ K","ZEYNEP SOFUOGLU","MUSTAFA AYDIN K","HASAN IPEK","KAAN ATASOY","ABDULLAH GURKAN","VADETTIN AVCI","ERCAN ALTUN","OSMAN CEYLAN K","SEMIH SOFUOGLU","ABDURRAHMAN OZKAN","FIRAT AVCI","MENDERES SOFUOGLU","HICABI AKYILDIZ","ABDURRAHMAN BULUT","MUHITTIN OZCELIK","MUHAMMET SOFUOGLU","MUHAMMED MUMIN ILGAR","MUSLUM KANIKARA K","BAYRAM YETER K"],
+  Cengelkoy: ["EMRE BULUT","MURAT GUNEY","AHMET OZCELIK","TOLGA BULUT","GULEN OTAC","VEYSEL YILMAZ","MUSTAFA YILDIRIM","BEYTULLAH OMER YAGMUR","SEYMA KARA","KEMAL KORPE","BILAL KAHVECI","ALI OMER YILMAZ","FATIH IPEK","ISMAIL SIMSEK","TAHIR SAHBAZ","SEMIH DUNDAR","ABDULSAMET YAPRAK","METIN BULUT","OSMAN KAPLAN","RAMAZAN KOCAL","YASAR KEMAL HAN","UGUR YILMAZ","NECMETTIN AKYILDIZ","AZIM RECEBI","AZIMYAR SHAHABUDDIN"]
+};
+var current = BRANCHES[0];
+var state = load();
+
+function load() {
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) {
+      var s = JSON.parse(raw);
+      BRANCHES.forEach(function(b) {
+        if (!s[b]) s[b] = { people: [], managers: [] };
+        if (!s[b].people) s[b].people = [];
+        if (!s[b].managers) s[b].managers = [];
+      });
+      return s;
+    }
+  } catch(e) {}
+  var s = {};
+  BRANCHES.forEach(function(b) {
+    s[b] = { people: [], managers: [] };
+    (SEED[b] || []).forEach(function(name) {
+      s[b].people.push({ name: name, tip: "A", ms: 0, hs: 0, izin: 0, yol: 0, yillik: 0, ceza: 0 });
+    });
+  });
+  return s;
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
+
+function getRates(branch, tip) {
+  var r = RATES[branch] || RATES.Kadikoy;
+  return r[tip] || r.A;
+}
+function calc(p, branch) {
+  var r = getRates(branch, p.tip || "A");
+  var mesai = (p.ms || 0) * r.saat;
+  var hs = (p.hs || 0) * r.hs;
+  var izin = (p.izin || 0) * r.izin;
+  var yol = p.yol || 0;
+  var yillik = p.yillik || 0;
+  var ceza = p.ceza || 0;
+  return { mesai: mesai, hs: hs, izin: izin, yol: yol, yillik: yillik, ceza: ceza, toplam: mesai + hs + izin + yol + yillik - ceza };
+}
+
+function renderBar() {
+  var html = "";
+  BRANCHES.forEach(function(b) {
+    var cls = (b === current) ? "active" : "";
+    html += "<button class='" + cls + "' onclick=\"selectBranch('" + b + "')\">" + b + "</button>";
+  });
+  html += "<button onclick=\"selectBranch('ALL')\">Tum Subeler</button>";
+  document.getElementById("bar").innerHTML = html;
+}
+function selectBranch(b) { current = b; render(); }
+
+function render() {
+  renderBar();
+  var el = document.getElementById("list");
+  var statsEl = document.getElementById("stats");
+  if (current === "ALL") {
+    var grand = 0, html = "<h3>Tum Subeler</h3>";
+    BRANCHES.forEach(function(b) {
+      var people = state[b].people || [];
+      var sub = people.reduce(function(s, p) { return s + calc(p, b).toplam; }, 0);
+      grand += sub;
+      html += "<div class='person'><b>" + b + "</b> : " + Math.round(sub).toLocaleString("tr-TR") + " TL (" + people.length + " kisi)</div>";
+    });
+    html += "<div class='person'><b>Genel Toplam: " + Math.round(grand).toLocaleString("tr-TR") + " TL</b></div>";
+    el.innerHTML = html;
+    statsEl.textContent = "Genel: " + Math.round(grand).toLocaleString("tr-TR") + " TL";
+    return;
+  }
+  var branch = state[current] || { people: [], managers: [] };
+  var people = branch.people || [];
+  var managers = branch.managers || [];
+  var sums = people.reduce(function(a, p) { var c = calc(p, current); a.toplam += c.toplam; return a; }, {toplam:0});
+
+  var html = "<div class='managers'><b>Yetkililer:</b> " + (managers.length ? managers.map(function(m,i){return m+" <button onclick='removeManager("+i+")'>x</button>";}).join(" | ") : "Yok") + "</div>";
+  html += "<h3>" + current + " (" + people.length + " kisi) · " + Math.round(sums.toplam).toLocaleString("tr-TR") + " TL</h3>";
+
+  people.forEach(function(p, i) {
+    var c = calc(p, current);
+    html += "<div class='person'>";
+    html += "<b>" + (p.name||"") + "</b> ";
+    html += "<select onchange='setTip("+i+",this.value)'><option"+(p.tip==="A"?" selected":"")+">A</option><option"+(p.tip==="B"?" selected":"")+">B</option><option"+(p.tip==="C"?" selected":"")+">C</option><option"+(p.tip==="D"?" selected":"")+">D</option></select><br>";
+    html += "MS Saat: <input type='number' value='"+(p.ms||0)+"' onchange='setVal("+i+",\"ms\",this.value)'> ";
+    html += "HS Adet: <input type='number' value='"+(p.hs||0)+"' onchange='setVal("+i+",\"hs\",this.value)'> ";
+    html += "Izin Gun: <input type='number' value='"+(p.izin||0)+"' onchange='setVal("+i+",\"izin\",this.value)'><br>";
+    html += "Yol: <input type='number' value='"+(p.yol||0)+"' onchange='setVal("+i+",\"yol\",this.value)'> ";
+    html += "Yillik: <input type='number' value='"+(p.yillik||0)+"' onchange='setVal("+i+",\"yillik\",this.value)'> ";
+    html += "Ceza: <input type='number' value='"+(p.ceza||0)+"' onchange='setVal("+i+",\"ceza\",this.value)'><br>";
+    html += "<b>Toplam: " + Math.round(c.toplam).toLocaleString("tr-TR") + " TL</b> ";
+    html += "<button onclick='removePerson("+i+")'>Sil</button>";
+    html += "</div>";
+  });
+  el.innerHTML = html;
+  statsEl.textContent = current + " · " + people.length + " kisi · " + Math.round(sums.toplam).toLocaleString("tr-TR") + " TL";
+}
+function setVal(i, field, val) {
+  if (!state[current].people[i]) return;
+  state[current].people[i][field] = val === "" ? 0 : parseFloat(val) || 0;
+  save(); render();
+}
+function setTip(i, tip) {
+  if (!state[current].people[i]) return;
+  state[current].people[i].tip = tip;
+  save(); render();
+}
+function addPerson() {
+  if (current === "ALL") return;
+  var name = prompt("Ad Soyad:");
+  if (!name) return;
+  state[current].people.push({ name: name.trim(), tip: "A", ms: 0, hs: 0, izin: 0, yol: 0, yillik: 0, ceza: 0 });
+  save(); render();
+}
+function removePerson(i) {
+  if (current === "ALL") return;
+  state[current].people.splice(i, 1);
+  save(); render();
+}
+function addManager() {
+  if (current === "ALL") { alert("Once sube sec"); return; }
+  var name = prompt("Yetkili adi:");
+  if (!name) return;
+  if (!state[current].managers) state[current].managers = [];
+  state[current].managers.push(name.trim());
+  save(); render();
+}
+function removeManager(i) {
+  if (current === "ALL") return;
+  state[current].managers.splice(i, 1);
+  save(); render();
+}
+function backup() {
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], {type:"application/json"}));
+  a.download = "3sube-yedek.json";
+  a.click();
+}
+function importBackup(inp) {
+  var f = inp.files[0]; if (!f) return;
+  var r = new FileReader();
+  r.onload = function(e) {
+    try {
+      if (confirm("Uzerine yazilsin mi?")) {
+        state = JSON.parse(e.target.result);
+        save(); render();
+      }
+    } catch(err) { alert("Gecersiz dosya"); }
+  };
+  r.readAsText(f);
+  inp.value = "";
+}
+render();
+</script>
+</body>
+</html>
