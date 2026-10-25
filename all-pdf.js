@@ -6,18 +6,11 @@
     }catch(e){return false;}
   }
   
-  function addButton(){
-    if(!isAdmin()) return;
-    var row=document.querySelector(".bar .row");
-    if(!row || document.getElementById("allPdfBtn")) return;
-    var btn=document.createElement("button");
-    btn.id="allPdfBtn";
-    btn.className="btn";
-    btn.style.background="#7c3aed";
-    btn.style.color="#fff";
-    btn.textContent="Tüm Şubeler PDF";
-    btn.onclick=generateAllPdf;
-    row.insertBefore(btn, row.querySelector("button[onclick='logout()']"));
+  function showBtn(){
+    var btn=document.getElementById("allPdfBtn");
+    if(!btn) return;
+    if(isAdmin()) btn.classList.remove("hide");
+    else btn.classList.add("hide");
   }
   
   function getBranchData(branch){
@@ -124,6 +117,6 @@
     if(typeof toast==="function") toast("PDF indirildi");
   };
   
-  setTimeout(addButton,500);
-  setInterval(addButton,2000);
+  setTimeout(showBtn,500);
+  setInterval(showBtn,2000);
 })();
