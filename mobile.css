@@ -1,0 +1,25 @@
+@media(max-width:768px){
+  .table-wrap{display:none!important}
+  #mobileList{display:block!important}
+  .stats{grid-template-columns:repeat(2,1fr)!important}
+  .bar{flex-direction:column;align-items:stretch}
+  .bar .row{justify-content:center}
+  h1{font-size:18px}
+  .tabs{overflow-x:auto;flex-wrap:nowrap}
+  .tab{white-space:nowrap}
+  .mlist{padding:8px}
+  .mrow{background:#fff;border:1px solid #d7cfc3;border-radius:10px;margin-bottom:8px;overflow:hidden}
+  .mrow.pay{border-left:4px solid #0f7b4c}
+  .mhead{display:flex;align-items:center;width:100%;padding:12px;background:none;border:none;cursor:pointer;text-align:left}
+  .mno{width:28px;height:28px;background:#c45c26;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-right:10px}
+  .mname{flex:1;font-weight:700;font-size:15px}
+  .mtot{font-weight:700;color:#0f7b4c;font-size:15px}
+  .mfields{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 12px 12px}
+  .mfields label{display:flex;flex-direction:column;font-size:12px;color:#666}
+  .mfields input{padding:8px;border:1px solid #d7cfc3;border-radius:6px;font-size:16px;margin-top:4px}
+  .branch-bar{overflow-x:auto;flex-wrap:nowrap}
+  .branch-bar button{white-space:nowrap}
+}
+@media(min-width:769px){
+  #mobileList{display:none!important}
+}
