@@ -76,6 +76,12 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 <section id="sec-rapor" class="hide"><div class="panel" id="raporBox"></div></section>
 <div id="toast"></div>
 <script>
+// Bir kerelik temizlik
+if(!localStorage.getItem("branch_fix_v122")){
+  localStorage.removeItem("mesai_Çengelköy");
+  localStorage.removeItem("mesai_Kadıköy");
+  localStorage.setItem("branch_fix_v122","1");
+}
 var BRANCHES=["Kadıköy","Cadde","Çengelköy"];
 var currentBranch=localStorage.getItem("currentBranch")||"Cadde";
 function renderBranchBar(){
@@ -91,15 +97,6 @@ function selectBranch(b){
   currentBranch=b;
   localStorage.setItem("currentBranch",b);
   if(typeof KEY!=="undefined") KEY="mesai_"+b;
-  // Yanlış veri varsa temizle
-  try{
-    var raw=localStorage.getItem(KEY);
-    if(raw){
-      var d=JSON.parse(raw);
-      var expected=b==="Cadde"?60:20;
-      if(d.people && d.people.length<expected) localStorage.removeItem(KEY);
-    }
-  }catch(e){}
   renderBranchBar();
   if(typeof load==='function') load();
   var active=document.querySelector(".tab.on");
@@ -110,8 +107,8 @@ renderBranchBar();
 <script src="lock.js?v=106"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=121"></script>
-<script src="app.js?v=120"></script>
+<script src="seed.js?v=122"></script>
+<script src="app.js?v=121"></script>
 <script src="gh.js?v=106"></script>
 <script src="plus.js?v=112"></script>
 <script src="page-extra.js?v=106"></script>
