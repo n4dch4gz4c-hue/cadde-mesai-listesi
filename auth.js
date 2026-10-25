@@ -39,6 +39,7 @@
     window.BRANCHES=currentUser.branches;
     window.currentBranch=currentUser.branches[0];
     localStorage.setItem("currentBranch",window.currentBranch);
+    if(typeof KEY!=="undefined") KEY="mesai_"+window.currentBranch;
     if(typeof renderBranchBar==="function") renderBranchBar();
     if(typeof load==="function") load();
     var sub=document.getElementById("pageSub");
