@@ -21,7 +21,7 @@ tr.pay td.tot{background:#f3e8d2;font-weight:700}
 input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16px}
 .sheet input{width:64px;text-align:center;font-size:14px}
 .hide{display:none!important}
-.panel{background:#fff;border:1px solid #d7cfc3;border-radius:12px;padding:12px;margin:12px 16px}
+.panel,.card{background:#fff;border:1px solid #d7cfc3;border-radius:12px;padding:12px;margin:12px 16px}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px}
 .stat{background:#fff;border:1px solid #d7cfc3;border-radius:10px;padding:10px}
 .table-wrap{overflow:auto;padding:0 16px 24px;max-height:70vh}
@@ -56,11 +56,17 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   <div class="stats" id="stats"></div>
   <div class="table-wrap"><table class="sheet"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai tutar</th><th>HS adet</th><th>HS tutar</th><th>Prim</th><th>Yol</th><th>İzin gün</th><th>İzin tutar</th><th>Yıllık</th><th>Disiplin</th><th>Toplam</th></tr></thead><tbody id="tbody"></tbody><tfoot id="tfoot"></tfoot></table></div>
 </section>
-<section id="sec-duzenle" class="hide"><div class="panel"><h2>Düzenleme</h2></div><div id="duzenleList"></div></section>
-<section id="sec-kurye" class="hide"><div class="panel"><h2>Kurye primleri</h2></div><div id="kuryeList"></div></section>
-<section id="sec-devam" class="hide"><div class="panel"><h2>Devamsızlık</h2></div><div id="devamList"></div></section>
-<section id="sec-ceza" class="hide"><div class="panel"><h2>Cezalar</h2></div><div id="cezaList"></div></section>
-<section id="sec-ozet" class="hide"><div class="panel" id="ozetKisa"></div></section>
+<section id="sec-duzenle" class="hide">
+  <div class="panel"><h2>Düzenleme</h2><p>İsim düzelt, kurye işaretle, sırayı taşı veya sil.</p>
+    <b>Kişi ekle</b>
+    <div class="row"><input id="nAd" placeholder="Ad soyad"/><input id="nBirim" type="number" value="300" style="width:90px"/><label><input id="nKurye" type="checkbox"/> Kurye</label><button class="btn primary" onclick="addKisi()">Ekle</button></div>
+  </div>
+  <div id="duzenleList"></div>
+</section>
+<section id="sec-kurye" class="hide"><div class="panel"><h2>Kurye primleri</h2></div><div id="kuryeList" class="cards"></div></section>
+<section id="sec-devam" class="hide"><div class="panel"><h2>Devamsızlık</h2><div class="row"><select id="dKisi"></select><input id="dGun" type="number" value="1"/><input id="dNot" placeholder="Not"/><button class="btn primary" onclick="addDevam()">Ekle</button></div></div><div id="devamList"></div></section>
+<section id="sec-ceza" class="hide"><div class="panel"><h2>Cezalar</h2><div class="row"><select id="cKisi"></select><input id="cTutar" type="number" value="1000"/><input id="cNeden" placeholder="Neden"/><button class="btn primary" onclick="addCeza()">Ekle</button></div></div><div id="cezaList" class="cards"></div></section>
+<section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kısa özet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrıntılı özet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
 <script>
