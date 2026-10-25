@@ -6,7 +6,8 @@
     "345334":{name:"Sedat Kızılkaya",role:"branch",branches:["Kadıköy"]},
     "5353":{name:"Ahmet Özçelik",role:"branch",branches:["Çengelköy"]},
     "1919":{name:"Kemal Körpe",role:"branch",branches:["Çengelköy"]},
-    "3434":{name:"İsmail",role:"branch",branches:["Çengelköy"]}
+    "3434":{name:"İsmail",role:"branch",branches:["Çengelköy"]},
+    "5656":{name:"Ferhat Avcı",role:"branch",branches:["Cadde"]}
   };
   
   var currentUser=null;
