@@ -30,18 +30,19 @@
   
   function fixTr(s){
     if(!s) return "";
-    return s.replace(/ğ/g,"g").replace(/Ğ/g,"G").replace(/ü/g,"u").replace(/Ü/g,"U").replace(/ş/g,"s").replace(/Ş/g,"S").replace(/ı/g,"i").replace(/İ/g,"I").replace(/ö/g,"o").replace(/Ö/g,"O").replace(/ç/g,"c").replace(/Ç/g,"C");
+    var map={"ğ":"g","Ğ":"G","ü":"u","Ü":"U","ş":"s","Ş":"S","ı":"i","İ":"I","ö":"o","Ö":"O","ç":"c","Ç":"C"};
+    return s.split("").map(function(c){return map[c]||c;}).join("");
   }
   
   window.generateAllPdf=function(){
     var {jsPDF}=window.jspdf;
     var doc=new jsPDF("p","mm","a4");
     var branches=["Kadikoy","Cadde","Cengelkoy"];
-    var branchNames=["Kadıköy","Cadde","Çengelköy"];
+    var branchKeys=["Kadıköy","Cadde","Çengelköy"];
     var allData=[];
     
     branches.forEach(function(b,idx){
-      var data=getBranchData(branchNames[idx]);
+      var data=getBranchData(branchKeys[idx]);
       if(!data||!data.people) return;
       var people=data.people.map(function(p){
         var mesai=calcMesai(p);
@@ -96,7 +97,7 @@
       });
     });
     
-    doc.save("Tum-Subeler-Mesai-"+new Date().toISOString().slice(0,10)+".pdf");
+    doc.save("Mesai-Rapor-"+new Date().toISOString().slice(0,10)+".pdf");
     if(typeof toast==="function") toast("PDF indirildi");
   };
   
