@@ -103,6 +103,39 @@ async function pagePdf(kind, share){
       columnStyles:{0:{cellWidth:12},1:{halign:"left",cellWidth:55}},
       margin:{left:8,right:8}
     });
+    // Devamsızlık ve Cezalar
+    var devam=(typeof state!=="undefined"?state.devamsizlik:[])||[];
+    var cezalar=(typeof state!=="undefined"?state.cezalar:[])||[];
+    var y=doc.lastAutoTable.finalY+8;
+    if(devam.length){
+      if(y>180){doc.addPage();y=15;}
+      doc.setFont(font,"bold"); doc.setFontSize(11); doc.setTextColor(234,88,12);
+      doc.text("DEVAMSIZLIK",8,y);
+      doc.autoTable({
+        startY:y+3,
+        head:[["No","Ad Soyad","Gun","Not"]],
+        body:devam.map(function(d,i){return [String(i+1),d.kisi,String(d.gun),d.not||"-"];}),
+        theme:"grid",
+        styles:{font:font,fontSize:7,cellPadding:0.6},
+        headStyles:{fillColor:[234,88,12],textColor:[255,255,255]},
+        margin:{left:8,right:8}
+      });
+      y=doc.lastAutoTable.finalY+8;
+    }
+    if(cezalar.length){
+      if(y>180){doc.addPage();y=15;}
+      doc.setFont(font,"bold"); doc.setFontSize(11); doc.setTextColor(234,88,12);
+      doc.text("CEZALAR",8,y);
+      doc.autoTable({
+        startY:y+3,
+        head:[["No","Ad Soyad","Tutar","Neden"]],
+        body:cezalar.map(function(c,i){return [String(i+1),c.kisi,tl(c.tutar)+" TL",c.neden||"-"];}),
+        theme:"grid",
+        styles:{font:font,fontSize:7,cellPadding:0.6},
+        headStyles:{fillColor:[234,88,12],textColor:[255,255,255]},
+        margin:{left:8,right:8}
+      });
+    }
   }else if(kind==="devam"){
     doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
     hasFont=typeof ensurePdfFont==="function"?await ensurePdfFont(doc):false;
