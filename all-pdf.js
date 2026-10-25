@@ -47,6 +47,7 @@
     }catch(e){}
     
     var fontName=hasFont?"DejaVu":"helvetica";
+    var fontStyle="normal";
     
     var branches=["Kadıköy","Cadde","Çengelköy"];
     var allData=[];
@@ -81,14 +82,12 @@
       grandPay+=payCount;
     });
     
-    doc.setFont(fontName,"normal");
+    doc.setFont(fontName,fontStyle);
     var y=12;
     doc.setFontSize(16);
-    doc.setFont(fontName,"bold");
     doc.text("AYLIK MESAİ RAPORU",105,y,{align:"center"});
     y+=6;
     doc.setFontSize(9);
-    doc.setFont(fontName,"normal");
     doc.text(new Date().toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}),105,y,{align:"center"});
     y+=12;
     
@@ -96,7 +95,6 @@
     doc.rect(20,y-4,170,16,"F");
     doc.setTextColor(255);
     doc.setFontSize(12);
-    doc.setFont(fontName,"bold");
     doc.text("GENEL TOPLAM",105,y+1,{align:"center"});
     doc.setFontSize(14);
     doc.text(tl(grandTotal)+" TL",105,y+8,{align:"center"});
@@ -104,7 +102,6 @@
     y+=20;
     
     doc.setFontSize(11);
-    doc.setFont(fontName,"bold");
     doc.text("GİDER DAĞILIMI",14,y);
     y+=6;
     
@@ -137,8 +134,8 @@
     });
     y=doc.lastAutoTable.finalY+10;
     
+    doc.setFont(fontName,fontStyle);
     doc.setFontSize(11);
-    doc.setFont(fontName,"bold");
     doc.text("ŞUBE BAZLI ÖZET",14,y);
     y+=6;
     
@@ -168,7 +165,7 @@
       doc.addPage();
       var y=10;
       
-      doc.setFont(fontName,"bold");
+      doc.setFont(fontName,fontStyle);
       doc.setFontSize(14);
       doc.text(d.branch.toUpperCase(),105,y,{align:"center"});
       y+=6;
@@ -179,7 +176,6 @@
       doc.setFontSize(9);
       doc.text("TOPLAM: "+tl(d.total)+" TL  |  "+d.payCount+"/"+d.count+" kişi",105,y+2,{align:"center"});
       doc.setTextColor(0);
-      doc.setFont(fontName,"normal");
       y+=8;
       
       var rows=d.people.map(function(p,i){
