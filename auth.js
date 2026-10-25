@@ -3,7 +3,10 @@
     "1903":{name:"Semih Sofuoğlu",role:"admin",branches:["Kadıköy","Cadde","Çengelköy"]},
     "1905":{name:"Alper Kızılkaya",role:"admin",branches:["Kadıköy","Cadde","Çengelköy"]},
     "367536":{name:"Özay Alşan",role:"branch",branches:["Kadıköy"]},
-    "345334":{name:"Sedat Kızılkaya",role:"branch",branches:["Kadıköy"]}
+    "345334":{name:"Sedat Kızılkaya",role:"branch",branches:["Kadıköy"]},
+    "5353":{name:"Ahmet Özçelik",role:"branch",branches:["Çengelköy"]},
+    "1919":{name:"Kemal Körpe",role:"branch",branches:["Çengelköy"]},
+    "3434":{name:"İsmail",role:"branch",branches:["Çengelköy"]}
   };
   
   var currentUser=null;
@@ -58,7 +61,6 @@
     location.reload();
   };
   
-  // Override renderBranchBar to respect user branches
   var _renderBranchBar=window.renderBranchBar;
   window.renderBranchBar=function(){
     if(!currentUser) return;
@@ -75,7 +77,6 @@
     if(kl) kl.style.display=isCadde?"":"none";
   };
   
-  // Init
   if(!checkSession()){
     document.addEventListener("DOMContentLoaded",showLogin);
     if(document.readyState!=="loading") showLogin();
