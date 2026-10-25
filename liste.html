@@ -29,6 +29,12 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 .branch-bar{display:flex;gap:6px;padding:8px 16px;background:#0b1220}
 .branch-bar button{background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 16px;border-radius:20px;cursor:pointer}
 .branch-bar button.active{background:#fff;color:#0f172a;font-weight:bold}
+/* Ceza tablosu için güçlü stiller */
+#cezaList table.sheet.slim{min-width:0!important;width:100%!important;background:#fff!important;border-collapse:collapse}
+#cezaList th{background:#c45c26!important;color:#fff!important;padding:8px!important;text-align:center!important}
+#cezaList td{border:1px solid #eadfd2!important;padding:6px!important;text-align:center!important;color:#111!important;background:#fff!important}
+#cezaList td.name{text-align:left!important;font-weight:700!important}
+#cezaList .table-wrap{padding:0!important;margin-top:12px}
 </style></head>
 <body>
 <div class="branch-bar" id="branchBar"></div>
@@ -96,7 +102,7 @@ renderBranchBar();
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
 <script src="seed.js?v=106"></script>
-<script src="app.js?v=106"></script>
+<script src="app.js?v=107"></script>
 <script src="gh.js?v=106"></script>
 <script src="plus.js?v=106"></script>
 <script src="page-extra.js?v=106"></script>
