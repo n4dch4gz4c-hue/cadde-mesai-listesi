@@ -251,8 +251,8 @@ td.name { font-weight: 600; min-width: 140px; }
 <div id="toast"></div>
 
 <script>
-const BRANCHES = ["Şube 1","Şube 2","Şube 3","Şube 4","Şube 5"];
-const KEY = "bes_sube_pro_v1";
+const BRANCHES = ["Kadıköy", "Bağdat Caddesi", "Çengelköy", "Taksim Büfe", "Taksim Pide"];
+const KEY = "bes_sube_pro_v2";
 const RATES = { mesai: 300, hs: 1250, prim: 7 };
 
 let state = load();
@@ -513,7 +513,7 @@ function importBackup(input) {
 }
 
 function esc(s) {
-  return String(s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  return String(s||"").replace(/[&<>"']/g, c => ({"&":"&","<":"<",">":">",'"':""","'":"&#39;"}[c]));
 }
 
 document.querySelectorAll(".tabs button").forEach(btn => {
