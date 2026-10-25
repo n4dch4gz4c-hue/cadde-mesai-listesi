@@ -9,44 +9,41 @@
 <meta http-equiv="Expires" content="0">
 <title>5 Şube Mesai</title>
 <style>
-:root { --bg:#f8fafc; --card:#fff; --text:#0f172a; --muted:#64748b; --border:#e2e8f0; --primary:#1d4ed8; --accent:#0f172a; --danger:#dc2626; --radius:12px; }
-* { box-sizing:border-box; }
-body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); }
-header { background:var(--accent); color:#fff; padding:14px 16px 10px; position:sticky; top:0; z-index:40; }
-header h1 { margin:0; font-size:1.25rem; }
-header .sub { font-size:0.8rem; opacity:0.75; margin-top:2px; }
-.branch-bar { display:flex; gap:6px; overflow-x:auto; padding:10px 0 4px; scrollbar-width:none; }
-.branch-bar::-webkit-scrollbar { display:none; }
-.branch-bar button { flex:none; background:rgba(255,255,255,0.12); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:7px 14px; border-radius:999px; font-size:0.85rem; }
-.branch-bar button.active { background:#fff; color:var(--accent); font-weight:700; }
-.toolbar { display:flex; gap:8px; flex-wrap:wrap; padding:12px 16px; background:#fff; border-bottom:1px solid var(--border); }
-.toolbar input[type="search"] { flex:1; min-width:140px; padding:8px 12px; border:1px solid var(--border); border-radius:8px; font-size:16px; }
-.btn { border:1px solid var(--border); background:#fff; padding:8px 12px; border-radius:8px; font-size:0.85rem; }
-.btn.primary { background:var(--primary); color:#fff; border-color:var(--primary); }
-.btn.danger { background:var(--danger); color:#fff; border-color:var(--danger); }
-.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; padding:12px 16px; }
-.stat { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:12px; }
-.stat span { display:block; font-size:0.75rem; color:var(--muted); }
-.stat b { font-size:1.15rem; }
-.tabs { display:flex; gap:4px; padding:0 16px 8px; overflow-x:auto; background:#fff; border-bottom:1px solid var(--border); }
-.tabs button { flex:none; background:transparent; border:none; padding:8px 12px; border-radius:8px; font-size:0.85rem; color:var(--muted); }
-.tabs button.on { background:#eff6ff; color:var(--primary); font-weight:600; }
-.panel { display:none; padding:12px 16px 40px; }
-.panel.show { display:block; }
-.table-wrap { overflow-x:auto; background:#fff; border-radius:var(--radius); border:1px solid var(--border); }
-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
-th, td { padding:8px 6px; text-align:left; border-bottom:1px solid var(--border); }
-th { background:#f1f5f9; }
-input[type="number"] { width:70px; padding:6px 8px; border:1px solid var(--border); border-radius:6px; font-size:16px; }
-td.name { font-weight:600; }
-.mobile-list { display:none; }
-.card { background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:12px; margin-bottom:10px; }
-.card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-.card-fields { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
-.card-fields label { font-size:0.75rem; color:var(--muted); display:flex; flex-direction:column; gap:4px; }
-.card-fields input { width:100%; }
-#toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; padding:10px 16px; border-radius:999px; font-size:0.85rem; display:none; z-index:100; }
-@media (max-width:768px) { .table-wrap { display:none; } .mobile-list { display:block; } .stats { grid-template-columns:1fr 1fr; } }
+body{margin:0;font-family:system-ui,sans-serif;background:#f8fafc;color:#0f172a}
+header{background:#0f172a;color:#fff;padding:14px 16px 10px;position:sticky;top:0;z-index:40}
+header h1{margin:0;font-size:1.25rem}
+header .sub{font-size:0.8rem;opacity:0.75;margin-top:2px}
+.branch-bar{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px}
+.branch-bar button{flex:none;background:rgba(255,255,255,0.12);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:7px 14px;border-radius:999px;font-size:0.85rem}
+.branch-bar button.active{background:#fff;color:#0f172a;font-weight:700}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px;background:#fff;border-bottom:1px solid #e2e8f0}
+.toolbar input{flex:1;min-width:140px;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:16px}
+.btn{border:1px solid #e2e8f0;background:#fff;padding:8px 12px;border-radius:8px;font-size:0.85rem}
+.btn.primary{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
+.btn.danger{background:#dc2626;color:#fff;border-color:#dc2626}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;padding:12px 16px}
+.stat{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:12px}
+.stat span{display:block;font-size:0.75rem;color:#64748b}
+.stat b{font-size:1.15rem}
+.tabs{display:flex;gap:4px;padding:0 16px 8px;overflow-x:auto;background:#fff;border-bottom:1px solid #e2e8f0}
+.tabs button{flex:none;background:transparent;border:none;padding:8px 12px;border-radius:8px;font-size:0.85rem;color:#64748b}
+.tabs button.on{background:#eff6ff;color:#1d4ed8;font-weight:600}
+.panel{display:none;padding:12px 16px 40px}
+.panel.show{display:block}
+.table-wrap{overflow-x:auto;background:#fff;border-radius:12px;border:1px solid #e2e8f0}
+table{width:100%;border-collapse:collapse;font-size:0.85rem}
+th,td{padding:8px 6px;text-align:left;border-bottom:1px solid #e2e8f0}
+th{background:#f1f5f9}
+input[type="number"]{width:70px;padding:6px 8px;border:1px solid #e2e8f0;border-radius:6px;font-size:16px}
+td.name{font-weight:600}
+.mobile-list{display:none}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:10px}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.card-fields{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.card-fields label{font-size:0.75rem;color:#64748b;display:flex;flex-direction:column;gap:4px}
+.card-fields input{width:100%}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 16px;border-radius:999px;font-size:0.85rem;display:none;z-index:100}
+@media(max-width:768px){.table-wrap{display:none}.mobile-list{display:block}.stats{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -55,7 +52,6 @@ td.name { font-weight:600; }
   <div class="sub" id="headerSub">Hazır</div>
   <div class="branch-bar" id="branchBar"></div>
 </header>
-
 <div class="toolbar">
   <input type="search" id="q" placeholder="İsim ara…" oninput="render()">
   <button class="btn primary" onclick="addPerson()">+ Kişi</button>
@@ -65,306 +61,176 @@ td.name { font-weight:600; }
   <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(this)">
   <button class="btn" onclick="window.print()">Yazdır</button>
 </div>
-
 <div class="stats" id="stats"></div>
-
 <div class="tabs">
   <button class="on" data-tab="liste" onclick="showTab('liste')">Liste</button>
   <button data-tab="devam" onclick="showTab('devam')">Devamsızlık</button>
   <button data-tab="ceza" onclick="showTab('ceza')">Ceza</button>
   <button data-tab="ozet" onclick="showTab('ozet')">Özet</button>
 </div>
-
 <section id="liste" class="panel show">
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai Saat</th><th>Mesai</th><th>HS</th><th>HS Tutar</th><th>Prim</th><th>Yol</th><th>Toplam</th><th></th></tr></thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
+  <div class="table-wrap"><table><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai Saat</th><th>Mesai</th><th>HS</th><th>HS Tutar</th><th>Prim</th><th>Yol</th><th>Toplam</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div>
   <div class="mobile-list" id="mobileList"></div>
 </section>
-
-<section id="devam" class="panel">
-  <div class="card">
-    <h3 style="margin:0 0 10px">Devamsızlık Ekle</h3>
-    <div class="card-fields">
-      <label>Kişi<select id="dKisi"></select></label>
-      <label>Gün<input id="dGun" type="number" value="1" min="0" step="0.5"></label>
-      <label style="grid-column:1/-1">Not<input id="dNot" type="text"></label>
-    </div>
-    <button class="btn primary" style="margin-top:10px" onclick="addDevam()">Ekle</button>
-  </div>
-  <div id="devamList"></div>
-</section>
-
-<section id="ceza" class="panel">
-  <div class="card">
-    <h3 style="margin:0 0 10px">Ceza Ekle</h3>
-    <div class="card-fields">
-      <label>Kişi<select id="cKisi"></select></label>
-      <label>Tutar<input id="cTutar" type="number" value="0" min="0"></label>
-      <label style="grid-column:1/-1">Neden<input id="cNeden" type="text"></label>
-    </div>
-    <button class="btn primary" style="margin-top:10px" onclick="addCeza()">Ekle</button>
-  </div>
-  <div id="cezaList"></div>
-</section>
-
+<section id="devam" class="panel"><div class="card"><h3 style="margin:0 0 10px">Devamsızlık Ekle</h3><div class="card-fields"><label>Kişi<select id="dKisi"></select></label><label>Gün<input id="dGun" type="number" value="1" min="0" step="0.5"></label><label style="grid-column:1/-1">Not<input id="dNot" type="text"></label></div><button class="btn primary" style="margin-top:10px" onclick="addDevam()">Ekle</button></div><div id="devamList"></div></section>
+<section id="ceza" class="panel"><div class="card"><h3 style="margin:0 0 10px">Ceza Ekle</h3><div class="card-fields"><label>Kişi<select id="cKisi"></select></label><label>Tutar<input id="cTutar" type="number" value="0" min="0"></label><label style="grid-column:1/-1">Neden<input id="cNeden" type="text"></label></div><button class="btn primary" style="margin-top:10px" onclick="addCeza()">Ekle</button></div><div id="cezaList"></div></section>
 <section id="ozet" class="panel"><div id="ozetBox"></div></section>
 <div id="toast"></div>
-
 <script>
-const BRANCHES = ["Kadıköy", "Bağdat Caddesi", "Çengelköy", "Taksim Büfe", "Taksim Pide"];
-const KEY = "bes_sube_v6";
-const RATES = { mesai: 300, hs: 1250 };
-
-let state = load();
-let current = BRANCHES[0];
-
-function load() {
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) {
-      const s = JSON.parse(raw);
-      BRANCHES.forEach(b => { if (!s[b]) s[b] = { people: [], devam: [], ceza: [] }; });
+const BRANCHES=["Kadıköy","Bağdat Caddesi","Çengelköy","Taksim Büfe","Taksim Pide"];
+const KEY="bes_sube_v7";
+const RATES={mesai:300,hs:1250};
+let state=load();
+let current=BRANCHES[0];
+function load(){
+  try{
+    const raw=localStorage.getItem(KEY);
+    if(raw){
+      const s=JSON.parse(raw);
+      BRANCHES.forEach(function(b){if(!s[b])s[b]={people:[],devam:[],ceza:[]};});
       return s;
     }
-  } catch(e) {}
-  const s = {};
-  BRANCHES.forEach(b => s[b] = { people: [], devam: [], ceza: [] });
+  }catch(e){}
+  const s={};
+  BRANCHES.forEach(function(b){s[b]={people:[],devam:[],ceza:[]};});
   return s;
 }
-function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
-function getB() { return state[current] || { people: [], devam: [], ceza: [] }; }
-function setB(d) { state[current] = d; save(); }
-
-function num(v) { const n = parseFloat(v); return isFinite(n) ? n : 0; }
-function tl(n) { return Math.round(n||0).toLocaleString("tr-TR") + " TL"; }
-function toast(m) {
-  const e = document.getElementById("toast");
-  e.textContent = m; e.style.display = "block";
-  setTimeout(() => e.style.display = "none", 2000);
+function save(){localStorage.setItem(KEY,JSON.stringify(state));}
+function getB(){return state[current]||{people:[],devam:[],ceza:[]};}
+function setB(d){state[current]=d;save();}
+function num(v){const n=parseFloat(v);return isFinite(n)?n:0;}
+function tl(n){return Math.round(n||0).toLocaleString("tr-TR")+" TL";}
+function toast(m){const e=document.getElementById("toast");e.textContent=m;e.style.display="block";setTimeout(function(){e.style.display="none";},2000);}
+function esc(s){
+  s=String(s||"");
+  return s.replace(/&/g,"&").replace(/</g,"<").replace(/>/g,">").replace(/"/g,""").replace(/'/g,"&#39;");
 }
-function esc(s) {
-  return String(s||"").replace(/[&<>"']/g, function(c) {
-    return {"&":"&","<":"<",">":">",'"':""","'":"&#39;"}[c];
+function calc(p){
+  const mesai=num(p.mesai)*RATES.mesai;
+  const hs=num(p.hs)*RATES.hs;
+  const prim=num(p.prim);
+  const yol=num(p.yol);
+  return{mesai:mesai,hs:hs,prim:prim,yol:yol,toplam:mesai+hs+prim+yol};
+}
+function renderBranchBar(){
+  const bar=document.getElementById("branchBar");
+  let html="";
+  BRANCHES.forEach(function(b){
+    html+='<button class="'+(b===current?"active":"")+'" onclick="switchBranch(\''+b+'\')">'+b+'</button>';
   });
+  html+='<button class="'+(current==="ALL"?"active":"")+'" onclick="switchBranch(\'ALL\')">Tüm Şubeler</button>';
+  bar.innerHTML=html;
 }
-
-function calc(p) {
-  const mesai = num(p.mesai) * RATES.mesai;
-  const hs = num(p.hs) * RATES.hs;
-  const prim = num(p.prim);
-  const yol = num(p.yol);
-  return { mesai, hs, prim, yol, toplam: mesai + hs + prim + yol };
-}
-
-function renderBranchBar() {
-  const bar = document.getElementById("branchBar");
-  bar.innerHTML = BRANCHES.map(function(b) {
-    return '<button class="' + (b===current?'active':'') + '" onclick="switchBranch(\'' + b + '\')">' + b + '</button>';
-  }).join('') + '<button class="' + (current==='ALL'?'active':'') + '" onclick="switchBranch(\'ALL\')">Tüm Şubeler</button>';
-}
-
-function switchBranch(b) { current = b; render(); }
-
-function render() {
+function switchBranch(b){current=b;render();}
+function render(){
   renderBranchBar();
-  if (current === "ALL") { renderAll(); return; }
-  const b = getB();
-  const q = (document.getElementById("q").value || "").toLocaleLowerCase("tr-TR");
-  const people = b.people.filter(function(p) { return !q || (p.name||"").toLocaleLowerCase("tr-TR").includes(q); });
-  const sums = people.reduce(function(a,p) {
-    const c = calc(p);
-    a.mesai += c.mesai; a.hs += c.hs; a.toplam += c.toplam;
-    return a;
-  }, {mesai:0, hs:0, toplam:0});
-
-  document.getElementById("headerSub").textContent = current + " · " + people.length + " kişi · " + tl(sums.toplam);
-  document.getElementById("stats").innerHTML =
-    '<div class="stat"><span>Toplam</span><b>' + tl(sums.toplam) + '</b></div>' +
-    '<div class="stat"><span>Mesai</span><b>' + tl(sums.mesai) + '</b></div>' +
-    '<div class="stat"><span>HS</span><b>' + tl(sums.hs) + '</b></div>' +
-    '<div class="stat"><span>Kişi</span><b>' + people.length + '</b></div>';
-
-  document.getElementById("tbody").innerHTML = people.map(function(p,i) {
-    const c = calc(p);
-    return '<tr>' +
-      '<td>' + (i+1) + '</td>' +
-      '<td class="name" contenteditable="true" onblur="updateName(' + i + ',this.textContent)">' + esc(p.name) + '</td>' +
-      '<td><input type="number" step="0.5" value="' + (p.mesai||'') + '" onchange="update(' + i + ',\'mesai\',this.value)"></td>' +
-      '<td>' + tl(c.mesai) + '</td>' +
-      '<td><input type="number" step="0.5" value="' + (p.hs||'') + '" onchange="update(' + i + ',\'hs\',this.value)"></td>' +
-      '<td>' + tl(c.hs) + '</td>' +
-      '<td><input type="number" value="' + (p.prim||'') + '" onchange="update(' + i + ',\'prim\',this.value)"></td>' +
-      '<td><input type="number" value="' + (p.yol||'') + '" onchange="update(' + i + ',\'yol\',this.value)"></td>' +
-      '<td><b>' + tl(c.toplam) + '</b></td>' +
-      '<td><button class="btn danger" onclick="remove(' + i + ')">Sil</button></td>' +
-      '</tr>';
+  if(current==="ALL"){renderAll();return;}
+  const b=getB();
+  const q=(document.getElementById("q").value||"").toLocaleLowerCase("tr-TR");
+  const people=b.people.filter(function(p){return !q||(p.name||"").toLocaleLowerCase("tr-TR").includes(q);});
+  const sums=people.reduce(function(a,p){const c=calc(p);a.mesai+=c.mesai;a.hs+=c.hs;a.toplam+=c.toplam;return a;},{mesai:0,hs:0,toplam:0});
+  document.getElementById("headerSub").textContent=current+" · "+people.length+" kişi · "+tl(sums.toplam);
+  document.getElementById("stats").innerHTML='<div class="stat"><span>Toplam</span><b>'+tl(sums.toplam)+'</b></div><div class="stat"><span>Mesai</span><b>'+tl(sums.mesai)+'</b></div><div class="stat"><span>HS</span><b>'+tl(sums.hs)+'</b></div><div class="stat"><span>Kişi</span><b>'+people.length+'</b></div>';
+  document.getElementById("tbody").innerHTML=people.map(function(p,i){
+    const c=calc(p);
+    return '<tr><td>'+(i+1)+'</td><td class="name" contenteditable="true" onblur="updateName('+i+',this.textContent)">'+esc(p.name)+'</td><td><input type="number" step="0.5" value="'+(p.mesai||'')+'" onchange="update('+i+',\'mesai\',this.value)"></td><td>'+tl(c.mesai)+'</td><td><input type="number" step="0.5" value="'+(p.hs||'')+'" onchange="update('+i+',\'hs\',this.value)"></td><td>'+tl(c.hs)+'</td><td><input type="number" value="'+(p.prim||'')+'" onchange="update('+i+',\'prim\',this.value)"></td><td><input type="number" value="'+(p.yol||'')+'" onchange="update('+i+',\'yol\',this.value)"></td><td><b>'+tl(c.toplam)+'</b></td><td><button class="btn danger" onclick="remove('+i+')">Sil</button></td></tr>';
   }).join('');
-
-  document.getElementById("mobileList").innerHTML = people.map(function(p,i) {
-    const c = calc(p);
-    return '<div class="card">' +
-      '<div class="card-head"><b>' + esc(p.name) + '</b><span>' + tl(c.toplam) + '</span></div>' +
-      '<div class="card-fields">' +
-        '<label>Mesai Saat<input type="number" step="0.5" value="' + (p.mesai||'') + '" onchange="update(' + i + ',\'mesai\',this.value)"></label>' +
-        '<label>HS<input type="number" step="0.5" value="' + (p.hs||'') + '" onchange="update(' + i + ',\'hs\',this.value)"></label>' +
-        '<label>Prim<input type="number" value="' + (p.prim||'') + '" onchange="update(' + i + ',\'prim\',this.value)"></label>' +
-        '<label>Yol<input type="number" value="' + (p.yol||'') + '" onchange="update(' + i + ',\'yol\',this.value)"></label>' +
-      '</div>' +
-      '<button class="btn danger" style="margin-top:8px;width:100%" onclick="remove(' + i + ')">Sil</button>' +
-      '</div>';
+  document.getElementById("mobileList").innerHTML=people.map(function(p,i){
+    const c=calc(p);
+    return '<div class="card"><div class="card-head"><b>'+esc(p.name)+'</b><span>'+tl(c.toplam)+'</span></div><div class="card-fields"><label>Mesai Saat<input type="number" step="0.5" value="'+(p.mesai||'')+'" onchange="update('+i+',\'mesai\',this.value)"></label><label>HS<input type="number" step="0.5" value="'+(p.hs||'')+'" onchange="update('+i+',\'hs\',this.value)"></label><label>Prim<input type="number" value="'+(p.prim||'')+'" onchange="update('+i+',\'prim\',this.value)"></label><label>Yol<input type="number" value="'+(p.yol||'')+'" onchange="update('+i+',\'yol\',this.value)"></label></div><button class="btn danger" style="margin-top:8px;width:100%" onclick="remove('+i+')">Sil</button></div>';
   }).join('');
-
   fillSelects();
 }
-
-function renderAll() {
-  let grand = 0, rows = "";
-  BRANCHES.forEach(function(b,i) {
-    const sub = state[b].people.reduce(function(s,p) { return s + calc(p).toplam; }, 0);
-    grand += sub;
-    rows += '<tr><td>' + (i+1) + '</td><td colspan="7"><b>' + b + '</b> (' + state[b].people.length + ')</td><td>' + tl(sub) + '</td><td></td></tr>';
+function renderAll(){
+  let grand=0,rows="";
+  BRANCHES.forEach(function(b,i){
+    const sub=state[b].people.reduce(function(s,p){return s+calc(p).toplam;},0);
+    grand+=sub;
+    rows+='<tr><td>'+(i+1)+'</td><td colspan="7"><b>'+b+'</b> ('+state[b].people.length+')</td><td>'+tl(sub)+'</td><td></td></tr>';
   });
-  document.getElementById("headerSub").textContent = "Tüm Şubeler · " + tl(grand);
-  document.getElementById("stats").innerHTML = '<div class="stat"><span>Genel Toplam</span><b>' + tl(grand) + '</b></div>';
-  document.getElementById("tbody").innerHTML = rows;
-  document.getElementById("mobileList").innerHTML = "";
+  document.getElementById("headerSub").textContent="Tüm Şubeler · "+tl(grand);
+  document.getElementById("stats").innerHTML='<div class="stat"><span>Genel Toplam</span><b>'+tl(grand)+'</b></div>';
+  document.getElementById("tbody").innerHTML=rows;
+  document.getElementById("mobileList").innerHTML="";
 }
-
-function update(i, f, v) {
-  const b = getB();
-  b.people[i][f] = v === "" ? "" : num(v);
-  setB(b);
-  render();
+function update(i,f,v){const b=getB();b.people[i][f]=v===""?"":num(v);setB(b);render();}
+function updateName(i,n){const b=getB();b.people[i].name=n.trim();setB(b);}
+function addPerson(){
+  const name=prompt("Ad Soyad:");
+  if(!name||!name.trim())return;
+  const b=getB();
+  b.people.push({name:name.trim(),mesai:"",hs:"",prim:"",yol:""});
+  setB(b);render();toast("Eklendi");
 }
-function updateName(i, n) {
-  const b = getB();
-  b.people[i].name = n.trim();
-  setB(b);
+function remove(i){if(!confirm("Silinsin mi?"))return;const b=getB();b.people.splice(i,1);setB(b);render();}
+function fillSelects(){
+  const opts='<option value="">Kişi seç</option>'+getB().people.map(function(p){return '<option>'+esc(p.name)+'</option>';}).join('');
+  ["dKisi","cKisi"].forEach(function(id){const el=document.getElementById(id);if(el)el.innerHTML=opts;});
 }
-function addPerson() {
-  const name = prompt("Ad Soyad:");
-  if (!name || !name.trim()) return;
-  const b = getB();
-  b.people.push({ name: name.trim(), mesai:"", hs:"", prim:"", yol:"" });
-  setB(b);
-  render();
-  toast("Eklendi");
+function addDevam(){
+  const kisi=document.getElementById("dKisi").value;
+  if(!kisi){toast("Kişi seç");return;}
+  const b=getB();
+  b.devam.push({kisi:kisi,gun:num(document.getElementById("dGun").value)||1,not:document.getElementById("dNot").value.trim()});
+  setB(b);document.getElementById("dNot").value="";renderDevam();toast("Eklendi");
 }
-function remove(i) {
-  if (!confirm("Silinsin mi?")) return;
-  const b = getB();
-  b.people.splice(i,1);
-  setB(b);
-  render();
+function renderDevam(){
+  const list=getB().devam||[];
+  document.getElementById("devamList").innerHTML=list.map(function(d,i){return '<div class="card"><b>'+esc(d.kisi)+'</b> · '+d.gun+' gün<br><small>'+esc(d.not||"")+'</small><br><button class="btn danger" onclick="delDevam('+i+')">Sil</button></div>';}).join('')||"<p>Kayıt yok</p>";
 }
-
-function fillSelects() {
-  const opts = '<option value="">Kişi seç</option>' + getB().people.map(function(p) { return '<option>' + esc(p.name) + '</option>'; }).join('');
-  ["dKisi","cKisi"].forEach(function(id) {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = opts;
-  });
+function delDevam(i){const b=getB();b.devam.splice(i,1);setB(b);renderDevam();}
+function addCeza(){
+  const kisi=document.getElementById("cKisi").value;
+  if(!kisi){toast("Kişi seç");return;}
+  const b=getB();
+  b.ceza.push({kisi:kisi,tutar:num(document.getElementById("cTutar").value),neden:document.getElementById("cNeden").value.trim()});
+  setB(b);document.getElementById("cNeden").value="";renderCeza();toast("Eklendi");
 }
-
-function addDevam() {
-  const kisi = document.getElementById("dKisi").value;
-  if (!kisi) { toast("Kişi seç"); return; }
-  const b = getB();
-  b.devam.push({ kisi, gun: num(document.getElementById("dGun").value)||1, not: document.getElementById("dNot").value.trim() });
-  setB(b);
-  document.getElementById("dNot").value = "";
-  renderDevam();
-  toast("Eklendi");
+function renderCeza(){
+  const list=getB().ceza||[];
+  document.getElementById("cezaList").innerHTML=list.map(function(c,i){return '<div class="card"><b>'+esc(c.kisi)+'</b> · '+tl(c.tutar)+'<br><small>'+esc(c.neden||"")+'</small><br><button class="btn danger" onclick="delCeza('+i+')">Sil</button></div>';}).join('')||"<p>Kayıt yok</p>";
 }
-function renderDevam() {
-  const list = getB().devam || [];
-  document.getElementById("devamList").innerHTML = list.map(function(d,i) {
-    return '<div class="card"><b>' + esc(d.kisi) + '</b> · ' + d.gun + ' gün<br><small>' + esc(d.not||"") + '</small><br><button class="btn danger" onclick="delDevam(' + i + ')">Sil</button></div>';
-  }).join('') || "<p>Kayıt yok</p>";
+function delCeza(i){const b=getB();b.ceza.splice(i,1);setB(b);renderCeza();}
+function renderOzet(){
+  if(current==="ALL"){document.getElementById("ozetBox").innerHTML="<p>Şube seç.</p>";return;}
+  const people=getB().people;
+  const rows=people.map(function(p,i){const c=calc(p);return '<tr><td>'+(i+1)+'</td><td>'+esc(p.name)+'</td><td>'+tl(c.mesai)+'</td><td>'+tl(c.hs)+'</td><td>'+tl(c.toplam)+'</td></tr>';}).join('');
+  document.getElementById("ozetBox").innerHTML='<div class="table-wrap"><table><thead><tr><th>No</th><th>Ad</th><th>Mesai</th><th>HS</th><th>Toplam</th></tr></thead><tbody>'+(rows||"<tr><td colspan=5>Kayıt yok</td></tr>")+'</tbody></table></div>';
 }
-function delDevam(i) { const b = getB(); b.devam.splice(i,1); setB(b); renderDevam(); }
-
-function addCeza() {
-  const kisi = document.getElementById("cKisi").value;
-  if (!kisi) { toast("Kişi seç"); return; }
-  const b = getB();
-  b.ceza.push({ kisi, tutar: num(document.getElementById("cTutar").value), neden: document.getElementById("cNeden").value.trim() });
-  setB(b);
-  document.getElementById("cNeden").value = "";
-  renderCeza();
-  toast("Eklendi");
+function showTab(id){
+  document.querySelectorAll(".tabs button").forEach(function(b){b.classList.toggle("on",b.dataset.tab===id);});
+  document.querySelectorAll(".panel").forEach(function(p){p.classList.toggle("show",p.id===id);});
+  if(id==="devam")renderDevam();
+  if(id==="ceza")renderCeza();
+  if(id==="ozet")renderOzet();
 }
-function renderCeza() {
-  const list = getB().ceza || [];
-  document.getElementById("cezaList").innerHTML = list.map(function(c,i) {
-    return '<div class="card"><b>' + esc(c.kisi) + '</b> · ' + tl(c.tutar) + '<br><small>' + esc(c.neden||"") + '</small><br><button class="btn danger" onclick="delCeza(' + i + ')">Sil</button></div>';
-  }).join('') || "<p>Kayıt yok</p>";
+function exportCSV(){
+  if(current==="ALL"){toast("Şube seç");return;}
+  const people=getB().people;
+  let csv="Ad;Mesai Saat;HS;Prim;Yol;Toplam\n";
+  people.forEach(function(p){const c=calc(p);csv+='"'+p.name+'";'+num(p.mesai)+';'+num(p.hs)+';'+num(p.prim)+';'+num(p.yol)+';'+Math.round(c.toplam)+'\n';});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}));
+  a.download=current+".csv";a.click();
 }
-function delCeza(i) { const b = getB(); b.ceza.splice(i,1); setB(b); renderCeza(); }
-
-function renderOzet() {
-  if (current === "ALL") {
-    document.getElementById("ozetBox").innerHTML = "<p>Şube seç.</p>";
-    return;
-  }
-  const people = getB().people;
-  const rows = people.map(function(p,i) {
-    const c = calc(p);
-    return '<tr><td>' + (i+1) + '</td><td>' + esc(p.name) + '</td><td>' + tl(c.mesai) + '</td><td>' + tl(c.hs) + '</td><td>' + tl(c.toplam) + '</td></tr>';
-  }).join('');
-  document.getElementById("ozetBox").innerHTML = '<div class="table-wrap"><table><thead><tr><th>No</th><th>Ad</th><th>Mesai</th><th>HS</th><th>Toplam</th></tr></thead><tbody>' + (rows||"<tr><td colspan=5>Kayıt yok</td></tr>") + '</tbody></table></div>';
+function backup(){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:"application/json"}));
+  a.download="5sube-yedek-"+new Date().toISOString().slice(0,10)+".json";
+  a.click();toast("Yedek indirildi");
 }
-
-function showTab(id) {
-  document.querySelectorAll(".tabs button").forEach(function(b) { b.classList.toggle("on", b.dataset.tab === id); });
-  document.querySelectorAll(".panel").forEach(function(p) { p.classList.toggle("show", p.id === id); });
-  if (id === "devam") renderDevam();
-  if (id === "ceza") renderCeza();
-  if (id === "ozet") renderOzet();
-}
-
-function exportCSV() {
-  if (current === "ALL") { toast("Şube seç"); return; }
-  const people = getB().people;
-  let csv = "Ad;Mesai Saat;HS;Prim;Yol;Toplam\n";
-  people.forEach(function(p) {
-    const c = calc(p);
-    csv += '"' + p.name + '";' + num(p.mesai) + ';' + num(p.hs) + ';' + num(p.prim) + ';' + num(p.yol) + ';' + Math.round(c.toplam) + '\n';
-  });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob(["\ufeff"+csv], {type:"text/csv;charset=utf-8"}));
-  a.download = current + ".csv";
-  a.click();
-}
-function backup() {
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(state,null,2)], {type:"application/json"}));
-  a.download = "5sube-yedek-" + new Date().toISOString().slice(0,10) + ".json";
-  a.click();
-  toast("Yedek indirildi");
-}
-function importBackup(inp) {
-  const f = inp.files[0];
-  if (!f) return;
-  const r = new FileReader();
-  r.onload = function(e) {
-    try {
-      if (confirm("Üzerine yazılsın mı?")) {
-        state = JSON.parse(e.target.result);
-        save();
-        render();
-        toast("Yüklendi");
+function importBackup(inp){
+  const f=inp.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=function(e){
+    try{
+      if(confirm("Üzerine yazılsın mı?")){
+        state=JSON.parse(e.target.result);save();render();toast("Yüklendi");
       }
-    } catch(err) { toast("Geçersiz dosya"); }
+    }catch(err){toast("Geçersiz dosya");}
   };
-  r.readAsText(f);
-  inp.value = "";
+  r.readAsText(f);inp.value="";
 }
-
 render();
 </script>
 </body>
