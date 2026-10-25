@@ -63,9 +63,9 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   <div class="table-wrap"><table class="sheet"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai tutar</th><th>HS adet</th><th>HS tutar</th><th>Prim</th><th>Yol</th><th>İzin gün</th><th>İzin tutar</th><th>Yıllık</th><th>Disiplin</th><th>Toplam</th></tr></thead><tbody id="tbody"></tbody><tfoot id="tfoot"></tfoot></table></div>
 </section>
 <section id="sec-duzenle" class="hide">
-  <div class="panel"><h2>Düzenleme</h2><p>İsim düzelt, kurye işaretle, sırayı taşı veya sil.</p>
+  <div class="panel"><h2>Düzenleme</h2><p>İsim düzelt, sırayı taşı veya sil.</p>
     <b>Kişi ekle</b>
-    <div class="row"><input id="nAd" placeholder="Ad soyad"/><input id="nBirim" type="number" value="300" style="width:90px"/><label><input id="nKurye" type="checkbox"/> Kurye</label><button class="btn primary" onclick="addKisi()">Ekle</button></div>
+    <div class="row"><input id="nAd" placeholder="Ad soyad"/><input id="nBirim" type="number" value="300" style="width:90px"/><label id="kuryeLabel"><input id="nKurye" type="checkbox"/> Kurye</label><button class="btn primary" onclick="addKisi()">Ekle</button></div>
   </div>
   <div id="duzenleList"></div>
 </section>
@@ -76,10 +76,6 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 <section id="sec-rapor" class="hide"><div class="panel" id="raporBox"></div></section>
 <div id="toast"></div>
 <script>
-if(!localStorage.getItem("kadikoy_fix_v129")){
-  localStorage.removeItem("mesai_Kadıköy");
-  localStorage.setItem("kadikoy_fix_v129","1");
-}
 var BRANCHES=["Kadıköy","Cadde","Çengelköy"];
 var currentBranch=localStorage.getItem("currentBranch")||"Cadde";
 function renderBranchBar(){
@@ -88,8 +84,11 @@ function renderBranchBar(){
     h+='<button class="'+(b===currentBranch?"active":"")+'" onclick="selectBranch(\''+b+'\')">'+b+'</button>';
   });
   document.getElementById("branchBar").innerHTML=h;
+  var isCadde=currentBranch==="Cadde";
   var k=document.getElementById("tabKurye");
-  if(k) k.style.display=(currentBranch==="Cadde")?"":"none";
+  if(k) k.style.display=isCadde?"":"none";
+  var kl=document.getElementById("kuryeLabel");
+  if(kl) kl.style.display=isCadde?"":"none";
 }
 function selectBranch(b){
   currentBranch=b;
@@ -114,8 +113,8 @@ renderBranchBar();
 <script src="lock.js?v=106"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=129"></script>
-<script src="app.js?v=122"></script>
+<script src="seed.js?v=130"></script>
+<script src="app.js?v=123"></script>
 <script src="gh.js?v=106"></script>
 <script src="plus.js?v=112"></script>
 <script src="page-extra.js?v=106"></script>
