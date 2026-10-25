@@ -1,4 +1,4 @@
-const KEY="cadde_bordro_v4";
+let KEY="mesai_Cadde";
 const HS_BIRIM=2500,PRIM_BIRIM=7,DIS_BIRIM=1,YOL_BIRIM=1200;
 function num(v,d){const n=parseFloat(v);return Number.isFinite(n)?n:(d||0);}
 function hydratePerson(p){
@@ -39,7 +39,7 @@ function loadLocal(){
   }else if(typeof SEED!=="undefined"){
     seed=SEED;
   }
-  return hydrate(JSON.parse(JSON.stringify(seed)));
+  return hydrate(JSON.parse(JSON.stringify(seed||{})));
 }
 let state=loadLocal();
 function persist(){localStorage.setItem(KEY,JSON.stringify(state));}
@@ -195,7 +195,6 @@ function exportCSV(){
   a.download="bordro.csv";a.click();
 }
 let _pdfFontB64=null;
-let _pdfFontBoldB64=null;
 async function arrayBufferToBase64(buffer){
   const bytes=new Uint8Array(buffer);
   let binary="";
@@ -215,19 +214,18 @@ async function ensurePdfFont(doc){
   try{
     if(!_pdfFontB64){
       const urls=["DejaVuSans.ttf","https://cdn.jsdelivr.net/npm/dejavu-fonts-ttf@2.37.3/ttf/DejaVuSans.ttf"];
-      let loaded=false;
       for(const url of urls){
         try{
           _pdfFontB64=await loadFontB64(url);
-          loaded=true;
           break;
         }catch(e){}
       }
-      if(!loaded) return false;
     }
-    doc.addFileToVFS("DejaVuSans.ttf",_pdfFontB64);
-    doc.addFont("DejaVuSans.ttf","DejaVu","normal");
-    return true;
+    if(_pdfFontB64){
+      doc.addFileToVFS("DejaVuSans.ttf",_pdfFontB64);
+      doc.addFont("DejaVuSans.ttf","DejaVu","normal");
+    }
+    return !!_pdfFontB64;
   }catch(e){
     return false;
   }
