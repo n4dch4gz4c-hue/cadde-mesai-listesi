@@ -1,6 +1,6 @@
 {
-  "name": "Cadde Mesai Listesi",
-  "short_name": "Cadde Mesai",
+  "name": "Mesai Listesi",
+  "short_name": "Mesai Listesi",
   "description": "Cadde personel mesai, HS, izin ve prim listesi",
   "start_url": "./liste.html",
   "scope": "./",
