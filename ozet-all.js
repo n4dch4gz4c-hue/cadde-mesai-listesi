@@ -1,6 +1,6 @@
 (function(){
 var cs=document.createElement("style");
-cs.textContent=["#sec-ozet table,#kalemPanel table{background:#fff!important;color:#111!important}","#sec-ozet td,#sec-ozet td.name,#kalemPanel td,#kalemPanel td.name{color:#111!important;background:#fff!important;-webkit-text-fill-color:#111!important}","#sec-ozet td.tot{background:#f3e8d2!important;color:#111!important}","#sec-ozet tfoot td{background:#222!important;color:#fff!important}","#ozetKisa table.kisa-tbl{width:100%;max-width:420px;font-size:12px}","#ozetKisa table.kisa-tbl th,#ozetKisa table.kisa-tbl td{padding:3px 6px;line-height:1.2}"].join("\n");
+cs.textContent=["#sec-ozet table,#kalemPanel table{background:#fff!important;color:#111!important}","#sec-ozet td,#sec-ozet td.name,#kalemPanel td,#kalemPanel td.name{color:#111!important;background:#fff!important;-webkit-text-fill-color:#111!important}","#sec-ozet td.tot{background:#f3e8d2!important;color:#111!important}","#sec-ozet tfoot td{background:#222!important;color:#fff!important}","#ozetKisa table.kisa-tbl{width:100%;max-width:420px;font-size:12px}","#ozetKisa table.kisa-tbl th,#ozetKisa table.kisa-tbl td{padding:3px 6px;line-height:1.2}","@media(max-width:768px){#sec-ozet .ayr-tbl{min-width:0!important;width:100%!important;font-size:9px!important}#sec-ozet .ayr-tbl th,#sec-ozet .ayr-tbl td{padding:2px 1px!important;font-size:9px!important;word-break:break-word}#sec-ozet .ayr-wrap{overflow-x:auto!important;max-width:100%!important}}"].join("\n");
 document.head.appendChild(cs);
 function money(n){ n=Math.round(Number(n)||0); return n===0?"0":(typeof tl==="function"?tl(n):String(n)); }
 function dsh(n){ n=Math.round(Number(n)||0); return n===0?"-":money(n); }
@@ -46,23 +46,41 @@ function htmlKisa(list){
 }
 function htmlAyr(list){
   var i,p,c,tot=0,mesai=0,hs=0,prim=0,yol=0,izin=0,yillik=0,pay=0,h="";
+  var isMobile=window.innerWidth<768;
   h="<div class='row' style='justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px'><h2 style='margin:0;color:#111'>Ayrintili ozet</h2>"+pdfBar("ozet-ayrinti")+"</div>";
   for(i=0;i<list.length;i++){
     c=rowCalc(list[i]); tot+=c.toplam||0; mesai+=c.mesai||0; hs+=c.hs||0; prim+=c.prim||0; yol+=c.yol||0; izin+=c.izin||0; yillik+=c.yillik||0; if(c.toplam>0) pay++;
   }
   h+="<p style='margin:8px 0;color:#111'>"+list.length+" kisi / "+pay+" odeme \u00b7 <b>"+money(tot)+" TL</b></p>";
-  h+="<div style='overflow:auto;max-height:72vh;width:100%'><table class='sheet slim' style='min-width:960px;width:100%;background:#fff;color:#111'>";
-  h+="<thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai</th><th>HS adet</th><th>HS</th><th>Prim</th><th>Yol</th><th>Izin g</th><th>Izin</th><th>Yillik</th><th>Toplam</th></tr></thead><tbody>";
-  for(i=0;i<list.length;i++){
-    p=list[i]; c=rowCalc(p);
-    h+="<tr class='"+(c.toplam>0?"pay":"")+"'><td style='color:#111'>"+(i+1)+"</td><td class='name' style='color:#111;font-weight:700'>"+(p.name||"")+(p.kurye?" K":"")+"</td>";
-    h+="<td style='color:#111'>"+(p.mesaiSaat||"-")+"</td><td style='color:#111'>"+dsh(c.mesai)+"</td>";
-    h+="<td style='color:#111'>"+(p.hsSaat||"-")+"</td><td style='color:#111'>"+dsh(c.hs)+"</td>";
-    h+="<td style='color:#111'>"+dsh(c.prim)+"</td><td style='color:#111'>"+dsh(c.yol)+"</td>";
-    h+="<td style='color:#111'>"+(p.izinGun||"-")+"</td><td style='color:#111'>"+dsh(c.izin)+"</td>";
-    h+="<td style='color:#111'>"+dsh(c.yillik)+"</td><td class='tot' style='color:#111;background:#f3e8d2'>"+dsh(c.toplam)+"</td></tr>";
+  
+  if(isMobile){
+    h+="<div class='ayr-wrap' style='overflow-x:auto;max-width:100%'><table class='sheet slim ayr-tbl' style='width:100%;background:#fff;color:#111;font-size:9px'>";
+    h+="<thead><tr><th>No</th><th>Ad</th><th>Mesai</th><th>HS</th><th>Yol</th><th>Izin</th><th>Top</th></tr></thead><tbody>";
+    for(i=0;i<list.length;i++){
+      p=list[i]; c=rowCalc(p);
+      var shortName=(p.name||"").substring(0,12);
+      h+="<tr class='"+(c.toplam>0?"pay":"")+"'><td style='color:#111;font-size:8px'>"+(i+1)+"</td><td class='name' style='color:#111;font-weight:700;font-size:8px'>"+shortName+"</td>";
+      h+="<td style='color:#111;font-size:8px'>"+dsh(c.mesai)+"</td>";
+      h+="<td style='color:#111;font-size:8px'>"+dsh(c.hs)+"</td>";
+      h+="<td style='color:#111;font-size:8px'>"+dsh(c.yol)+"</td>";
+      h+="<td style='color:#111;font-size:8px'>"+dsh(c.izin)+"</td>";
+      h+="<td class='tot' style='color:#111;background:#f3e8d2;font-size:8px'>"+dsh(c.toplam)+"</td></tr>";
+    }
+    h+="</tbody><tfoot><tr><td></td><td>TOP</td><td>"+money(mesai)+"</td><td>"+money(hs)+"</td><td>"+money(yol)+"</td><td>"+money(izin)+"</td><td>"+money(tot)+"</td></tr></tfoot></table></div>";
+  }else{
+    h+="<div style='overflow:auto;max-height:72vh;width:100%'><table class='sheet slim' style='min-width:960px;width:100%;background:#fff;color:#111'>";
+    h+="<thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai</th><th>HS adet</th><th>HS</th><th>Prim</th><th>Yol</th><th>Izin g</th><th>Izin</th><th>Yillik</th><th>Toplam</th></tr></thead><tbody>";
+    for(i=0;i<list.length;i++){
+      p=list[i]; c=rowCalc(p);
+      h+="<tr class='"+(c.toplam>0?"pay":"")+"'><td style='color:#111'>"+(i+1)+"</td><td class='name' style='color:#111;font-weight:700'>"+(p.name||"")+(p.kurye?" K":"")+"</td>";
+      h+="<td style='color:#111'>"+(p.mesaiSaat||"-")+"</td><td style='color:#111'>"+dsh(c.mesai)+"</td>";
+      h+="<td style='color:#111'>"+(p.hsSaat||"-")+"</td><td style='color:#111'>"+dsh(c.hs)+"</td>";
+      h+="<td style='color:#111'>"+dsh(c.prim)+"</td><td style='color:#111'>"+dsh(c.yol)+"</td>";
+      h+="<td style='color:#111'>"+(p.izinGun||"-")+"</td><td style='color:#111'>"+dsh(c.izin)+"</td>";
+      h+="<td style='color:#111'>"+dsh(c.yillik)+"</td><td class='tot' style='color:#111;background:#f3e8d2'>"+dsh(c.toplam)+"</td></tr>";
+    }
+    h+="</tbody><tfoot><tr><td></td><td>TOPLAM</td><td></td><td>"+money(mesai)+"</td><td></td><td>"+money(hs)+"</td><td>"+money(prim)+"</td><td>"+money(yol)+"</td><td></td><td>"+money(izin)+"</td><td>"+money(yillik)+"</td><td>"+money(tot)+"</td></tr></tfoot></table></div>";
   }
-  h+="</tbody><tfoot><tr><td></td><td>TOPLAM</td><td></td><td>"+money(mesai)+"</td><td></td><td>"+money(hs)+"</td><td>"+money(prim)+"</td><td>"+money(yol)+"</td><td></td><td>"+money(izin)+"</td><td>"+money(yillik)+"</td><td>"+money(tot)+"</td></tr></tfoot></table></div>";
   return h;
 }
 function show(list){
