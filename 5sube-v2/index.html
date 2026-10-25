@@ -6,13 +6,15 @@
 <title>5 Sube Mesai</title>
 <style>
 body{margin:0;font-family:system-ui,sans-serif;background:#f8fafc}
-header{background:#0f172a;color:#fff;padding:14px 16px;position:sticky;top:0}
+header{background:#0f172a;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:10}
 .branch-bar{display:flex;gap:6px;overflow-x:auto;padding:8px 0}
-.branch-bar button{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:8px 14px;border-radius:20px}
+.branch-bar button{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:8px 14px;border-radius:20px;font-size:14px}
 .branch-bar button.active{background:#fff;color:#0f172a;font-weight:bold}
-.toolbar{padding:12px;background:#fff}
-.btn{padding:8px 12px;border:1px solid #ccc;border-radius:8px;background:#1d4ed8;color:#fff}
-#list{padding:16px}
+.toolbar{padding:12px;background:#fff;display:flex;gap:8px;flex-wrap:wrap}
+.btn{padding:8px 12px;border:1px solid #ccc;border-radius:8px;background:#fff}
+.btn.primary{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
+.person{background:#fff;margin:8px 16px;padding:12px;border-radius:12px;border:1px solid #e2e8f0}
+.person input{width:80px;padding:6px;margin:0 4px;font-size:16px}
 </style>
 </head>
 <body>
@@ -21,47 +23,95 @@ header{background:#0f172a;color:#fff;padding:14px 16px;position:sticky;top:0}
   <div class="branch-bar" id="bar"></div>
 </header>
 <div class="toolbar">
-  <button class="btn" onclick="addPerson()">+ Kisi Ekle</button>
+  <button class="btn primary" onclick="addPerson()">+ Kisi Ekle</button>
+  <button class="btn" onclick="backup()">Yedek Al</button>
 </div>
 <div id="list"></div>
 <script>
 var BRANCHES = ["Kadikoy", "Bagdat Caddesi", "Cengelkoy", "Taksim Bufe", "Taksim Pide"];
+var KEY = "5sube_full_ok";
 var current = BRANCHES[0];
-var data = {};
-BRANCHES.forEach(function(b){ data[b] = []; });
+var state = load();
+
+function load() {
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  var s = {};
+  BRANCHES.forEach(function(b) { s[b] = []; });
+  return s;
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
 
 function renderBar() {
   var html = "";
   BRANCHES.forEach(function(b) {
     var cls = (b === current) ? "active" : "";
-    html += "<button class='" + cls + "' onclick='select(\"" + b + "\")'>" + b + "</button>";
+    html += "<button class=\"" + cls + "\" onclick=\"selectBranch('" + b + "')\">" + b + "</button>";
   });
-  html += "<button onclick='select(\"ALL\")'>Tum Subeler</button>";
+  html += "<button onclick=\"selectBranch('ALL')\">Tum Subeler</button>";
   document.getElementById("bar").innerHTML = html;
 }
-function select(b) { current = b; render(); }
+function selectBranch(b) { current = b; render(); }
+
 function render() {
   renderBar();
-  var people = data[current] || [];
-  var html = "<h3>" + current + "</h3><ul>";
+  var el = document.getElementById("list");
+  if (current === "ALL") {
+    var total = 0;
+    var html = "<h3>Tum Subeler</h3>";
+    BRANCHES.forEach(function(b) {
+      var sub = (state[b] || []).reduce(function(s, p) { return s + (p.mesai||0)*300 + (p.hs||0)*1250; }, 0);
+      total += sub;
+      html += "<div class='person'><b>" + b + "</b> : " + Math.round(sub) + " TL</div>";
+    });
+    html += "<div class='person'><b>Genel Toplam: " + Math.round(total) + " TL</b></div>";
+    el.innerHTML = html;
+    return;
+  }
+  var people = state[current] || [];
+  var html = "<h3>" + current + " (" + people.length + " kisi)</h3>";
   people.forEach(function(p, i) {
-    html += "<li>" + p + " <button onclick='remove(" + i + ")'>Sil</button></li>";
+    var tot = (p.mesai||0)*300 + (p.hs||0)*1250 + (p.prim||0) + (p.yol||0);
+    html += "<div class='person'>";
+    html += "<b>" + (p.name || "") + "</b><br>";
+    html += "Mesai: <input type='number' value='" + (p.mesai||"") + "' onchange='setVal(" + i + ",\"mesai\",this.value)'> ";
+    html += "HS: <input type='number' value='" + (p.hs||"") + "' onchange='setVal(" + i + ",\"hs\",this.value)'> ";
+    html += "Prim: <input type='number' value='" + (p.prim||"") + "' onchange='setVal(" + i + ",\"prim\",this.value)'> ";
+    html += "Yol: <input type='number' value='" + (p.yol||"") + "' onchange='setVal(" + i + ",\"yol\",this.value)'> ";
+    html += "<br><b>Toplam: " + Math.round(tot) + " TL</b> ";
+    html += "<button onclick='removePerson(" + i + ")'>Sil</button>";
+    html += "</div>";
   });
-  html += "</ul>";
-  document.getElementById("list").innerHTML = html;
+  el.innerHTML = html;
+}
+function setVal(i, field, val) {
+  if (!state[current][i]) return;
+  state[current][i][field] = val === "" ? 0 : parseFloat(val) || 0;
+  save();
+  render();
 }
 function addPerson() {
+  if (current === "ALL") return;
   var name = prompt("Ad Soyad:");
-  if (name && current !== "ALL") {
-    data[current].push(name);
-    render();
-  }
+  if (!name) return;
+  if (!state[current]) state[current] = [];
+  state[current].push({name: name, mesai: 0, hs: 0, prim: 0, yol: 0});
+  save();
+  render();
 }
-function remove(i) {
-  if (current !== "ALL") {
-    data[current].splice(i, 1);
-    render();
-  }
+function removePerson(i) {
+  if (current === "ALL") return;
+  state[current].splice(i, 1);
+  save();
+  render();
+}
+function backup() {
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(state)], {type:"application/json"}));
+  a.download = "5sube-yedek.json";
+  a.click();
 }
 render();
 </script>
