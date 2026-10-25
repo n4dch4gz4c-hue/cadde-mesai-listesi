@@ -93,14 +93,17 @@ function selectBranch(b){
   if(typeof KEY!=="undefined") KEY="mesai_"+b;
   renderBranchBar();
   if(typeof load==='function') load();
+  // Aktif sekmeyi yeniden çiz
+  var active=document.querySelector(".tab.on");
+  if(active && typeof tab==="function") tab(active);
 }
 renderBranchBar();
 </script>
 <script src="lock.js?v=106"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=119"></script>
-<script src="app.js?v=118"></script>
+<script src="seed.js?v=120"></script>
+<script src="app.js?v=119"></script>
 <script src="gh.js?v=106"></script>
 <script src="plus.js?v=112"></script>
 <script src="page-extra.js?v=106"></script>
