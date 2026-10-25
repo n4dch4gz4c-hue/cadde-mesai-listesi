@@ -56,8 +56,17 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   .mfields{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:4px 12px 14px;background:#f8f6f2}
   .mfields label{display:flex;flex-direction:column;font-size:12px;color:#666;font-weight:600}
   .mfields input{padding:10px;border:1px solid #d7cfc3;border-radius:8px;font-size:16px;margin-top:4px;background:#fff}
-  #sec-duzenle .table-wrap{display:block!important;overflow-x:auto}
-  #sec-duzenle table{min-width:0!important;width:100%!important}
+  #sec-duzenle .panel{margin:8px;padding:10px}
+  #sec-duzenle .table-wrap{display:block!important;overflow-x:auto;padding:0}
+  #sec-duzenle table{min-width:0!important;width:100%!important;font-size:12px}
+  #sec-duzenle input{width:100%!important;max-width:120px;font-size:14px;padding:6px}
+  #sec-duzenle .row{flex-wrap:wrap;gap:6px}
+  #sec-duzenle .row input{flex:1;min-width:100px}
+  #sec-devam .panel,#sec-ceza .panel{margin:8px;padding:10px}
+  #sec-devam .row,#sec-ceza .row{flex-wrap:wrap;gap:6px}
+  #sec-devam .row input,#sec-devam .row select,#sec-ceza .row input,#sec-ceza .row select{flex:1;min-width:80px;font-size:14px;padding:6px}
+  #devamList .table-wrap,#cezaList .table-wrap{overflow-x:auto;padding:0}
+  #devamList table,#cezaList table{min-width:0!important;width:100%!important;font-size:12px}
   #sec-rapor .panel{margin:8px;padding:10px;overflow-x:auto}
   #sec-rapor table{min-width:0!important;width:100%!important;font-size:12px}
   #sec-rapor .stats{grid-template-columns:repeat(2,1fr)!important}
