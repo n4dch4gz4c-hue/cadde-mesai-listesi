@@ -89,7 +89,7 @@ renderOzet=function(){
     <p>${s.all.length} kisi · ${s.pay.length} odeme · <b>${tl(s.toplam)} TL</b></p>
     <table class="sheet slim"><thead><tr><th>No</th><th>Ad Soyad</th><th>Toplam</th></tr></thead>
     <tbody>${s.all.map((x,i)=>`<tr class="${x.c.toplam>0?"pay":"zero"}"><td>${i+1}</td><td class="name">${x.p.name}</td><td class="tot">${dash(x.c.toplam)}</td></tr>`).join("")}</tbody>
-    <tfoot><tr><td></td><td>TOPLAM</td><td>${tl(s.toplam)}</td></tr></tfoot></table>`;
+    <tfoot><tr style="background:#e8f5e9!important"><td style="background:#e8f5e9!important;color:#1b5e20!important"></td><td style="background:#e8f5e9!important;color:#1b5e20!important">TOPLAM</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.toplam)}</td></tr></tfoot></table>`;
   ayr.innerHTML=`<div class="row" style="justify-content:space-between;padding:0 0 10px"><h2 style="margin:0">Ayrintili ozet</h2><button class="btn primary" onclick="pagePdf('ozet-ayrinti',false)">PDF indir</button></div>
     <p>${s.all.length} kisi · ${s.pay.length} odeme · ${tl(s.toplam)} TL</p>
     <table class="sheet slim"><thead><tr><th>No</th><th>Ad</th><th>Mesai</th><th>HS</th><th>Prim</th><th>Yol</th><th>Izin</th><th>Yillik</th><th>Toplam</th></tr></thead>
@@ -97,7 +97,7 @@ renderOzet=function(){
       <td>${i+1}</td><td class="name">${x.p.name}</td><td>${dash(x.c.mesai)}</td><td>${dash(x.c.hs)}</td>
       <td>${dash(x.c.prim)}</td><td>${dash(x.c.yol)}</td><td>${dash(x.c.izin)}</td>
       <td>${dash(x.c.yillik)}</td><td>${dash(x.c.toplam)}</td></tr>`).join("")}</tbody>
-    <tfoot><tr><td></td><td>TOPLAM</td><td>${tl(s.mesai)}</td><td>${tl(s.hs)}</td><td>${tl(s.prim)}</td><td>${tl(s.yol)}</td><td>${tl(s.izin)}</td><td>${tl(s.yillik)}</td><td>${tl(s.toplam)}</td></tr></tfoot></table>`;
+    <tfoot><tr style="background:#e8f5e9!important"><td style="background:#e8f5e9!important;color:#1b5e20!important"></td><td style="background:#e8f5e9!important;color:#1b5e20!important">TOPLAM</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.mesai)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.hs)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.prim)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.yol)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.izin)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.yillik)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.toplam)}</td></tr></tfoot></table>`;
 };
 function periodLabel(){
   const d=new Date();
@@ -121,14 +121,14 @@ function renderRapor(){
   const devam=state.devamsizlik||[];
   const chartHtml=kalem.map(([k,v,col])=>{
     const pct=s.toplam?((v/s.toplam)*100):0;
-    const barW=Math.max(v>0?3:0,(v/maxV)*100);
-    return `<div class="kbar-row">
-      <div class="kbar-top">
-        <span class="kbar-label">${k}</span>
-        <span class="kbar-val">${dash(v)} <small>${pct.toFixed(1)}%</small></span>
+    const barW=Math.max(v>0?8:0,(v/maxV)*100);
+    return `<div style="margin:0 0 12px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
+        <span style="font-weight:700;font-size:13px;color:#111">${k}</span>
+        <span style="font-weight:700;font-size:13px;color:#111">${dash(v)} <small style="color:#666">${pct.toFixed(1)}%</small></span>
       </div>
-      <div class="kbar-track">
-        <div class="kbar-fill" style="width:${barW}%;background:${col}"></div>
+      <div style="background:#e8eef5;border-radius:8px;height:20px;overflow:hidden;width:100%">
+        <div style="height:100%;border-radius:8px;width:${barW}%;background:${col};min-width:4px"></div>
       </div>
     </div>`;
   }).join("");
@@ -152,10 +152,10 @@ function renderRapor(){
     </div>
     <div class="panel" id="kalemPanel">
       <h3 style="color:#111;margin:0 0 10px">Kalem dagilimi</h3>
-      <div class="kchart">${chartHtml}</div>
+      <div style="padding:8px 0">${chartHtml}</div>
       <table class="sheet slim kalem-table" style="margin-top:12px"><thead><tr><th>Kalem</th><th>Tutar</th><th>Pay</th></tr></thead>
       <tbody>${kalem.map(([k,v])=>`<tr><td class="name">${k}</td><td>${dash(v)}</td><td>${s.toplam?((v/s.toplam)*100).toFixed(1):"0"}%</td></tr>`).join("")}</tbody>
-      <tfoot><tr><td>GENEL TOPLAM</td><td>${tl(s.toplam)}</td><td>100%</td></tr></tfoot></table>
+      <tfoot><tr style="background:#e8f5e9!important"><td style="background:#e8f5e9!important;color:#1b5e20!important">GENEL TOPLAM</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.toplam)}</td><td style="background:#e8f5e9!important;color:#1b5e20!important">100%</td></tr></tfoot></table>
     </div>
     <div class="panel" id="kisiPanel">
       <h3 style="color:#111;margin:0 0 8px">Personel odeme listesi</h3>
@@ -163,7 +163,7 @@ function renderRapor(){
       <tbody>${s.all.map((x,i)=>`<tr class="${x.c.toplam>0?"pay":"zero"}">
         <td>${i+1}</td><td class="name">${x.p.name}${x.p.kurye?" <span class='kmark'>K</span>":""}</td>
         <td class="tot">${dash(x.c.toplam)}</td></tr>`).join("")}</tbody>
-      <tfoot><tr><td></td><td>TOPLAM</td><td>${tl(s.toplam)}</td></tr></tfoot></table>
+      <tfoot><tr style="background:#e8f5e9!important"><td style="background:#e8f5e9!important;color:#1b5e20!important"></td><td style="background:#e8f5e9!important;color:#1b5e20!important">TOPLAM</td><td style="background:#e8f5e9!important;color:#1b5e20!important">${tl(s.toplam)}</td></tr></tfoot></table>
     </div>
     <div class="panel">
       <h3 style="color:#111">Devamsizlik</h3>
