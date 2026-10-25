@@ -11,6 +11,7 @@ html,body{margin:0;font-family:system-ui,sans-serif;background:#f4f1ea;color:#1f
 h1{margin:0;font-size:22px}
 .btn,.tab{border:1px solid #d7cfc3;background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer}
 .tab.on,.btn.primary{background:#1f4b8f;color:#fff;border-color:#1f4b8f}
+.btn.sync{background:#0f7b4c;color:#fff;border-color:#0f7b4c}
 table{border-collapse:collapse;width:100%;min-width:1100px;background:#fff;font-size:13px}
 th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0}
 td{border:1px solid #eadfd2;padding:3px 4px;text-align:center;color:#111}
@@ -36,29 +37,35 @@ input{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:14px;widt
     <input id="q" placeholder="İsim ara..." oninput="render()">
     <button class="btn primary" onclick="save()">Kaydet</button>
     <button class="btn" onclick="backup()">Yedek</button>
+    <button class="btn" onclick="document.getElementById('imp').click()">Yedek Yükle</button>
+    <input type="file" id="imp" accept=".json" style="display:none" onchange="importBackup(this)">
   </div>
 </header>
 <nav class="tabs">
   <button class="tab on" data-tab="liste" onclick="tab(this)">Liste</button>
   <button class="tab" data-tab="duzenle" onclick="tab(this)">Düzenleme</button>
+  <button class="tab" data-tab="devam" onclick="tab(this)">Devamsızlık</button>
+  <button class="tab" data-tab="ceza" onclick="tab(this)">Ceza</button>
   <button class="tab" data-tab="ozet" onclick="tab(this)">Özet</button>
 </nav>
 <section id="sec-liste">
   <div class="stats" id="stats"></div>
   <div class="table-wrap"><table><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai tutar</th><th>HS adet</th><th>HS tutar</th><th>Yol</th><th>İzin gün</th><th>İzin tutar</th><th>Yıllık</th><th>Toplam</th></tr></thead><tbody id="tbody"></tbody></table></div>
 </section>
-<section id="sec-duzenle" class="hide"><div class="panel"><h3>Düzenleme</h3><div id="editList"></div></div></section>
+<section id="sec-duzenle" class="hide"><div class="panel"><h3>Düzenleme — <span id="editBranch"></span></h3><div class="row"><input id="newName" placeholder="Ad Soyad"><button class="btn primary" onclick="addPerson()">+ Ekle</button></div><div id="editList"></div></div></section>
+<section id="sec-devam" class="hide"><div class="panel"><h3>Devamsızlık</h3><div id="devamList"></div></div></section>
+<section id="sec-ceza" class="hide"><div class="panel"><h3>Ceza</h3><div id="cezaList"></div></div></section>
 <section id="sec-ozet" class="hide"><div class="panel" id="ozetContent"></div></section>
 <div id="toast"></div>
 <script>
 var BRANCHES=["Kadıköy","Cadde","Çengelköy"];
-var KEY="3sube_mesai_v12";
+var KEY="3sube_mesai_v13";
 var HS_BIRIM=2500;
 var RATES={"Kadıköy":{saat:320,izin:2900},"Cadde":{saat:320,izin:2900},"Çengelköy":{saat:280,izin:2800}};
 var CADDE_SEED=[{"name":"CEMAL ÇELİK","ms":0,"hs":0,"izin":0,"yol":8000,"yillik":0},{"name":"ABDULLAH AVCI","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"CUMHUR YİĞİT","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"HÜSAMETTİN KÖRPE","ms":4,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"SALİH USTA","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"BURHAN BAYAKIR","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"ERDAL ÇAVDAR","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"OKTAY ÇELİK","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"HİKMET ERDOĞDU","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"SELİM ORTAHİSAR","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"MEHMET EMİN MÜDERRİSOĞLU","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"KÖKSAL SOYKAN","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"FERHAT AVCI","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"ERHAN SOFUOĞLU","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"HASAN ALİ GERZ","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"MUHAMMET CAN SARICA","ms":0,"hs":3,"izin":0,"yol":0,"yillik":0},{"name":"BİLAL SÜRİKLİ","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"HASAN KOÇALAN","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"UĞUR GÖKER","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"BEDRETTİN AVCI","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"EMRE POLAT","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"SELAHATTİN AVCI","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"CANER AVCI","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"ALİ AKKOCA","ms":1.5,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"AZAD MYRADOV","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"MURAT TORUN","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"MEHMET ÇELİK","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"YILMAZ AVCI","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"RAMAZAN BAYAKIR","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"ONUR AVCI","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"MUHAMMET MUSTAFA BAYAKIR","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"CİHAN AVCI","ms":0,"hs":1,"izin":0,"yol":0,"yillik":0},{"name":"FURKAN KAVAK","ms":0,"hs":0,"izin":1,"yol":0,"yillik":0},{"name":"SEPİDEH MENATTİ","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"MUHAMMET EREN ÇELİK","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"MURAT DAĞIDIR","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"SEYFİ ÇELİK","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"FEVZİ DOLAK","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"AYDIN AVCI","ms":2,"hs":2,"izin":0,"yol":0,"yillik":0},{"name":"HAKAN ATMACA","ms":0,"hs":3,"izin":0,"yol":0,"yillik":0},{"name":"ABDULLAH DENERİ","ms":8,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"HAMİT AKPINAR","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"ADİL EMİR ÇELİK","ms":0,"hs":3,"izin":0,"yol":0,"yillik":0},{"name":"ABDURRAHMAN KAPAN","ms":1,"hs":3,"izin":0,"yol":0,"yillik":0},{"name":"SAYİM GÜMÜŞ","ms":0,"hs":1,"izin":0,"yol":0,"yillik":0},{"name":"YUNUS EMRE ÇELİK","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"RAMAZAN YAVUZ","ms":1,"hs":0,"izin":0,"yol":0,"yillik":21850},{"name":"ZEYNEP SOFUOĞLU","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"MUSTAFA AYDIN","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"HASAN İPEK","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"KAAN ATASOY","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"ABDULLAH GÜRKAN","ms":0,"hs":3,"izin":0,"yol":0,"yillik":0},{"name":"VADETTİN AVCI","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"ERCAN ALTUN","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"OSMAN CEYLAN","ms":0,"hs":1,"izin":0,"yol":0,"yillik":0},{"name":"SEMİH SOFUOĞLU","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"ABDURRAHMAN ÖZKAN","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"FIRAT AVCI","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"MENDERES SOFUOĞLU","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"HİCABİ AKYILDIZ","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"ABDURRAHMAN BULUT","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"MUHİTTİN ÖZÇELİK","ms":0,"hs":4,"izin":0,"yol":0,"yillik":0},{"name":"MUHAMMET SOFUOĞLU","ms":0,"hs":1,"izin":0,"yol":0,"yillik":0},{"name":"MUHAMMED MÜMİN ILGAR","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"MÜSLÜM KANIKARA","ms":0,"hs":0,"izin":0,"yol":0,"yillik":0},{"name":"BAYRAM YETER","ms":0,"hs":0.5,"izin":0,"yol":0,"yillik":0}];
 var current="Cadde";
 var state=load();
-function load(){try{var r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}var s={};s.Cadde={people:JSON.parse(JSON.stringify(CADDE_SEED))};s.Kadıköy={people:[]};s["Çengelköy"]={people:[]};return s;}
+function load(){try{var r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}var s={};s.Cadde={people:JSON.parse(JSON.stringify(CADDE_SEED)),devamsizlik:[],cezalar:[]};s.Kadıköy={people:[],devamsizlik:[],cezalar:[]};s["Çengelköy"]={people:[],devamsizlik:[],cezalar:[]};return s;}
 function save(){localStorage.setItem(KEY,JSON.stringify(state));toast("Kaydedildi");}
 function calc(p,b){var r=RATES[b]||RATES.Cadde;var mesai=(p.ms||0)*r.saat,hs=(p.hs||0)*HS_BIRIM,izin=(p.izin||0)*r.izin;return {mesai,hs,izin,yol:p.yol||0,yillik:p.yillik||0,toplam:mesai+hs+izin+(p.yol||0)+(p.yillik||0)};}
 function tl(n){return Math.round(n||0).toLocaleString("tr-TR");}
@@ -66,10 +73,17 @@ function dash(n){return Math.round(n||0)===0?"-":tl(n);}
 function toast(t){var e=document.getElementById("toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",1600);}
 function renderBar(){var h="";BRANCHES.forEach(b=>h+='<button class="'+(b===current?"active":"")+'" onclick="selectBranch(\''+b+'\')">'+b+'</button>');document.getElementById("bar").innerHTML=h;}
 function selectBranch(b){current=b;render();}
-function tab(el){document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t===el));var id=el.dataset.tab;["liste","duzenle","ozet"].forEach(s=>document.getElementById("sec-"+s).classList.toggle("hide",s!==id));}
+function tab(el){document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t===el));var id=el.dataset.tab;["liste","duzenle","devam","ceza","ozet"].forEach(s=>{var e=document.getElementById("sec-"+s);if(e)e.classList.toggle("hide",s!==id);});if(id==="duzenle")renderEdit();if(id==="ozet")renderOzet();if(id==="devam")renderDevam();if(id==="ceza")renderCeza();}
 function render(){renderBar();var people=state[current].people||[];var sums=people.reduce((a,p)=>{var c=calc(p,current);a.toplam+=c.toplam;a.mesai+=c.mesai;a.hs+=c.hs;a.pay+=c.toplam>0?1:0;return a;},{toplam:0,mesai:0,hs:0,pay:0});document.getElementById("stats").innerHTML='<div class="stat"><span>Genel toplam</span><b>'+tl(sums.toplam)+' TL</b></div><div class="stat"><span>Ödemesi olan</span><b>'+sums.pay+' / '+people.length+'</b></div><div class="stat"><span>Hafta sonu</span><b>'+tl(sums.hs)+' TL</b></div><div class="stat"><span>Mesai</span><b>'+tl(sums.mesai)+' TL</b></div>';document.getElementById("pageSub").textContent=current+" · "+people.length+" kişi · "+tl(sums.toplam)+" TL";var rows="";people.forEach((p,i)=>{var c=calc(p,current);rows+='<tr class="'+(c.toplam>0?"pay":"")+'"><td>'+(i+1)+'</td><td class="name">'+p.name+'</td><td><input type="number" value="'+(p.ms||"")+'" onchange="setVal('+i+',\'ms\',this.value)"></td><td>'+dash(c.mesai)+'</td><td><input type="number" value="'+(p.hs||"")+'" onchange="setVal('+i+',\'hs\',this.value)"></td><td>'+dash(c.hs)+'</td><td><input type="number" value="'+(p.yol||"")+'" onchange="setVal('+i+',\'yol\',this.value)"></td><td><input type="number" value="'+(p.izin||"")+'" onchange="setVal('+i+',\'izin\',this.value)"></td><td>'+dash(c.izin)+'</td><td><input type="number" value="'+(p.yillik||"")+'" onchange="setVal('+i+',\'yillik\',this.value)"></td><td class="tot">'+dash(c.toplam)+'</td></tr>';});document.getElementById("tbody").innerHTML=rows||'<tr><td colspan="11">Kayıt yok</td></tr>';}
+function renderEdit(){document.getElementById("editBranch").textContent=current;var people=state[current].people||[];document.getElementById("editList").innerHTML=people.map((p,i)=>'<div style="padding:6px 0;border-bottom:1px solid #eee"><b>'+(i+1)+'. '+p.name+'</b> <button onclick="removePerson('+i+')">Sil</button></div>').join("")||"<p>Kişi yok</p>";}
+function renderOzet(){var people=state[current].people||[];var sums=people.reduce((a,p)=>{var c=calc(p,current);a.toplam+=c.toplam;a.mesai+=c.mesai;a.hs+=c.hs;return a;},{toplam:0,mesai:0,hs:0});document.getElementById("ozetContent").innerHTML="<h3>"+current+" Özet</h3><p>Toplam: "+tl(sums.toplam)+" TL</p><p>Mesai: "+tl(sums.mesai)+" TL</p><p>HS: "+tl(sums.hs)+" TL</p><p>Kişi: "+people.length+"</p>";}
+function renderDevam(){var list=state[current].devamsizlik||[];document.getElementById("devamList").innerHTML=list.map(d=>'<div>'+d.kisi+' — '+d.gun+' gün</div>').join("")||"<p>Kayıt yok</p>";}
+function renderCeza(){var list=state[current].cezalar||[];document.getElementById("cezaList").innerHTML=list.map(c=>'<div>'+c.kisi+' — '+c.tutar+' TL</div>').join("")||"<p>Kayıt yok</p>";}
 function setVal(i,f,v){state[current].people[i][f]=v===""?0:+v||0;save();render();}
+function addPerson(){var n=document.getElementById("newName").value.trim();if(!n){toast("İsim gir");return;}state[current].people.push({name:n,ms:0,hs:0,izin:0,yol:0,yillik:0});document.getElementById("newName").value="";save();render();renderEdit();}
+function removePerson(i){if(!confirm("Silinsin mi?"))return;state[current].people.splice(i,1);save();render();renderEdit();}
 function backup(){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:"application/json"}));a.download="3sube-yedek.json";a.click();}
+function importBackup(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){if(confirm("Üzerine yazılsın mı?")){state=JSON.parse(e.target.result);save();render();}};r.readAsText(f);inp.value="";}
 render();
 </script>
 </body>
