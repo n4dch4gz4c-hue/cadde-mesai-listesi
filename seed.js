@@ -113,9 +113,9 @@ const SEED_CENGEL={period:"ÇENGELKÖY MESAİ",people:[
 ],cezalar:[],devamsizlik:[]};
 
 const SEED_KADIKOY={period:"KADIKÖY MESAİ",people:[
-{id:201,name:"ÖZAY ALŞAN",mesaiBirim:320,yolTutar:4000,izinGun:4,yillikTutar:12000},
+{id:201,name:"ÖZAY ALŞAN",mesaiBirim:320,yolTutar:4000,izinTutar:11600,yillikTutar:400},
 {id:202,name:"ABDULKADİR AKYÜZ",mesaiBirim:320,hsSaat:4,yillikTutar:400},
-{id:203,name:"MUHAMMED AKYÜZ",mesaiBirim:300,mesaiSaat:2,izinGun:1,yillikTutar:3100},
+{id:203,name:"MUHAMMED AKYÜZ",mesaiBirim:300,mesaiSaat:2,izinTutar:2700,yillikTutar:400},
 {id:204,name:"SEDAT KIZILKAYA",mesaiBirim:320,hsSaat:4,yillikTutar:400},
 {id:205,name:"MAHMUT TEKER",mesaiBirim:270,hsSaat:4,mesaiSaat:48},
 {id:206,name:"İSRAFİL ÖZTÜRK",mesaiBirim:320,mesaiSaat:18,yillikTutar:400},
@@ -134,10 +134,10 @@ const SEED_KADIKOY={period:"KADIKÖY MESAİ",people:[
 {id:219,name:"MURAT KAYA",mesaiBirim:220},
 {id:220,name:"MUHSİN ÖZMERT",mesaiBirim:320,mesaiSaat:18,yillikTutar:400},
 {id:221,name:"EMİRHAN KANDEMİR",mesaiBirim:300,hsSaat:3.5,yillikTutar:400},
-{id:222,name:"AZAT ASLANGRİ",mesaiBirim:220,izinGun:1,yillikTutar:2300},
+{id:222,name:"AZAT ASLANGRİ",mesaiBirim:220,izinTutar:1900,yillikTutar:400},
 {id:223,name:"RIZVAN FINDIK",mesaiBirim:300,mesaiSaat:50,yillikTutar:400},
 {id:224,name:"K. ENDER KIZILKAYA",mesaiBirim:220,hsSaat:4,yillikTutar:400},
-{id:225,name:"ERAY SOFUOĞLU",mesaiBirim:300,mesaiSaat:2,yolTutar:4000,izinGun:1,yillikTutar:2700},
+{id:225,name:"ERAY SOFUOĞLU",mesaiBirim:300,mesaiSaat:2,yolTutar:4000,izinTutar:2700},
 {id:226,name:"FURKAN ARDA",mesaiBirim:270,hsSaat:4,yillikTutar:400},
 {id:227,name:"FERAT GÜNDÜZ",mesaiBirim:320,yillikTutar:400},
 {id:228,name:"İBRAHİM KARAMAN",mesaiBirim:270,hsSaat:3.5,yillikTutar:400},
