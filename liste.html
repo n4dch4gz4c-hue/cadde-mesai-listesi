@@ -113,11 +113,13 @@ var BRANCHES=["Kadıköy","Cadde","Çengelköy"];
 var currentBranch=localStorage.getItem("currentBranch")||"Cadde";
 function renderBranchBar(){
   var h="";
-  BRANCHES.forEach(function(b){
-    h+='<button class="'+(b===currentBranch?"active":"")+'" onclick="selectBranch(\''+b+'\')">'+b+'</button>';
+  var branches=window.BRANCHES||BRANCHES;
+  var cur=window.currentBranch||currentBranch;
+  branches.forEach(function(b){
+    h+='<button class="'+(b===cur?"active":"")+'" onclick="selectBranch(\''+b+'\')">'+b+'</button>';
   });
   document.getElementById("branchBar").innerHTML=h;
-  var isCadde=currentBranch==="Cadde";
+  var isCadde=cur==="Cadde";
   var k=document.getElementById("tabKurye");
   if(k) k.style.display=isCadde?"":"none";
   var kl=document.getElementById("kuryeLabel");
@@ -125,6 +127,7 @@ function renderBranchBar(){
 }
 function selectBranch(b){
   currentBranch=b;
+  window.currentBranch=b;
   localStorage.setItem("currentBranch",b);
   if(typeof KEY!=="undefined") KEY="mesai_"+b;
   if(b!=="Cadde"){
@@ -154,5 +157,4 @@ renderBranchBar();
 <script src="page-extra.js?v=133"></script>
 <script src="mobile-fix.js?v=106"></script>
 <script src="ozet-all.js?v=106"></script>
-<script>if(typeof KEY!=="undefined") KEY="mesai_"+currentBranch;</script>
 </body></html>
