@@ -5,6 +5,7 @@
 <meta http-equiv="Cache-Control" content="no-store"/>
 <meta name="theme-color" content="#0b1220"/>
 <title>3 Şube Mesai Listesi</title>
+<link rel="stylesheet" href="mobile.css?v=1"/>
 <script>if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}</script>
 <style>
 html,body{margin:0;font-family:system-ui,sans-serif;background:#f4f1ea;color:#1f2933}
@@ -62,6 +63,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 <section id="sec-liste">
   <div class="stats" id="stats"></div>
   <div class="table-wrap"><table class="sheet"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai tutar</th><th>HS adet</th><th>HS tutar</th><th>Prim</th><th>Yol</th><th>İzin gün</th><th>İzin tutar</th><th>Yıllık</th><th>Disiplin</th><th>Toplam</th></tr></thead><tbody id="tbody"></tbody><tfoot id="tfoot"></tfoot></table></div>
+  <div id="mobileList"></div>
 </section>
 <section id="sec-duzenle" class="hide">
   <div class="panel"><h2>Düzenleme</h2><p>İsim düzelt, sırayı taşı veya sil.</p>
@@ -118,7 +120,7 @@ renderBranchBar();
 <script src="seed.js?v=130"></script>
 <script src="app.js?v=124"></script>
 <script src="gh.js?v=106"></script>
-<script src="plus.js?v=112"></script>
+<script src="plus.js?v=113"></script>
 <script src="page-extra.js?v=133"></script>
 <script src="mobile-fix.js?v=106"></script>
 <script src="ozet-all.js?v=106"></script>
