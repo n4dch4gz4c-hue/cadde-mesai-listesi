@@ -112,8 +112,53 @@ const SEED_CENGEL={period:"ÇENGELKÖY MESAİ",people:[
 {id:125,name:"AZİMYAR SHAHABUDDİN",mesaiBirim:220}
 ],cezalar:[],devamsizlik:[]};
 
+const SEED_KADIKOY={period:"KADIKÖY MESAİ",people:[
+{id:201,name:"ÖZAY ALŞAN",mesaiBirim:320,yolTutar:4000,izinGun:4,yillikTutar:11600,disiplinDk:400},
+{id:202,name:"ABDULKADİR AKYÜZ",mesaiBirim:320,hsSaat:8,disiplinDk:400},
+{id:203,name:"MUHAMMED AKYÜZ",mesaiBirim:300,mesaiSaat:2,izinGun:1,yillikTutar:2700,disiplinDk:400},
+{id:204,name:"SEDAT KIZILKAYA",mesaiBirim:320,hsSaat:8,disiplinDk:400},
+{id:205,name:"MAHMUT TEKER",mesaiBirim:270,hsSaat:8,mesaiSaat:48},
+{id:206,name:"İSRAFİL ÖZTÜRK",mesaiBirim:320,mesaiSaat:18,disiplinDk:400},
+{id:207,name:"CAFER KOCA",mesaiBirim:270,mesaiSaat:3},
+{id:208,name:"İSA AKYILDIZ",mesaiBirim:320,disiplinDk:400},
+{id:209,name:"MUHSİN IŞIK",mesaiBirim:270,hsSaat:5,disiplinDk:400},
+{id:210,name:"RAMAZAN KURAL",mesaiBirim:320,disiplinDk:400},
+{id:211,name:"RAMAZAN UZUNALP",mesaiBirim:220},
+{id:212,name:"GÜRKAN EYÜPOĞLU",mesaiBirim:270,hsSaat:8,disiplinDk:400},
+{id:213,name:"VEDAT ÖZTÜRK",mesaiBirim:320,hsSaat:8,disiplinDk:400},
+{id:214,name:"BİLAL DENERİ",mesaiBirim:220,disiplinDk:400},
+{id:215,name:"VEPA",mesaiBirim:220},
+{id:216,name:"GÖKHAN YEŞİLBAŞ",mesaiBirim:270,mesaiSaat:13,disiplinDk:400},
+{id:217,name:"EREN YILMAZ",mesaiBirim:220,hsSaat:8,disiplinDk:400},
+{id:218,name:"İSMAİL ALBAYRAK",mesaiBirim:220},
+{id:219,name:"MURAT KAYA",mesaiBirim:220},
+{id:220,name:"MUHSİN ÖZMERT",mesaiBirim:320,mesaiSaat:18,disiplinDk:400},
+{id:221,name:"EMİRHAN KANDEMİR",mesaiBirim:300,hsSaat:7,disiplinDk:400},
+{id:222,name:"AZAT ASLANGRİ",mesaiBirim:220,izinGun:1,yillikTutar:1900,disiplinDk:400},
+{id:223,name:"RIZVAN FINDIK",mesaiBirim:300,mesaiSaat:50,disiplinDk:400},
+{id:224,name:"K. ENDER KIZILKAYA",mesaiBirim:220,hsSaat:8,disiplinDk:400},
+{id:225,name:"ERAY SOFUOĞLU",mesaiBirim:300,mesaiSaat:2,yolTutar:4000,izinGun:1,yillikTutar:2700},
+{id:226,name:"FURKAN ARDA",mesaiBirim:270,hsSaat:8,disiplinDk:400},
+{id:227,name:"FERAT GÜNDÜZ",mesaiBirim:320,disiplinDk:400},
+{id:228,name:"İBRAHİM KARAMAN",mesaiBirim:270,hsSaat:7,disiplinDk:400},
+{id:229,name:"YİĞİT ASLANGRİ",mesaiBirim:220,hsSaat:3},
+{id:230,name:"TUNCAY ÇAĞLAYAN",mesaiBirim:300,hsSaat:4,mesaiSaat:9,disiplinDk:400},
+{id:231,name:"ABDULSAMET SEYAR",mesaiBirim:220,hsSaat:7},
+{id:232,name:"BATUHAN SEYAR",mesaiBirim:220,hsSaat:8,disiplinDk:400},
+{id:233,name:"ALİ BİNGÖL",mesaiBirim:220,mesaiSaat:5,disiplinDk:400},
+{id:234,name:"ALTAN BULUT",mesaiBirim:300,disiplinDk:400},
+{id:235,name:"YASİN TERCANL",mesaiBirim:220,mesaiSaat:7},
+{id:236,name:"İSMAİL YAZICI",mesaiBirim:270,disiplinDk:400},
+{id:237,name:"EMİR ÇAPAR",mesaiBirim:220},
+{id:238,name:"OĞUZHAN ÇAVUSOĞLU",mesaiBirim:220,hsSaat:8},
+{id:239,name:"TAHSIN CERAN",mesaiBirim:270,mesaiSaat:29},
+{id:240,name:"MUHAMMED ONUR SAMUR",mesaiBirim:220,hsSaat:2},
+{id:241,name:"İSMAİL BURAK AKYOL",mesaiBirim:220,hsSaat:2}
+],cezalar:[],devamsizlik:[]};
+
 const SEED=SEED_CADDE;
 function getSeedForBranch(b){
   if(b==="Çengelköy") return SEED_CENGEL;
+  if(b==="Kadıköy") return SEED_KADIKOY;
   return SEED_CADDE;
 }
