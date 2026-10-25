@@ -8,22 +8,22 @@
 body{margin:0;font-family:system-ui,sans-serif;background:#f8fafc}
 header{background:#0f172a;color:#fff;padding:14px 16px;position:sticky;top:0}
 .branch-bar{display:flex;gap:6px;overflow-x:auto;padding:8px 0}
-.branch-bar button{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:8px 14px;border-radius:20px;font-size:14px}
+.branch-bar button{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:8px 14px;border-radius:20px}
 .branch-bar button.active{background:#fff;color:#0f172a;font-weight:bold}
-.toolbar{padding:12px;background:#fff;display:flex;gap:8px;flex-wrap:wrap}
-.btn{padding:8px 12px;border:1px solid #ccc;border-radius:8px;background:#fff}
-.btn.primary{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
+.toolbar{padding:12px;background:#fff}
+.btn{padding:8px 12px;border:1px solid #ccc;border-radius:8px;background:#1d4ed8;color:#fff}
+#list{padding:16px}
 </style>
 </head>
 <body>
 <header>
   <h1>5 Sube Mesai</h1>
-  <div class="branch-bar" id="branchBar"></div>
+  <div class="branch-bar" id="bar"></div>
 </header>
 <div class="toolbar">
-  <button class="btn primary" onclick="addPerson()">+ Kisi</button>
+  <button class="btn" onclick="addPerson()">+ Kisi Ekle</button>
 </div>
-<div id="content"></div>
+<div id="list"></div>
 <script>
 var BRANCHES = ["Kadikoy", "Bagdat Caddesi", "Cengelkoy", "Taksim Bufe", "Taksim Pide"];
 var current = BRANCHES[0];
@@ -31,40 +31,37 @@ var data = {};
 BRANCHES.forEach(function(b){ data[b] = []; });
 
 function renderBar() {
-  var bar = document.getElementById("branchBar");
   var html = "";
   BRANCHES.forEach(function(b) {
-    html += '<button class="' + (b === current ? "active" : "") + '" onclick="selectBranch(\'' + b + '\')">' + b + '</button>';
+    var cls = (b === current) ? "active" : "";
+    html += "<button class='" + cls + "' onclick='select(\"" + b + "\")'>" + b + "</button>";
   });
-  html += '<button onclick="selectBranch(\'ALL\')">Tum Subeler</button>';
-  bar.innerHTML = html;
+  html += "<button onclick='select(\"ALL\")'>Tum Subeler</button>";
+  document.getElementById("bar").innerHTML = html;
 }
-function selectBranch(b) { current = b; render(); }
+function select(b) { current = b; render(); }
 function render() {
   renderBar();
-  var el = document.getElementById("content");
-  if (current === "ALL") {
-    el.innerHTML = "<p>Tum subeler ozeti</p>";
-    return;
-  }
   var people = data[current] || [];
-  var html = "<ul>";
+  var html = "<h3>" + current + "</h3><ul>";
   people.forEach(function(p, i) {
     html += "<li>" + p + " <button onclick='remove(" + i + ")'>Sil</button></li>";
   });
   html += "</ul>";
-  el.innerHTML = html;
+  document.getElementById("list").innerHTML = html;
 }
 function addPerson() {
   var name = prompt("Ad Soyad:");
-  if (name) {
+  if (name && current !== "ALL") {
     data[current].push(name);
     render();
   }
 }
 function remove(i) {
-  data[current].splice(i, 1);
-  render();
+  if (current !== "ALL") {
+    data[current].splice(i, 1);
+    render();
+  }
 }
 render();
 </script>
