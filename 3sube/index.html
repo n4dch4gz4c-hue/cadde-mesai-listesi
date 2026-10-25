@@ -9,156 +9,165 @@
 html,body{margin:0;font-family:system-ui,sans-serif;background:#f4f1ea;color:#1f2933}
 .bar,.tabs,.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 16px}
 h1{margin:0;font-size:22px}
-.btn,.tab{border:1px solid #d7cfc3;background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer}
+.btn,.tab{border:1px solid #d7cfc3;background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:14px}
 .tab.on,.btn.primary{background:#1f4b8f;color:#fff;border-color:#1f4b8f}
 .btn.sync{background:#0f7b4c;color:#fff;border-color:#0f7b4c}
 table{border-collapse:collapse;width:100%;min-width:1100px;background:#fff;font-size:13px}
-th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0}
+th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0;z-index:5}
 td{border:1px solid #eadfd2;padding:3px 4px;text-align:center;color:#111}
-td.name{text-align:left;font-weight:700;color:#111}
+td.name{text-align:left;font-weight:700}
 tr.pay td.tot{background:#f3e8d2;font-weight:700}
-input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16px}
-.sheet input{width:64px;text-align:center;font-size:14px}
-.panel{background:#fff;border:1px solid #d7cfc3;border-radius:12px;padding:12px;margin:12px 16px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px}
+input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:14px;width:64px;text-align:center}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px 12px}
 .stat{background:#fff;border:1px solid #d7cfc3;border-radius:10px;padding:10px}
 .table-wrap{overflow:auto;padding:0 16px 24px;max-height:70vh}
-.branch-bar{display:flex;gap:6px;overflow-x:auto}
-.branch-bar button{background:rgba(255,255,255,0.15);color:#fff;border:none;padding:8px 14px;border-radius:20px;font-size:14px}
+.branch-bar{display:flex;gap:6px}
+.branch-bar button{background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 14px;border-radius:20px}
 .branch-bar button.active{background:#fff;color:#0f172a;font-weight:bold}
 @media(max-width:900px){
-html,body{background:#0b1220!important}
-header.bar{position:sticky;top:0;z-index:20;background:#121a2b!important;color:#fff}
-header.bar h1{font-size:18px;color:#fff}
-.stats{grid-template-columns:1fr 1fr;padding:10px 12px}
-.stat{background:#1a2438!important;border-color:#2a3a55!important;color:#fff}
-.table-wrap{display:none}
-#mobileList{display:block!important;padding:4px 12px 32px}
-.mrow{border:1px solid #eadfd2;border-radius:16px;background:#fff;margin:8px 0;padding:12px}
-.mname{font-weight:700;font-size:15px}
-.mtot{font-weight:800;color:#1f4b8f}
+  html,body{background:#0b1220!important}
+  header.bar{background:#121a2b!important;color:#fff}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{background:#1a2438!important;border-color:#2a3a55!important;color:#fff}
+  .table-wrap{display:none}
+  #mobileList{display:block!important;padding:8px 12px 32px}
+  .mrow{background:#fff;border-radius:16px;padding:12px;margin:8px 0;border:1px solid #eadfd2}
 }
 #mobileList{display:none}
 </style>
 </head>
 <body>
 <header class="bar" style="background:#0b1220;color:#fff">
-  <div><h1>3 Şube Mesai Listesi</h1><p id="pageSub"></p></div>
+  <div>
+    <h1>3 Şube Mesai Listesi</h1>
+    <p id="pageSub" style="margin:2px 0 0;font-size:13px;opacity:.85"></p>
+  </div>
   <div class="branch-bar" id="bar"></div>
   <div class="row">
-    <input id="q" placeholder="İsim ara..." oninput="render()">
+    <input id="q" placeholder="İsim ara..." oninput="render()" style="min-width:160px">
     <button class="btn primary" onclick="addPerson()">+ Kişi</button>
-    <button class="btn" onclick="backup()">Yedek Al</button>
+    <button class="btn" onclick="backup()">Yedek</button>
     <button class="btn" onclick="document.getElementById('imp').click()">Yedek Yükle</button>
     <input type="file" id="imp" accept=".json" style="display:none" onchange="importBackup(this)">
   </div>
 </header>
+
 <div class="stats" id="stats"></div>
+
 <div class="table-wrap">
   <table class="sheet">
-    <thead><tr><th>No</th><th>Ad Soyad</th><th>Tip</th><th>Mesai Saat</th><th>Mesai Tutar</th><th>HS Adet</th><th>HS Tutar</th><th>İzin Gün</th><th>İzin Tutar</th><th>Yol</th><th>Yıllık</th><th>Ceza</th><th>Toplam</th></tr></thead>
+    <thead>
+      <tr>
+        <th>No</th><th>Ad Soyad</th><th>Tip</th>
+        <th>Mesai saat</th><th>Mesai tutar</th>
+        <th>HS adet</th><th>HS tutar</th>
+        <th>İzin gün</th><th>İzin tutar</th>
+        <th>Yol</th><th>Yıllık</th><th>Ceza</th><th>Toplam</th>
+      </tr>
+    </thead>
     <tbody id="tbody"></tbody>
   </table>
 </div>
 <div id="mobileList"></div>
+
 <script>
-var BRANCHES = ["Kadıköy", "Cadde", "Cengelkoy"];
-var KEY = "3sube_mesai_v2";
+var BRANCHES = ["Kadıköy","Cadde","Cengelkoy"];
+var KEY = "3sube_mesai_v3";
 var RATES = {
-  "Kadıköy": { A:{saat:320,izin:2900,hs:2500}, B:{saat:300,izin:2700,hs:2500}, C:{saat:270,izin:2400,hs:2500}, D:{saat:220,izin:1900,hs:2500} },
-  "Cadde":   { A:{saat:320,izin:2900,hs:2500}, B:{saat:300,izin:2700,hs:2500}, C:{saat:270,izin:2400,hs:2500}, D:{saat:220,izin:1900,hs:2500} },
-  "Cengelkoy":{ A:{saat:280,izin:2800,hs:2000}, B:{saat:250,izin:2500,hs:2000}, C:{saat:230,izin:2300,hs:2000}, D:{saat:190,izin:1900,hs:2000} }
+  "Kadıköy":{A:{saat:320,izin:2900,hs:2500},B:{saat:300,izin:2700,hs:2500},C:{saat:270,izin:2400,hs:2500},D:{saat:220,izin:1900,hs:2500}},
+  "Cadde":{A:{saat:320,izin:2900,hs:2500},B:{saat:300,izin:2700,hs:2500},C:{saat:270,izin:2400,hs:2500},D:{saat:220,izin:1900,hs:2500}},
+  "Cengelkoy":{A:{saat:280,izin:2800,hs:2000},B:{saat:250,izin:2500,hs:2000},C:{saat:230,izin:2300,hs:2000},D:{saat:190,izin:1900,hs:2000}}
 };
 var SEED = {
-  "Kadıköy": ["ÖZAY ALSAN","ABDULKADİR AKYÜZ","MUHAMMED AKYÜZ","SEDAT KIZILKAYA","MAHMUT TEKER","İSRAFİL ÖZTÜRK","CAFER KOCA","İSA AKYILDIZ","MUHSİN IŞIK","RAMAZAN KURAL","RAMAZAN UZUNALP","GÜRKAN EYÜPOĞLU","VEDAT ÖZTÜRK","BİLAL DENERİ","VEPA","GÖKHAN YEŞİLBAŞ","EREN YILMAZ","İSMAİL ALBAYRAK","MURAT KAYA","MUHSİN ÖZMERT","EMİRHAN KANDEMİR","AZAT ASLANGRİ","RIZVAN FINDIK","K. ENDER KIZILKAYA","ERAY SOFUOĞLU","FURKAN ARDA","FERAT GÜNDÜZ","İBRAHİM KARAMAN","YİĞİT ASLANGRİ","TUNCAY ÇAĞLAYAN","ABDULSAMET SEYAR","BATUHAN SEYAR","ALİ BİNGÖL","ALTAN BULUT","YASİN TERCANLI","İSMAİL YAZICI","EMİR ÇAPAR","OĞUZHAN ÇAVUŞOĞLU","TAHSİN CERAN","MUHAMMED ONUR SAMUR","İSMAİL BURAK AKYOL"],
-  "Cadde": ["CEMAL ÇELİK","ABDULLAH AVCI","CUMHUR YİĞİT","HÜSAMETTİN KÖRPE","SALİH USTA","BURHAN BAYAKIR","ERDAL ÇAVDAR","OKTAY ÇELİK","HİKMET ERDOĞDU","SELİM ORTAHİSAR","MEHMET EMİN MÜDERRİSOĞLU","KÖKSAL SOYKAN","FERHAT AVCI","ERHAN SOFUOĞLU","HASAN ALİ GERZ","MUHAMMET CAN SARICA","BİLAL SÜRİKLİ","HASAN KOÇALAN","UĞUR GÖKER","BEDRETTİN AVCI","EMRE POLAT","SELAHATTİN AVCI","CANER AVCI","ALİ AKKOCA","AZAD MYRADOV","MURAT TORUN","MEHMET ÇELİK","YILMAZ AVCI","RAMAZAN BAYAKIR","ONUR AVCI","MUHAMMET MUSTAFA BAYAKIR","CİHAN AVCI","FURKAN KAVAK","SEPİDEH MENATTİ","MUHAMMET EREN ÇELİK","MURAT DAĞIDIR","SEYFİ ÇELİK","FEVZİ DOLAK","AYDIN AVCI","HAKAN ATMACA","ABDULLAH DENERİ","HAMİT AKPINAR","ADİL EMİR ÇELİK","ABDURRAHMAN KAPAN","SAYIM GÜMÜŞ","YUNUS EMRE ÇELİK","RAMAZAN YAVUZ","ZEYNEP SOFUOĞLU","MUSTAFA AYDIN","HASAN İPEK","KAAN ATASOY","ABDULLAH GÜRKAN","VADETTİN AVCI","ERCAN ALTUN","OSMAN CEYLAN","SEMİH SOFUOĞLU","ABDURRAHMAN ÖZKAN","FIRAT AVCI","MENDERES SOFUOĞLU","HİCABİ AKYILDIZ","ABDURRAHMAN BULUT","MUHİTTİN ÖZÇELİK","MUHAMMET SOFUOĞLU","MUHAMMED MÜMİN ILGAR","MÜSLÜM KANIKARA","BAYRAM YETER"],
-  "Cengelkoy": ["EMRE BULUT","MURAT GÜNEY","AHMET ÖZÇELİK","TOLGA BULUT","GÜLEN OTAC","VEYSEL YILMAZ","MUSTAFA YILDIRIM","BEYTULLAH ÖMER YAĞMUR","ŞEYMA KARA","KEMAL KÖRPE","BİLAL KAHVECİ","ALİ ÖMER YILMAZ","FATİH İPEK","İSMAİL ŞİMŞEK","TAHİR ŞAHBAZ","SEMİH DÜNDAR","ABDULSAMET YAPRAK","METİN BULUT","OSMAN KAPLAN","RAMAZAN KOÇAL","YAŞAR KEMAL HAN","UĞUR YILMAZ","NECMETTİN AKYILDIZ","AZİM RECEBİ","AZİMYAR ŞAHABUDDİN"]
+  "Kadıköy":["ÖZAY ALSAN","ABDULKADİR AKYÜZ","MUHAMMED AKYÜZ","SEDAT KIZILKAYA","MAHMUT TEKER","İSRAFİL ÖZTÜRK","CAFER KOCA","İSA AKYILDIZ","MUHSİN IŞIK","RAMAZAN KURAL","RAMAZAN UZUNALP","GÜRKAN EYÜPOĞLU","VEDAT ÖZTÜRK","BİLAL DENERİ","VEPA","GÖKHAN YEŞİLBAŞ","EREN YILMAZ","İSMAİL ALBAYRAK","MURAT KAYA","MUHSİN ÖZMERT","EMİRHAN KANDEMİR","AZAT ASLANGRİ","RIZVAN FINDIK","K. ENDER KIZILKAYA","ERAY SOFUOĞLU","FURKAN ARDA","FERAT GÜNDÜZ","İBRAHİM KARAMAN","YİĞİT ASLANGRİ","TUNCAY ÇAĞLAYAN","ABDULSAMET SEYAR","BATUHAN SEYAR","ALİ BİNGÖL","ALTAN BULUT","YASİN TERCANLI","İSMAİL YAZICI","EMİR ÇAPAR","OĞUZHAN ÇAVUŞOĞLU","TAHSİN CERAN","MUHAMMED ONUR SAMUR","İSMAİL BURAK AKYOL"],
+  "Cadde":["CEMAL ÇELİK","ABDULLAH AVCI","CUMHUR YİĞİT","HÜSAMETTİN KÖRPE","SALİH USTA","BURHAN BAYAKIR","ERDAL ÇAVDAR","OKTAY ÇELİK","HİKMET ERDOĞDU","SELİM ORTAHİSAR","MEHMET EMİN MÜDERRİSOĞLU","KÖKSAL SOYKAN","FERHAT AVCI","ERHAN SOFUOĞLU","HASAN ALİ GERZ","MUHAMMET CAN SARICA","BİLAL SÜRİKLİ","HASAN KOÇALAN","UĞUR GÖKER","BEDRETTİN AVCI","EMRE POLAT","SELAHATTİN AVCI","CANER AVCI","ALİ AKKOCA","AZAD MYRADOV","MURAT TORUN","MEHMET ÇELİK","YILMAZ AVCI","RAMAZAN BAYAKIR","ONUR AVCI","MUHAMMET MUSTAFA BAYAKIR","CİHAN AVCI","FURKAN KAVAK","SEPİDEH MENATTİ","MUHAMMET EREN ÇELİK","MURAT DAĞIDIR","SEYFİ ÇELİK","FEVZİ DOLAK","AYDIN AVCI","HAKAN ATMACA","ABDULLAH DENERİ","HAMİT AKPINAR","ADİL EMİR ÇELİK","ABDURRAHMAN KAPAN","SAYIM GÜMÜŞ","YUNUS EMRE ÇELİK","RAMAZAN YAVUZ","ZEYNEP SOFUOĞLU","MUSTAFA AYDIN","HASAN İPEK","KAAN ATASOY","ABDULLAH GÜRKAN","VADETTİN AVCI","ERCAN ALTUN","OSMAN CEYLAN","SEMİH SOFUOĞLU","ABDURRAHMAN ÖZKAN","FIRAT AVCI","MENDERES SOFUOĞLU","HİCABİ AKYILDIZ","ABDURRAHMAN BULUT","MUHİTTİN ÖZÇELİK","MUHAMMET SOFUOĞLU","MUHAMMED MÜMİN ILGAR","MÜSLÜM KANIKARA","BAYRAM YETER"],
+  "Cengelkoy":["EMRE BULUT","MURAT GÜNEY","AHMET ÖZÇELİK","TOLGA BULUT","GÜLEN OTAC","VEYSEL YILMAZ","MUSTAFA YILDIRIM","BEYTULLAH ÖMER YAĞMUR","ŞEYMA KARA","KEMAL KÖRPE","BİLAL KAHVECİ","ALİ ÖMER YILMAZ","FATİH İPEK","İSMAİL ŞİMŞEK","TAHİR ŞAHBAZ","SEMİH DÜNDAR","ABDULSAMET YAPRAK","METİN BULUT","OSMAN KAPLAN","RAMAZAN KOÇAL","YAŞAR KEMAL HAN","UĞUR YILMAZ","NECMETTİN AKYILDIZ","AZİM RECEBİ","AZİMYAR ŞAHABUDDİN"]
 };
 var current = BRANCHES[0];
 var state = load();
-function load() {
-  try {
-    var raw = localStorage.getItem(KEY);
-    if (raw) return JSON.parse(raw);
-  } catch(e) {}
-  var s = {};
-  BRANCHES.forEach(function(b) {
-    s[b] = { people: (SEED[b]||[]).map(function(name){ return {name:name, tip:"A", ms:0, hs:0, izin:0, yol:0, yillik:0, ceza:0}; }) };
-  });
+
+function load(){
+  try{ var r=localStorage.getItem(KEY); if(r) return JSON.parse(r); }catch(e){}
+  var s={};
+  BRANCHES.forEach(b=>s[b]={people:(SEED[b]||[]).map(n=>({name:n,tip:"A",ms:0,hs:0,izin:0,yol:0,yillik:0,ceza:0}))});
   return s;
 }
-function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
-function getRates(b, tip) { return (RATES[b]||RATES["Kadıköy"])[tip] || (RATES[b]||RATES["Kadıköy"]).A; }
-function calc(p, b) {
-  var r = getRates(b, p.tip||"A");
-  var mesai = (p.ms||0)*r.saat, hs=(p.hs||0)*r.hs, izin=(p.izin||0)*r.izin;
-  return {mesai, hs, izin, yol:p.yol||0, yillik:p.yillik||0, ceza:p.ceza||0, toplam: mesai+hs+izin+(p.yol||0)+(p.yillik||0)-(p.ceza||0)};
+function save(){ localStorage.setItem(KEY,JSON.stringify(state)); }
+function rates(b,t){ return (RATES[b]||RATES.Kadıköy)[t]||(RATES[b]||RATES.Kadıköy).A; }
+function calc(p,b){
+  var r=rates(b,p.tip||"A");
+  var mesai=(p.ms||0)*r.saat, hs=(p.hs||0)*r.hs, izin=(p.izin||0)*r.izin;
+  return {mesai,hs,izin,yol:p.yol||0,yillik:p.yillik||0,ceza:p.ceza||0,toplam:mesai+hs+izin+(p.yol||0)+(p.yillik||0)-(p.ceza||0)};
 }
 function tl(n){ return Math.round(n||0).toLocaleString("tr-TR"); }
-function renderBar() {
-  var html = "";
-  BRANCHES.forEach(function(b){
-    html += '<button class="'+(b===current?'active':'')+'" onclick="selectBranch(\''+b+'\')">'+b+'</button>';
-  });
-  html += '<button onclick="selectBranch(\'ALL\')">Tüm Şubeler</button>';
-  document.getElementById("bar").innerHTML = html;
+function dash(n){ return Math.round(n||0)===0?"-":tl(n); }
+
+function renderBar(){
+  var h="";
+  BRANCHES.forEach(b=>h+='<button class="'+(b===current?"active":"")+'" onclick="selectBranch(\''+b+'\')">'+b+'</button>');
+  h+='<button onclick="selectBranch(\'ALL\')">Tüm Şubeler</button>';
+  document.getElementById("bar").innerHTML=h;
 }
 function selectBranch(b){ current=b; render(); }
-function render() {
+
+function render(){
   renderBar();
-  var q = (document.getElementById("q").value||"").toLocaleLowerCase("tr-TR");
-  var statsEl = document.getElementById("stats");
-  var tbody = document.getElementById("tbody");
-  var mobile = document.getElementById("mobileList");
-  if (current === "ALL") {
-    var grand=0, rows="", mrows="";
-    BRANCHES.forEach(function(b){
-      var people=state[b].people||[];
-      var sub=people.reduce(function(s,p){return s+calc(p,b).toplam;},0);
-      grand+=sub;
-      rows += '<tr><td colspan="13"><b>'+b+'</b> — '+people.length+' kişi — '+tl(sub)+' TL</td></tr>';
-      mrows += '<div class="mrow"><b>'+b+'</b> · '+tl(sub)+' TL ('+people.length+' kişi)</div>';
+  var q=(document.getElementById("q").value||"").toLocaleLowerCase("tr-TR");
+  var stats=document.getElementById("stats");
+  var tbody=document.getElementById("tbody");
+  var mobile=document.getElementById("mobileList");
+  var sub=document.getElementById("pageSub");
+
+  if(current==="ALL"){
+    var grand=0,rows="",mrows="";
+    BRANCHES.forEach(b=>{
+      var p=state[b].people||[];
+      var s=p.reduce((a,x)=>a+calc(x,b).toplam,0);
+      grand+=s;
+      rows+='<tr><td colspan="13" style="text-align:left;font-weight:700;padding:10px">'+b+' — '+p.length+' kişi — '+tl(s)+' TL</td></tr>';
+      mrows+='<div class="mrow"><b>'+b+'</b> · '+tl(s)+' TL ('+p.length+' kişi)</div>';
     });
-    tbody.innerHTML = rows;
-    mobile.innerHTML = mrows;
-    statsEl.innerHTML = '<div class="stat"><span>Genel Toplam</span><b>'+tl(grand)+' TL</b></div>';
-    document.getElementById("pageSub").textContent = "Tüm şubeler · "+tl(grand)+" TL";
+    tbody.innerHTML=rows;
+    mobile.innerHTML=mrows;
+    stats.innerHTML='<div class="stat"><span>Genel Toplam</span><b>'+tl(grand)+' TL</b></div>';
+    sub.textContent="Tüm şubeler · "+tl(grand)+" TL";
     return;
   }
-  var people = (state[current].people||[]).filter(function(p){ return !q || (p.name||"").toLocaleLowerCase("tr-TR").includes(q); });
-  var sums = people.reduce(function(a,p){ var c=calc(p,current); a.toplam+=c.toplam; a.mesai+=c.mesai; a.hs+=c.hs; return a; }, {toplam:0,mesai:0,hs:0});
-  statsEl.innerHTML = '<div class="stat"><span>Toplam</span><b>'+tl(sums.toplam)+' TL</b></div><div class="stat"><span>Kişi</span><b>'+people.length+'</b></div><div class="stat"><span>Mesai</span><b>'+tl(sums.mesai)+' TL</b></div><div class="stat"><span>HS</span><b>'+tl(sums.hs)+' TL</b></div>';
-  document.getElementById("pageSub").textContent = current+" · "+people.length+" kişi · "+tl(sums.toplam)+" TL";
-  var rows="", mrows="";
-  people.forEach(function(p,i){
-    var c = calc(p, current);
-    var tipSel = '<select onchange="setTip('+i+',this.value)"><option'+(p.tip==="A"?" selected":"")+'>A</option><option'+(p.tip==="B"?" selected":"")+'>B</option><option'+(p.tip==="C"?" selected":"")+'>C</option><option'+(p.tip==="D"?" selected":"")+'>D</option></select>';
-    rows += '<tr class="'+(c.toplam>0?"pay":"")+'"><td>'+(i+1)+'</td><td class="name">'+p.name+'</td><td>'+tipSel+'</td>'+
-      '<td><input type="number" value="'+(p.ms||"")+'" onchange="setVal('+i+',\'ms\',this.value)"></td><td>'+tl(c.mesai)+'</td>'+
-      '<td><input type="number" value="'+(p.hs||"")+'" onchange="setVal('+i+',\'hs\',this.value)"></td><td>'+tl(c.hs)+'</td>'+
-      '<td><input type="number" value="'+(p.izin||"")+'" onchange="setVal('+i+',\'izin\',this.value)"></td><td>'+tl(c.izin)+'</td>'+
+
+  var people=(state[current].people||[]).filter(p=>!q||(p.name||"").toLocaleLowerCase("tr-TR").includes(q));
+  var sums=people.reduce((a,p)=>{var c=calc(p,current);a.toplam+=c.toplam;a.mesai+=c.mesai;a.hs+=c.hs;a.pay+=c.toplam>0?1:0;return a;},{toplam:0,mesai:0,hs:0,pay:0});
+  stats.innerHTML=
+    '<div class="stat"><span>Genel toplam</span><b>'+tl(sums.toplam)+' TL</b></div>'+
+    '<div class="stat"><span>Ödemesi olan</span><b>'+sums.pay+' / '+people.length+'</b></div>'+
+    '<div class="stat"><span>Hafta sonu</span><b>'+tl(sums.hs)+' TL</b></div>'+
+    '<div class="stat"><span>Mesai</span><b>'+tl(sums.mesai)+' TL</b></div>';
+  sub.textContent=current+" · "+people.length+" kişi · genel toplam "+tl(sums.toplam)+" TL";
+
+  var rows="",mrows="";
+  people.forEach((p,i)=>{
+    var c=calc(p,current);
+    var tip='<select onchange="setTip('+i+',this.value)"><option'+(p.tip==="A"?" selected":"")+'>A</option><option'+(p.tip==="B"?" selected":"")+'>B</option><option'+(p.tip==="C"?" selected":"")+'>C</option><option'+(p.tip==="D"?" selected":"")+'>D</option></select>';
+    rows+='<tr class="'+(c.toplam>0?"pay":"")+'"><td>'+(i+1)+'</td><td class="name">'+p.name+'</td><td>'+tip+'</td>'+
+      '<td><input type="number" value="'+(p.ms||"")+'" onchange="setVal('+i+',\'ms\',this.value)"></td><td>'+dash(c.mesai)+'</td>'+
+      '<td><input type="number" value="'+(p.hs||"")+'" onchange="setVal('+i+',\'hs\',this.value)"></td><td>'+dash(c.hs)+'</td>'+
+      '<td><input type="number" value="'+(p.izin||"")+'" onchange="setVal('+i+',\'izin\',this.value)"></td><td>'+dash(c.izin)+'</td>'+
       '<td><input type="number" value="'+(p.yol||"")+'" onchange="setVal('+i+',\'yol\',this.value)"></td>'+
       '<td><input type="number" value="'+(p.yillik||"")+'" onchange="setVal('+i+',\'yillik\',this.value)"></td>'+
       '<td><input type="number" value="'+(p.ceza||"")+'" onchange="setVal('+i+',\'ceza\',this.value)"></td>'+
-      '<td class="tot">'+tl(c.toplam)+'</td></tr>';
-    mrows += '<div class="mrow"><div class="mname">'+p.name+' '+tipSel+'</div>'+
-      'MS:<input type="number" value="'+(p.ms||"")+'" onchange="setVal('+i+',\'ms\',this.value)"> '+
-      'HS:<input type="number" value="'+(p.hs||"")+'" onchange="setVal('+i+',\'hs\',this.value)"> '+
-      'İzin:<input type="number" value="'+(p.izin||"")+'" onchange="setVal('+i+',\'izin\',this.value)"><br>'+
-      'Yol:<input type="number" value="'+(p.yol||"")+'" onchange="setVal('+i+',\'yol\',this.value)"> '+
-      'Yıllık:<input type="number" value="'+(p.yillik||"")+'" onchange="setVal('+i+',\'yillik\',this.value)"> '+
-      'Ceza:<input type="number" value="'+(p.ceza||"")+'" onchange="setVal('+i+',\'ceza\',this.value)"> '+
-      '<b class="mtot">'+tl(c.toplam)+' TL</b> <button onclick="removePerson('+i+')">Sil</button></div>';
+      '<td class="tot">'+dash(c.toplam)+'</td></tr>';
+    mrows+='<div class="mrow"><b>'+p.name+'</b> '+tip+'<br>MS:<input type="number" value="'+(p.ms||"")+'" onchange="setVal('+i+',\'ms\',this.value)"> HS:<input type="number" value="'+(p.hs||"")+'" onchange="setVal('+i+',\'hs\',this.value)"> İzin:<input type="number" value="'+(p.izin||"")+'" onchange="setVal('+i+',\'izin\',this.value)"><br>Yol:<input type="number" value="'+(p.yol||"")+'" onchange="setVal('+i+',\'yol\',this.value)"> Yıllık:<input type="number" value="'+(p.yillik||"")+'" onchange="setVal('+i+',\'yillik\',this.value)"> Ceza:<input type="number" value="'+(p.ceza||"")+'" onchange="setVal('+i+',\'ceza\',this.value)"> <b>'+tl(c.toplam)+' TL</b> <button onclick="removePerson('+i+')">Sil</button></div>';
   });
-  tbody.innerHTML = rows || '<tr><td colspan="13">Kayıt yok</td></tr>';
-  mobile.innerHTML = mrows || '<div class="mrow">Kayıt yok</div>';
+  tbody.innerHTML=rows||'<tr><td colspan="13">Kayıt yok</td></tr>';
+  mobile.innerHTML=mrows||'<div class="mrow">Kayıt yok</div>';
 }
-function setVal(i,f,v){ if(current==="ALL")return; state[current].people[i][f]=v===""?0:parseFloat(v)||0; save(); render(); }
+
+function setVal(i,f,v){ if(current==="ALL")return; state[current].people[i][f]=v===""?0:+v||0; save(); render(); }
 function setTip(i,t){ if(current==="ALL")return; state[current].people[i].tip=t; save(); render(); }
 function addPerson(){ if(current==="ALL")return; var n=prompt("Ad Soyad:"); if(!n)return; state[current].people.push({name:n.trim(),tip:"A",ms:0,hs:0,izin:0,yol:0,yillik:0,ceza:0}); save(); render(); }
 function removePerson(i){ if(current==="ALL"||!confirm("Silinsin mi?"))return; state[current].people.splice(i,1); save(); render(); }
 function backup(){ var a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:"application/json"})); a.download="3sube-yedek.json"; a.click(); }
-function importBackup(inp){ var f=inp.files[0]; if(!f)return; var r=new FileReader(); r.onload=function(e){ if(confirm("Üzerine yazılsın mı?")){ state=JSON.parse(e.target.result); save(); render(); } }; r.readAsText(f); inp.value=""; }
+function importBackup(inp){ var f=inp.files[0]; if(!f)return; var r=new FileReader(); r.onload=e=>{ if(confirm("Üzerine yazılsın mı?")){ state=JSON.parse(e.target.result); save(); render(); } }; r.readAsText(f); inp.value=""; }
+
 render();
 </script>
 </body>
