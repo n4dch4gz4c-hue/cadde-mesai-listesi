@@ -40,10 +40,13 @@
     var doc=new jsPDF("p","mm","a4");
     
     var hasFont=false;
-    if(typeof ensurePdfFont==="function"){
-      hasFont=await ensurePdfFont(doc);
-      if(hasFont) doc.setFont("DejaVu","normal");
-    }
+    try{
+      if(typeof ensurePdfFont==="function"){
+        hasFont=await ensurePdfFont(doc);
+      }
+    }catch(e){}
+    
+    var fontName=hasFont?"DejaVu":"helvetica";
     
     var branches=["Kadıköy","Cadde","Çengelköy"];
     var allData=[];
@@ -78,40 +81,40 @@
       grandPay+=payCount;
     });
     
-    var y=12;
-    doc.setFontSize(16);
-    doc.setFont(undefined,"bold");
-    doc.text("AYLIK MESAI RAPORU",105,y,{align:"center"});
-    y+=6;
-    doc.setFontSize(9);
-    doc.setFont(undefined,"normal");
+    doc.setFont(fontName,"normal");
+    var y=15;
+    doc.setFontSize(18);
+    doc.setFont(fontName,"bold");
+    doc.text("AYLIK MESAİ RAPORU",105,y,{align:"center"});
+    y+=8;
+    doc.setFontSize(10);
+    doc.setFont(fontName,"normal");
     doc.text(new Date().toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"}),105,y,{align:"center"});
-    y+=10;
+    y+=15;
     
     doc.setFillColor(31,75,143);
-    doc.rect(14,y-4,182,14,"F");
+    doc.rect(20,y-5,170,20,"F");
     doc.setTextColor(255);
-    doc.setFontSize(12);
-    doc.setFont(undefined,"bold");
-    doc.text("GENEL TOPLAM: "+tl(grandTotal)+" TL",105,y+2,{align:"center"});
-    doc.setFontSize(8);
-    doc.setFont(undefined,"normal");
-    doc.text(grandCount+" kisi · "+grandPay+" odeme",105,y+7,{align:"center"});
+    doc.setFontSize(14);
+    doc.setFont(fontName,"bold");
+    doc.text("GENEL TOPLAM",105,y+2,{align:"center"});
+    doc.setFontSize(16);
+    doc.text(tl(grandTotal)+" TL",105,y+10,{align:"center"});
     doc.setTextColor(0);
-    y+=18;
+    y+=25;
     
-    doc.setFontSize(11);
-    doc.setFont(undefined,"bold");
-    doc.text("GIDER DAGILIMI",14,y);
-    y+=6;
+    doc.setFontSize(12);
+    doc.setFont(fontName,"bold");
+    doc.text("GİDER DAĞILIMI",14,y);
+    y+=8;
     
     var giderRows=[
       ["Mesai",tl(giderler.mesai)],
       ["Hafta Sonu",tl(giderler.hs)],
       ["Prim",tl(giderler.prim)],
       ["Yol",tl(giderler.yol)],
-      ["Izin",tl(giderler.izin)],
-      ["Yillik",tl(giderler.yillik)],
+      ["İzin",tl(giderler.izin)],
+      ["Yıllık",tl(giderler.yillik)],
       ["Disiplin",tl(giderler.dis)],
       ["TOPLAM",tl(grandTotal)]
     ];
@@ -121,9 +124,9 @@
       head:[["Kalem","Tutar (TL)"]],
       body:giderRows,
       theme:"grid",
-      styles:{fontSize:8,cellPadding:2},
-      headStyles:{fillColor:[31,75,143],textColor:255},
-      columnStyles:{0:{cellWidth:60},1:{cellWidth:40,halign:"right"}},
+      styles:{fontSize:9,cellPadding:3,font:fontName},
+      headStyles:{fillColor:[31,75,143],textColor:255,font:fontName},
+      columnStyles:{0:{cellWidth:80},1:{cellWidth:50,halign:"right"}},
       margin:{left:14},
       didParseCell:function(data){
         if(data.row.index===giderRows.length-1){
@@ -132,12 +135,12 @@
         }
       }
     });
-    y=doc.lastAutoTable.finalY+10;
+    y=doc.lastAutoTable.finalY+15;
     
-    doc.setFontSize(11);
-    doc.setFont(undefined,"bold");
-    doc.text("SUBE BAZLI OZET",14,y);
-    y+=6;
+    doc.setFontSize(12);
+    doc.setFont(fontName,"bold");
+    doc.text("ŞUBE BAZLI ÖZET",14,y);
+    y+=8;
     
     var subeRows=allData.map(function(d){
       return [d.branch,d.payCount+"/"+d.count,tl(d.total)];
@@ -146,12 +149,12 @@
     
     doc.autoTable({
       startY:y,
-      head:[["Sube","Odeme","Toplam (TL)"]],
+      head:[["Şube","Ödeme","Toplam (TL)"]],
       body:subeRows,
       theme:"grid",
-      styles:{fontSize:8,cellPadding:2},
-      headStyles:{fillColor:[196,92,38],textColor:255},
-      columnStyles:{0:{cellWidth:50},1:{cellWidth:30,halign:"center"},2:{cellWidth:40,halign:"right"}},
+      styles:{fontSize:9,cellPadding:3,font:fontName},
+      headStyles:{fillColor:[196,92,38],textColor:255,font:fontName},
+      columnStyles:{0:{cellWidth:60},1:{cellWidth:40,halign:"center"},2:{cellWidth:50,halign:"right"}},
       margin:{left:14},
       didParseCell:function(data){
         if(data.row.index===subeRows.length-1){
@@ -160,20 +163,24 @@
         }
       }
     });
-    y=doc.lastAutoTable.finalY+12;
     
     allData.forEach(function(d){
-      if(y>240){doc.addPage();y=15;}
+      doc.addPage();
+      var y=15;
       
-      doc.setFillColor(196,92,38);
-      doc.rect(14,y-4,182,8,"F");
-      doc.setTextColor(255);
-      doc.setFontSize(10);
-      doc.setFont(undefined,"bold");
-      doc.text(d.branch.toUpperCase()+" · "+tl(d.total)+" TL · "+d.payCount+"/"+d.count+" kisi",105,y+1,{align:"center"});
-      doc.setTextColor(0);
-      doc.setFont(undefined,"normal");
+      doc.setFont(fontName,"bold");
+      doc.setFontSize(16);
+      doc.text(d.branch.toUpperCase(),105,y,{align:"center"});
       y+=8;
+      
+      doc.setFillColor(31,75,143);
+      doc.rect(14,y-4,182,12,"F");
+      doc.setTextColor(255);
+      doc.setFontSize(11);
+      doc.text("TOPLAM: "+tl(d.total)+" TL  |  "+d.payCount+"/"+d.count+" kişi",105,y+3,{align:"center"});
+      doc.setTextColor(0);
+      doc.setFont(fontName,"normal");
+      y+=14;
       
       var rows=d.people.map(function(p,i){
         return [i+1,p.name,tl(p.c.toplam)];
@@ -185,9 +192,9 @@
         head:[["No","Ad Soyad","Ay Sonu (TL)"]],
         body:rows,
         theme:"grid",
-        styles:{fontSize:7,cellPadding:1},
-        headStyles:{fillColor:[31,75,143],textColor:255,fontSize:7},
-        columnStyles:{0:{cellWidth:10},1:{cellWidth:110},2:{cellWidth:35,halign:"right"}},
+        styles:{fontSize:8,cellPadding:1.5,font:fontName},
+        headStyles:{fillColor:[196,92,38],textColor:255,fontSize:8,font:fontName},
+        columnStyles:{0:{cellWidth:12},1:{cellWidth:110},2:{cellWidth:40,halign:"right"}},
         margin:{left:14,right:14},
         didParseCell:function(data){
           if(data.row.index===rows.length-1){
@@ -196,7 +203,6 @@
           }
         }
       });
-      y=doc.lastAutoTable.finalY+8;
     });
     
     doc.save("Aylik-Rapor-"+new Date().toISOString().slice(0,10)+".pdf");
