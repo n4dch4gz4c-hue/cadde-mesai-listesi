@@ -24,6 +24,137 @@ function attach(){
 }
 function _sums(){return typeof sums==="function"?sums():{all:[],pay:[],mesai:0,hs:0,prim:0,yol:0,izin:0,yillik:0,dis:0,toplam:0};}
 function isCadde(){ return typeof currentBranch==="undefined" || currentBranch==="Cadde"; }
+function branchName(){ return typeof currentBranch!=="undefined" ? currentBranch : "Cadde"; }
+
+async function pagePdf(kind, share){
+  if(!window.jspdf||!window.jspdf.jsPDF){toast("PDF yok");return;}
+  var jsPDF=window.jspdf.jsPDF;
+  var s=_sums();
+  var now=new Date().toLocaleString("tr-TR",{day:"2-digit",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  var br=branchName();
+  var hasFont=false, font="helvetica", doc;
+  
+  if(kind==="ozet-kisa"){
+    doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+    hasFont=typeof ensurePdfFont==="function"?await ensurePdfFont(doc):false;
+    font=hasFont?"DejaVu":"helvetica";
+    doc.setFillColor(11,18,32);
+    doc.rect(0,0,210,12,"F");
+    doc.setFont(font,"bold"); doc.setFontSize(12); doc.setTextColor(255,255,255);
+    doc.text(br+" \u00b7 KISA OZET",10,8);
+    doc.setFont(font,"normal"); doc.setFontSize(8);
+    doc.text(now,200,8,{align:"right"});
+    var body=s.all.map(function(x,i){return [String(i+1),x.p.name,tl(x.c.toplam)];});
+    doc.autoTable({
+      startY:16,
+      head:[["No","Ad Soyad","Odenecek"]],
+      body:body,
+      foot:[["","TOPLAM",tl(s.toplam)]],
+      theme:"grid",
+      styles:{font:font,fontSize:8,cellPadding:1,halign:"center",textColor:[20,20,20]},
+      headStyles:{fillColor:[31,75,143],textColor:[255,255,255]},
+      footStyles:{fillColor:[34,34,34],textColor:[255,255,255]},
+      columnStyles:{0:{cellWidth:15},1:{halign:"left",cellWidth:100},2:{halign:"right"}},
+      margin:{left:10,right:10}
+    });
+  }else if(kind==="ozet-ayrinti"||kind==="liste"){
+    doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
+    hasFont=typeof ensurePdfFont==="function"?await ensurePdfFont(doc):false;
+    font=hasFont?"DejaVu":"helvetica";
+    doc.setFillColor(11,18,32);
+    doc.rect(0,0,297,12,"F");
+    doc.setFont(font,"bold"); doc.setFontSize(12); doc.setTextColor(255,255,255);
+    doc.text(br+" \u00b7 LISTE",10,8);
+    doc.setFont(font,"normal"); doc.setFontSize(8);
+    doc.text(now,287,8,{align:"right"});
+    var body=s.all.map(function(x,i){return [String(i+1),x.p.name,dash(x.c.mesai),dash(x.c.hs),dash(x.c.prim),dash(x.c.yol),dash(x.c.izin),dash(x.c.yillik),dash(x.c.toplam)];});
+    doc.autoTable({
+      startY:16,
+      head:[["No","Ad Soyad","Mesai","HS","Prim","Yol","Izin","Yillik","Toplam"]],
+      body:body,
+      foot:[["","TOPLAM",tl(s.mesai),tl(s.hs),tl(s.prim),tl(s.yol),tl(s.izin),tl(s.yillik),tl(s.toplam)]],
+      theme:"grid",
+      styles:{font:font,fontSize:7,cellPadding:0.8,halign:"center",textColor:[20,20,20]},
+      headStyles:{fillColor:[31,75,143],textColor:[255,255,255]},
+      footStyles:{fillColor:[34,34,34],textColor:[255,255,255]},
+      columnStyles:{0:{cellWidth:12},1:{halign:"left",cellWidth:50}},
+      margin:{left:8,right:8}
+    });
+  }else if(kind==="rapor"){
+    doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
+    hasFont=typeof ensurePdfFont==="function"?await ensurePdfFont(doc):false;
+    font=hasFont?"DejaVu":"helvetica";
+    doc.setFillColor(234,88,12);
+    doc.rect(0,0,297,14,"F");
+    doc.setFont(font,"bold"); doc.setFontSize(14); doc.setTextColor(255,255,255);
+    doc.text(br+" AYLIK RAPOR",10,9);
+    doc.setFont(font,"normal"); doc.setFontSize(8);
+    doc.text(now,287,9,{align:"right"});
+    var body=s.all.map(function(x,i){return [String(i+1),x.p.name,dash(x.c.mesai),dash(x.c.hs),dash(x.c.yol),dash(x.c.izin),dash(x.c.yillik),dash(x.c.toplam)];});
+    doc.autoTable({
+      startY:20,
+      head:[["No","Ad Soyad","Mesai","HS","Yol","Izin","Yillik","Toplam"]],
+      body:body,
+      foot:[["","TOPLAM",tl(s.mesai),tl(s.hs),tl(s.yol),tl(s.izin),tl(s.yillik),tl(s.toplam)]],
+      theme:"grid",
+      styles:{font:font,fontSize:7,cellPadding:0.8,halign:"center"},
+      headStyles:{fillColor:[234,88,12],textColor:[255,255,255]},
+      footStyles:{fillColor:[30,30,30],textColor:[255,255,255]},
+      columnStyles:{0:{cellWidth:12},1:{halign:"left",cellWidth:55}},
+      margin:{left:8,right:8}
+    });
+  }else if(kind==="devam"){
+    doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+    hasFont=typeof ensurePdfFont==="function"?await ensurePdfFont(doc):false;
+    font=hasFont?"DejaVu":"helvetica";
+    doc.setFont(font,"bold"); doc.setFontSize(14); doc.setTextColor(31,75,143);
+    doc.text(br+" \u00b7 DEVAMSIZLIK",10,15);
+    var devam=(typeof state!=="undefined"?state.devamsizlik:[])||[];
+    var body=devam.map(function(d,i){return [String(i+1),d.kisi,String(d.gun),d.not||"-"];});
+    doc.autoTable({
+      startY:22,
+      head:[["No","Ad Soyad","Gun","Not"]],
+      body:body.length?body:[["","Kayit yok","",""]],
+      theme:"grid",
+      styles:{font:font,fontSize:8,cellPadding:1},
+      headStyles:{fillColor:[31,75,143],textColor:[255,255,255]},
+      columnStyles:{0:{cellWidth:15},1:{halign:"left",cellWidth:70}},
+      margin:{left:10,right:10}
+    });
+  }else if(kind==="ceza"){
+    doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+    hasFont=typeof ensurePdfFont==="function"?await ensurePdfFont(doc):false;
+    font=hasFont?"DejaVu":"helvetica";
+    doc.setFont(font,"bold"); doc.setFontSize(14); doc.setTextColor(31,75,143);
+    doc.text(br+" \u00b7 CEZALAR",10,15);
+    var cezalar=(typeof state!=="undefined"?state.cezalar:[])||[];
+    var body=cezalar.map(function(c,i){return [String(i+1),c.kisi,tl(c.tutar)+" TL",c.neden||"-"];});
+    doc.autoTable({
+      startY:22,
+      head:[["No","Ad Soyad","Tutar","Neden"]],
+      body:body.length?body:[["","Kayit yok","",""]],
+      theme:"grid",
+      styles:{font:font,fontSize:8,cellPadding:1},
+      headStyles:{fillColor:[31,75,143],textColor:[255,255,255]},
+      columnStyles:{0:{cellWidth:15},1:{halign:"left",cellWidth:60}},
+      margin:{left:10,right:10}
+    });
+  }else{
+    doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4"});
+    doc.setFont("helvetica","bold"); doc.setFontSize(14);
+    doc.text(br+" \u00b7 "+kind.toUpperCase(),10,15);
+  }
+  
+  var filename=br.toLowerCase()+"-"+kind+".pdf";
+  if(share && typeof outPdf==="function"){
+    await outPdf(doc,filename);
+  }else{
+    doc.save(filename);
+    toast("PDF indirildi");
+  }
+}
+window.pagePdf=pagePdf;
+
 function renderDuzenle(){
   var box=document.getElementById("duzenleList");
   if(!box)return;
@@ -96,5 +227,4 @@ renderAll=function(){
 };
 setTimeout(attach,400);
 setTimeout(attach,1200);
-window.pagePdf = pagePdf;
 })();
