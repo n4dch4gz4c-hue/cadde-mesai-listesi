@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta http-equiv="Cache-Control" content="no-store"/>
 <meta name="theme-color" content="#0b1220"/>
-<title>Cadde Mesai Listesi</title>
+<title>3 Şube Mesai Listesi</title>
 <script>if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(rs){rs.forEach(function(r){r.unregister();});});}</script>
 <style>
 html,body{margin:0;font-family:system-ui,sans-serif;background:#f4f1ea;color:#1f2933}
@@ -14,89 +14,28 @@ h1{margin:0;font-size:22px}
 .tab.on,.btn.primary{background:#1f4b8f;color:#fff;border-color:#1f4b8f}
 .btn.sync{background:#0f7b4c;color:#fff;border-color:#0f7b4c}
 table{border-collapse:collapse;width:100%;min-width:1100px;background:#fff;font-size:13px}
-table.slim{min-width:0}
 th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0}
 td{border:1px solid #eadfd2;padding:3px 4px;text-align:center;color:#111}
-td.name{text-align:left;font-weight:700;color:#111}
-tr.pay td.tot{background:#f3e8d2;font-weight:700;color:#111}
-tfoot td{background:#222;color:#fff}
+td.name{text-align:left;font-weight:700}
+tr.pay td.tot{background:#f3e8d2;font-weight:700}
 input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16px}
 .sheet input{width:64px;text-align:center;font-size:14px}
 .hide{display:none!important}
-.panel,.card,.pcard{background:#fff;border:1px solid #d7cfc3;border-radius:12px;padding:12px;margin:12px 16px}
+.panel{background:#fff;border:1px solid #d7cfc3;border-radius:12px;padding:12px;margin:12px 16px}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 16px}
 .stat{background:#fff;border:1px solid #d7cfc3;border-radius:10px;padding:10px}
 .table-wrap{overflow:auto;padding:0 16px 24px;max-height:70vh}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;padding:0 16px 24px}
-#toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 12px;border-radius:8px;display:none;z-index:9}
-#q{min-width:140px;flex:1}
-#mobileList{display:none}
-#asFab,#asPanel{display:none!important}
-.kmark{font-size:9px;font-weight:600;margin-left:3px;vertical-align:super}
-.mlist{display:flex;flex-direction:column;gap:8px}
-.mrow{border:1px solid #eadfd2;border-radius:16px;background:#fff;overflow:hidden}
-.mrow.pay{background:#fff8e8;border-color:#e8d7a8}
-.mhead{width:100%;display:flex!important;align-items:center;gap:10px;padding:13px 14px;border:0;background:transparent;text-align:left;font:inherit;color:#111;box-sizing:border-box}
-.mno{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#e8eef8;color:#1f4b8f;font-size:12px;font-weight:700;flex:none}
-.mname{flex:1;font-weight:700;font-size:15px;min-width:0;color:#111}
-.mtot{font-weight:800;font-size:15px;flex:none;color:#1f4b8f}
-.mrow.pay .mtot{color:#8a4b12}
-.mfields{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 12px 14px}
-.mfields label{font-size:11px;color:#6b6258;display:flex;flex-direction:column;gap:4px}
-.mfields input{width:100%;box-sizing:border-box;font-size:16px;padding:9px 8px;border:1px solid #d7cfc3;border-radius:10px}
-.kchart{padding:4px 0 8px}
-.kbar-row{margin:0 0 10px}
-.kbar-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;gap:8px}
-.kbar-label{font-weight:700;font-size:13px;color:#111}
-.kbar-val{font-weight:700;font-size:13px;color:#111;white-space:nowrap}
-.kbar-val small{font-weight:500;color:#64748b;margin-left:4px}
-.kbar-track{background:#e8eef5;border-radius:8px;height:18px;overflow:hidden}
-.kbar-fill{height:100%;border-radius:8px;min-width:0;transition:width .25s ease}
-.rapor-head{padding:12px 16px}
-.rapor-title{margin:4px 0;color:#111}
-.rapor-sub,.rapor-muted{color:#64748b}
-#kisiPanel table.kisi-table{max-width:420px;min-width:0!important}
-@media(max-width:900px){
-html,body{background:#0b1220!important}
-header.bar{position:sticky;top:0;z-index:20;background:#121a2b!important}
-header.bar h1{font-size:18px;color:#fff}
-#pageSub{color:#9aa8c2;margin:2px 0 0;font-size:12px}
-header.bar #q,header.bar .btn{background:#1a2438!important;border-color:#2a3a55!important;color:#e8eef8!important}
-header.bar .btn.primary{background:#2563eb!important}
-header.bar .btn.sync{background:#0f7b4c!important}
-nav.tabs{position:sticky;top:78px;z-index:19;background:#121a2b!important;overflow-x:auto;flex-wrap:nowrap}
-nav.tabs .tab{flex:none;border-radius:999px;background:#1a2438;border-color:#2a3a55;color:#d7e2f4}
-nav.tabs .tab.on{background:#2563eb!important;color:#fff!important}
-.stats{grid-template-columns:1fr 1fr;padding:10px 12px}
-.stat{background:#1a2438!important;border-color:#2a3a55!important;color:#fff}
-.stat span{display:block;font-size:11px;color:#9aa8c2}
-#sec-liste > .table-wrap{display:none}
-#mobileList{display:block!important;padding:4px 12px 32px}
-#sec-ozet .panel,#kalemPanel,#kisiPanel,#sec-duzenle .panel,#sec-devam .panel,#sec-rapor .panel{background:#fff!important;color:#111!important}
-#sec-ozet table,#kalemPanel table,#kisiPanel table,#sec-duzenle table,#sec-devam table,#sec-rapor table{display:table!important;min-width:0!important;width:100%!important;background:#fff!important;color:#111!important}
-#sec-ozet td,#sec-ozet td.name,#kalemPanel td,#kisiPanel td,#sec-duzenle td,#sec-devam td,#sec-rapor td{color:#111!important;-webkit-text-fill-color:#111!important}
-#sec-ozet td.tot,#kisiPanel td.tot{background:#f3e8d2!important;color:#111!important}
-#sec-duzenle .table-wrap,#sec-devam .table-wrap,#sec-ozet .table-wrap,#sec-rapor .table-wrap{display:block!important;overflow:auto;padding:0 12px 24px}
-#kisiPanel{overflow:auto}
-#kisiPanel table.kisi-table{min-width:0!important;max-width:100%!important}
-.mrow{background:#fff!important;color:#111!important}
-.mrow.pay{background:#fff3d0!important}
-.mname,.mhead{color:#111!important}
-#duzenleList input.nm{color:#111;background:#fff}
-.rapor-head{padding:12px}
-.rapor-title{color:#fff!important}
-.rapor-sub,.rapor-muted{color:#9aa8c2!important}
-.kchart{padding:2px 0 6px}
-.kbar-track{height:20px}
-.kbar-label,.kbar-val{font-size:14px}
-}
+.branch-bar{display:flex;gap:6px;padding:8px 16px;background:#0b1220}
+.branch-bar button{background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 16px;border-radius:20px;cursor:pointer}
+.branch-bar button.active{background:#fff;color:#0f172a;font-weight:bold}
 </style></head>
 <body>
+<div class="branch-bar" id="branchBar"></div>
 <header class="bar">
-  <div><h1 onclick="secretTap()">Cadde Mesai Listesi</h1><p id="pageSub"></p></div>
+  <div><h1>3 Şube Mesai Listesi</h1><p id="pageSub"></p></div>
   <div class="row">
-    <input id="q" placeholder="Isim ara..." oninput="renderAll()"/>
-    <button class="btn sync" onclick="yenileSunucu()">Cek</button>
+    <input id="q" placeholder="İsim ara..." oninput="renderAll()"/>
+    <button class="btn sync" onclick="yenileSunucu()">Çek</button>
     <button class="btn primary" onclick="save()">Kaydet</button>
     <button class="btn" onclick="toggleGhBox()">Senkron</button>
     <button class="btn" onclick="exportCSV()">CSV</button>
@@ -104,42 +43,48 @@ nav.tabs .tab.on{background:#2563eb!important;color:#fff!important}
     <button class="btn" onclick="sharePDF()">PDF</button>
   </div>
 </header>
-<div id="ghBox" class="panel hide">
-  <b>Senkron anahtari</b>
-  <div class="row">
-    <input id="ghToken" type="password" placeholder="GitHub token"/>
-    <input id="ghRepo" placeholder="n4dch4gz4c-hue/cadde-mesai-listesi"/>
-    <input id="ghPath" placeholder="cadde-data.json"/>
-    <button class="btn" onclick="ghSaveCfg()">Anahtari kaydet</button>
-  </div>
-</div>
 <nav class="tabs">
   <button class="tab on" data-tab="liste" onclick="tab(this)">Liste</button>
-  <button class="tab" data-tab="duzenle" onclick="tab(this)">Duzenleme</button>
-  <button class="tab" data-tab="kurye" onclick="tab(this)">Kurye</button>
-  <button class="tab" data-tab="devam" onclick="tab(this)">Devamsizlik</button>
+  <button class="tab" data-tab="duzenle" onclick="tab(this)">Düzenleme</button>
+  <button class="tab" data-tab="kurye" id="tabKurye" onclick="tab(this)">Kurye</button>
+  <button class="tab" data-tab="devam" onclick="tab(this)">Devamsızlık</button>
   <button class="tab" data-tab="ceza" onclick="tab(this)">Ceza</button>
-  <button class="tab" data-tab="ozet" onclick="tab(this)">Ozet</button>
-  <button class="tab" data-tab="rapor" onclick="tab(this)">Aylik rapor</button>
+  <button class="tab" data-tab="ozet" onclick="tab(this)">Özet</button>
+  <button class="tab" data-tab="rapor" onclick="tab(this)">Aylık rapor</button>
 </nav>
 <section id="sec-liste">
   <div class="stats" id="stats"></div>
-  <div class="table-wrap"><table class="sheet"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai tutar</th><th>HS adet</th><th>HS tutar</th><th>Prim</th><th>Yol</th><th>Izin gun</th><th>Izin tutar</th><th>Yillik</th><th>Disiplin</th><th>Toplam</th></tr></thead><tbody id="tbody"></tbody><tfoot id="tfoot"></tfoot></table></div>
-  <div id="mobileList"></div>
+  <div class="table-wrap"><table class="sheet"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai tutar</th><th>HS adet</th><th>HS tutar</th><th>Prim</th><th>Yol</th><th>İzin gün</th><th>İzin tutar</th><th>Yıllık</th><th>Disiplin</th><th>Toplam</th></tr></thead><tbody id="tbody"></tbody><tfoot id="tfoot"></tfoot></table></div>
 </section>
-<section id="sec-duzenle" class="hide">
-  <div class="panel"><h2>Duzenleme</h2><p>Isim duzelt, kurye isaretle, sirayi tasi veya sil.</p>
-    <b>Kisi ekle</b>
-    <div class="row"><input id="nAd" placeholder="Ad soyad"/><input id="nBirim" type="number" value="300" style="width:90px"/><label><input id="nKurye" type="checkbox"/> Kurye</label><button class="btn primary" onclick="addKisi()">Ekle</button></div>
-  </div>
-  <div id="duzenleList"></div>
-</section>
-<section id="sec-kurye" class="hide"><div class="panel"><h2>Kurye primleri</h2></div><div id="kuryeList" class="cards"></div></section>
-<section id="sec-devam" class="hide"><div class="panel"><h2>Devamsizlik</h2><div class="row"><select id="dKisi"></select><input id="dGun" type="number" value="1"/><input id="dNot" placeholder="Not"/><button class="btn primary" onclick="addDevam()">Ekle</button></div></div><div id="devamList"></div></section>
-<section id="sec-ceza" class="hide"><div class="panel"><h2>Cezalar</h2><div class="row"><select id="cKisi"></select><input id="cTutar" type="number" value="1000"/><input id="cNeden" placeholder="Neden"/><button class="btn primary" onclick="addCeza()">Ekle</button></div></div><div id="cezaList" class="cards"></div></section>
-<section id="sec-ozet" class="hide"><div class="row"><button class="tab on" data-ozet="kisa" onclick="ozetMod('kisa')">Kisa ozet</button><button class="tab" data-ozet="ayrinti" onclick="ozetMod('ayrinti')">Ayrintili ozet</button></div><div class="panel" id="ozetKisa"></div><div class="panel hide" id="ozetAyrinti"></div></section>
+<section id="sec-duzenle" class="hide"><div class="panel"><h2>Düzenleme</h2></div><div id="duzenleList"></div></section>
+<section id="sec-kurye" class="hide"><div class="panel"><h2>Kurye primleri</h2></div><div id="kuryeList"></div></section>
+<section id="sec-devam" class="hide"><div class="panel"><h2>Devamsızlık</h2></div><div id="devamList"></div></section>
+<section id="sec-ceza" class="hide"><div class="panel"><h2>Cezalar</h2></div><div id="cezaList"></div></section>
+<section id="sec-ozet" class="hide"><div class="panel" id="ozetKisa"></div></section>
 <section id="sec-rapor" class="hide"><div id="raporBox"></div></section>
 <div id="toast"></div>
+<script>
+var BRANCHES=["Kadıköy","Cadde","Çengelköy"];
+var currentBranch=localStorage.getItem("currentBranch")||"Cadde";
+function renderBranchBar(){
+  var h="";
+  BRANCHES.forEach(function(b){
+    h+='<button class="'+(b===currentBranch?"active":"")+'" onclick="selectBranch(\''+b+'\')">'+b+'</button>';
+  });
+  document.getElementById("branchBar").innerHTML=h;
+  var k=document.getElementById("tabKurye");
+  if(k) k.style.display=(currentBranch==="Cadde")?"":"none";
+}
+function selectBranch(b){
+  currentBranch=b;
+  localStorage.setItem("currentBranch",b);
+  if(typeof KEY!=="undefined") KEY="mesai_"+b;
+  renderBranchBar();
+  if(typeof load==='function') load();
+  if(typeof renderAll==='function') renderAll();
+}
+renderBranchBar();
+</script>
 <script src="lock.js?v=106"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
@@ -150,4 +95,5 @@ nav.tabs .tab.on{background:#2563eb!important;color:#fff!important}
 <script src="page-extra.js?v=106"></script>
 <script src="mobile-fix.js?v=106"></script>
 <script src="ozet-all.js?v=106"></script>
+<script>if(typeof KEY!=="undefined") KEY="mesai_"+currentBranch;</script>
 </body></html>
