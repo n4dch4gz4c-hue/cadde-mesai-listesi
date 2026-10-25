@@ -18,7 +18,6 @@ th{background:#c45c26;color:#fff;padding:6px;position:sticky;top:0}
 td{border:1px solid #eadfd2;padding:3px 4px;text-align:center;color:#111}
 td.name{text-align:left;font-weight:700}
 tr.pay td.tot{background:#f3e8d2;font-weight:700}
-/* Toplam satırı - güçlü override */
 tfoot td,#ozetKisa tfoot td,#ozetAyrinti tfoot td,#raporBox tfoot td,#kisiPanel tfoot td,#kalemPanel tfoot td{background:#e8f5e9!important;color:#1b5e20!important;font-weight:700!important}
 input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16px}
 .sheet input{width:64px;text-align:center;font-size:14px}
@@ -30,20 +29,11 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 .branch-bar{display:flex;gap:6px;padding:8px 16px;background:#0b1220}
 .branch-bar button{background:rgba(255,255,255,.15);color:#fff;border:none;padding:8px 16px;border-radius:20px;cursor:pointer}
 .branch-bar button.active{background:#fff;color:#0f172a;font-weight:bold}
-/* Ceza + Kurye */
 #cezaList table.sheet.slim,#kuryeList table.sheet.slim{min-width:0!important;width:100%!important;background:#fff!important;border-collapse:collapse}
 #cezaList th,#kuryeList th{background:#c45c26!important;color:#fff!important;padding:8px!important;text-align:center!important}
 #cezaList td,#kuryeList td{border:1px solid #eadfd2!important;padding:6px!important;text-align:center!important;color:#111!important;background:#fff!important}
 #cezaList td.name,#kuryeList td.name{text-align:left!important;font-weight:700!important}
 #cezaList .table-wrap,#kuryeList .table-wrap{padding:0!important;margin-top:12px}
-/* Grafik çubukları */
-.kbar-row{margin:0 0 12px;display:block!important}
-.kbar-top{display:flex!important;justify-content:space-between;align-items:baseline;margin-bottom:4px;gap:8px}
-.kbar-label{font-weight:700;font-size:13px;color:#111}
-.kbar-val{font-weight:700;font-size:13px;color:#111;white-space:nowrap}
-.kbar-track{background:#e8eef5!important;border-radius:8px;height:20px!important;overflow:hidden;display:block!important;width:100%!important}
-.kbar-fill{height:100%!important;border-radius:8px;min-width:4px!important;display:block!important}
-.kchart{padding:8px 0;display:block!important}
 </style></head>
 <body>
 <div class="branch-bar" id="branchBar"></div>
@@ -113,7 +103,7 @@ renderBranchBar();
 <script src="seed.js?v=106"></script>
 <script src="app.js?v=108"></script>
 <script src="gh.js?v=106"></script>
-<script src="plus.js?v=108"></script>
+<script src="plus.js?v=109"></script>
 <script src="page-extra.js?v=106"></script>
 <script src="mobile-fix.js?v=106"></script>
 <script src="ozet-all.js?v=106"></script>
