@@ -1,6 +1,6 @@
 (function(){
 var cs=document.createElement("style");
-cs.textContent=["#sec-ozet table,#kalemPanel table{background:#fff!important;color:#111!important}","#sec-ozet td,#sec-ozet td.name,#kalemPanel td,#kalemPanel td.name{color:#111!important;background:#fff!important;-webkit-text-fill-color:#111!important}","#sec-ozet td.tot{background:#f3e8d2!important;color:#111!important}","#sec-ozet tfoot td{background:#222!important;color:#fff!important}","#ozetKisa table.kisa-tbl{width:100%;max-width:420px;font-size:12px}","#ozetKisa table.kisa-tbl th,#ozetKisa table.kisa-tbl td{padding:3px 6px;line-height:1.2}","@media(max-width:768px){#sec-ozet .ayr-tbl{min-width:0!important;width:100%!important;font-size:9px!important}#sec-ozet .ayr-tbl th,#sec-ozet .ayr-tbl td{padding:2px 1px!important;font-size:9px!important;word-break:break-word}#sec-ozet .ayr-wrap{overflow-x:auto!important;max-width:100%!important}}"].join("\n");
+cs.textContent=["#sec-ozet table,#kalemPanel table{background:#fff!important;color:#111!important}","#sec-ozet td,#sec-ozet td.name,#kalemPanel td,#kalemPanel td.name{color:#111!important;background:#fff!important;-webkit-text-fill-color:#111!important}","#sec-ozet td.tot{background:#f3e8d2!important;color:#111!important}","#sec-ozet tfoot td{background:#222!important;color:#fff!important}","#ozetKisa table.kisa-tbl{width:100%;max-width:420px;font-size:12px}","#ozetKisa table.kisa-tbl th,#ozetKisa table.kisa-tbl td{padding:3px 6px;line-height:1.2}","@media(max-width:768px){.ozet-card{background:#fff;border:1px solid #ddd;border-radius:8px;padding:8px;margin-bottom:6px;font-size:12px}.ozet-card .name{font-weight:700;color:#111}.ozet-card .tot{color:#0f7b4c;font-weight:700;float:right}.ozet-card .details{font-size:10px;color:#666;margin-top:4px}}"].join("\n");
 document.head.appendChild(cs);
 function money(n){ n=Math.round(Number(n)||0); return n===0?"0":(typeof tl==="function"?tl(n):String(n)); }
 function dsh(n){ n=Math.round(Number(n)||0); return n===0?"-":money(n); }
@@ -26,22 +26,32 @@ function bag(){
 }
 function people(){ return bag().people||[]; }
 function pdfBar(kind){
-  return "<div class='row' style='gap:6px;margin:0'><button class='btn primary' type='button' onclick=\"pagePdf('"+kind+"',false)\">PDF indir</button><button class='btn' type='button' onclick=\"pagePdf('"+kind+"',true)\">Paylas</button></div>";
+  return "<div class='row' style='gap:6px;margin:0'><button class='btn primary' type='button' onclick=\"pagePdf('"+kind+"',false)\">PDF</button><button class='btn' type='button' onclick=\"pagePdf('"+kind+"',true)\">Paylas</button></div>";
 }
 var MODE="kisa";
 var INK="color:#111;-webkit-text-fill-color:#111;font-weight:700;padding:3px 6px";
 function htmlKisa(list){
   var i,p,c,tot=0,pay=0,h="";
+  var isMobile=window.innerWidth<768;
   h="<div class='row' style='justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px'><h2 style='margin:0;font-size:17px;color:#111'>Kisa ozet</h2>"+pdfBar("ozet-kisa")+"</div>";
   for(i=0;i<list.length;i++){ c=rowCalc(list[i]); tot+=c.toplam||0; if(c.toplam>0) pay++; }
   h+="<p style='margin:6px 0 8px;color:#111;font-size:13px'>"+list.length+" kisi / "+pay+" odeme \u00b7 <b>"+money(tot)+" TL</b></p>";
-  h+="<table class='sheet slim kisa-tbl'>";
-  h+="<thead><tr><th style='width:36px'>No</th><th>Ad Soyad</th><th style='width:78px'>Odenecek</th></tr></thead><tbody>";
-  for(i=0;i<list.length;i++){
-    p=list[i]; c=rowCalc(p);
-    h+="<tr class='"+(c.toplam>0?"pay":"")+"'><td style='"+INK+"'>"+(i+1)+"</td><td class='name' style='"+INK+"'>"+(p.name||"")+"</td><td class='tot' style='"+INK+";background:#f3e8d2'>"+money(c.toplam)+"</td></tr>";
+  
+  if(isMobile){
+    for(i=0;i<list.length;i++){
+      p=list[i]; c=rowCalc(p);
+      h+="<div class='ozet-card'><span class='name'>"+(i+1)+". "+(p.name||"")+"</span><span class='tot'>"+money(c.toplam)+" TL</span><div style='clear:both'></div></div>";
+    }
+    h+="<div class='ozet-card' style='background:#e8f5e9;font-weight:700'><span>TOPLAM</span><span class='tot'>"+money(tot)+" TL</span><div style='clear:both'></div></div>";
+  }else{
+    h+="<table class='sheet slim kisa-tbl'>";
+    h+="<thead><tr><th style='width:36px'>No</th><th>Ad Soyad</th><th style='width:78px'>Odenecek</th></tr></thead><tbody>";
+    for(i=0;i<list.length;i++){
+      p=list[i]; c=rowCalc(p);
+      h+="<tr class='"+(c.toplam>0?"pay":"")+"'><td style='"+INK+"'>"+(i+1)+"</td><td class='name' style='"+INK+"'>"+(p.name||"")+"</td><td class='tot' style='"+INK+";background:#f3e8d2'>"+money(c.toplam)+"</td></tr>";
+    }
+    h+="</tbody><tfoot><tr><td></td><td>TOPLAM</td><td>"+money(tot)+"</td></tr></tfoot></table>";
   }
-  h+="</tbody><tfoot><tr><td></td><td>TOPLAM</td><td>"+money(tot)+"</td></tr></tfoot></table>";
   return h;
 }
 function htmlAyr(list){
@@ -54,19 +64,19 @@ function htmlAyr(list){
   h+="<p style='margin:8px 0;color:#111'>"+list.length+" kisi / "+pay+" odeme \u00b7 <b>"+money(tot)+" TL</b></p>";
   
   if(isMobile){
-    h+="<div class='ayr-wrap' style='overflow-x:auto;max-width:100%'><table class='sheet slim ayr-tbl' style='width:100%;background:#fff;color:#111;font-size:9px'>";
-    h+="<thead><tr><th>No</th><th>Ad</th><th>Mesai</th><th>HS</th><th>Yol</th><th>Izin</th><th>Top</th></tr></thead><tbody>";
     for(i=0;i<list.length;i++){
       p=list[i]; c=rowCalc(p);
-      var shortName=(p.name||"").substring(0,12);
-      h+="<tr class='"+(c.toplam>0?"pay":"")+"'><td style='color:#111;font-size:8px'>"+(i+1)+"</td><td class='name' style='color:#111;font-weight:700;font-size:8px'>"+shortName+"</td>";
-      h+="<td style='color:#111;font-size:8px'>"+dsh(c.mesai)+"</td>";
-      h+="<td style='color:#111;font-size:8px'>"+dsh(c.hs)+"</td>";
-      h+="<td style='color:#111;font-size:8px'>"+dsh(c.yol)+"</td>";
-      h+="<td style='color:#111;font-size:8px'>"+dsh(c.izin)+"</td>";
-      h+="<td class='tot' style='color:#111;background:#f3e8d2;font-size:8px'>"+dsh(c.toplam)+"</td></tr>";
+      var details=[];
+      if(c.mesai>0) details.push("Mesai:"+money(c.mesai));
+      if(c.hs>0) details.push("HS:"+money(c.hs));
+      if(c.yol>0) details.push("Yol:"+money(c.yol));
+      if(c.izin>0) details.push("Izin:"+money(c.izin));
+      if(c.yillik>0) details.push("Yillik:"+money(c.yillik));
+      h+="<div class='ozet-card'><span class='name'>"+(i+1)+". "+(p.name||"")+"</span><span class='tot'>"+money(c.toplam)+" TL</span><div style='clear:both'></div>";
+      if(details.length) h+="<div class='details'>"+details.join(" \u00b7 ")+"</div>";
+      h+="</div>";
     }
-    h+="</tbody><tfoot><tr><td></td><td>TOP</td><td>"+money(mesai)+"</td><td>"+money(hs)+"</td><td>"+money(yol)+"</td><td>"+money(izin)+"</td><td>"+money(tot)+"</td></tr></tfoot></table></div>";
+    h+="<div class='ozet-card' style='background:#e8f5e9;font-weight:700'><span>TOPLAM</span><span class='tot'>"+money(tot)+" TL</span><div style='clear:both'></div></div>";
   }else{
     h+="<div style='overflow:auto;max-height:72vh;width:100%'><table class='sheet slim' style='min-width:960px;width:100%;background:#fff;color:#111'>";
     h+="<thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai</th><th>HS adet</th><th>HS</th><th>Prim</th><th>Yol</th><th>Izin g</th><th>Izin</th><th>Yillik</th><th>Toplam</th></tr></thead><tbody>";
