@@ -22,11 +22,11 @@ function calcTotals(s){
   return {toplam,mesai,izin,ceza,kisi};
 }
 function pct(cur,prev){
-  if(!prev||prev===0) return "";
+  if(!prev||prev===0) return "-";
   var d=((cur-prev)/prev*100);
   var sign=d>=0?"↑":"↓";
   var col=d>=0?"#0f7b4c":"#c45c26";
-  return '<span style="color:'+col+';font-weight:700">'+sign+' '+Math.abs(d).toFixed(1)+'%</span>';
+  return '<span style="color:'+col+';font-weight:700;font-size:13px">'+sign+' '+Math.abs(d).toFixed(1)+'%</span>';
 }
 function renderDashboard(){
   var box=document.getElementById("dashboardBox");
@@ -44,42 +44,67 @@ function renderDashboard(){
   try{prev=JSON.parse(localStorage.getItem("mesai_prev_snapshot")||"null");}catch(e){}
   var prevAll=prev&&prev.all?prev.all:{toplam:0,mesai:0,izin:0,ceza:0};
 
-  var html='<div style="padding:16px">';
-  html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:16px">';
+  var colors={Kadıköy:"#1f4b8f",Cadde:"#c45c26",Çengelöy:"#0f7b4c"};
+  var icons={Kadıköy:"📍",Cadde:"🏪",Çengelöy:"🌿"};
+
+  var html='<div style="padding:12px 16px 24px;background:#f4f1ea;min-height:70vh">';
+
+  // Üst kartlar
+  html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px">';
   branches.forEach(function(b){
     var t=data[b];
     var avg=t.kisi?Math.round(t.toplam/t.kisi):0;
-    var color=b==="Kadıköy"?"#1f4b8f":b==="Cadde"?"#c45c26":"#0f7b4c";
-    html+='<div style="background:#fff;border:1px solid #d7cfc3;border-radius:12px;padding:14px;border-top:4px solid '+color+'">';
-    html+='<div style="font-weight:700;font-size:16px;margin-bottom:8px">'+b+'</div>';
-    html+='<div style="font-size:22px;font-weight:800;color:'+color+'">'+tl(t.toplam)+' TL</div>';
-    html+='<div style="font-size:13px;color:#666;margin-top:6px">Kişi: '+t.kisi+' · Ort: '+tl(avg)+' TL</div>';
+    var c=colors[b];
+    html+='<div style="background:#fff;border-radius:14px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:5px solid '+c+'">';
+    html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:20px">'+icons[b]+'</span><span style="font-weight:700;font-size:16px;color:#111">'+b+'</span></div>';
+    html+='<div style="font-size:12px;color:#666;margin-bottom:2px">Toplam Ödenecek</div>';
+    html+='<div style="font-size:26px;font-weight:800;color:'+c+';line-height:1.1">'+tl(t.toplam)+' TL</div>';
+    html+='<div style="display:flex;justify-content:space-between;margin-top:12px;font-size:13px;color:#444"><span>👤 Kişi Sayısı</span><b>'+t.kisi+'</b></div>';
+    html+='<div style="display:flex;justify-content:space-between;margin-top:4px;font-size:13px;color:#444"><span>📊 Ortalama</span><b>'+tl(avg)+' TL</b></div>';
     html+='</div>';
   });
   html+='</div>';
 
-  html+='<div class="panel" style="margin:0 0 16px"><h3 style="margin:0 0 10px">Ay Karşılaştırması</h3>';
-  html+='<table style="width:100%;border-collapse:collapse;font-size:14px"><tr style="background:#f8f6f2"><th style="text-align:left;padding:8px">Kalem</th><th style="text-align:right;padding:8px">Bu Ay</th><th style="text-align:right;padding:8px">Geçen Ay</th><th style="text-align:right;padding:8px">Değişim</th></tr>';
-  function row(label,cur,prevv){
-    return '<tr><td style="padding:8px;border-bottom:1px solid #eadfd2">'+label+'</td><td style="text-align:right;padding:8px;border-bottom:1px solid #eadfd2;font-weight:600">'+tl(cur)+' TL</td><td style="text-align:right;padding:8px;border-bottom:1px solid #eadfd2">'+(prevv?tl(prevv)+' TL':'-')+'</td><td style="text-align:right;padding:8px;border-bottom:1px solid #eadfd2">'+pct(cur,prevv)+'</td></tr>';
+  // Ay karşılaştırması
+  html+='<div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)">';
+  html+='<div style="font-weight:700;font-size:16px;margin-bottom:12px">Ay Karşılaştırması</div>';
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr 80px;gap:8px;font-size:13px;color:#666;margin-bottom:6px;padding:0 4px"><div>📅 Bu Ay</div><div>📅 Geçen Ay</div><div></div></div>';
+  function cmpRow(label,icon,cur,prevv){
+    return '<div style="display:grid;grid-template-columns:1fr 1fr 90px;gap:8px;align-items:center;padding:8px 4px;border-bottom:1px solid #f0ebe3"><div style="display:flex;align-items:center;gap:6px"><span>'+icon+'</span><span>'+label+'</span><b style="margin-left:auto">'+tl(cur)+' TL</b></div><div style="text-align:right;color:#555">'+(prevv?tl(prevv)+' TL':'-')+'</div><div style="text-align:right">'+pct(cur,prevv)+'</div></div>';
   }
-  html+=row("Toplam",all.toplam,prevAll.toplam);
-  html+=row("Mesai",all.mesai,prevAll.mesai);
-  html+=row("İzin",all.izin,prevAll.izin);
-  html+=row("Ceza",all.ceza,prevAll.ceza);
-  html+='</table>';
-  html+='<div style="margin-top:10px"><button class="btn" onclick="savePrevSnapshot()">Bu ayı geçen ay olarak kaydet</button></div>';
+  html+=cmpRow("Toplam","💰",all.toplam,prevAll.toplam);
+  html+=cmpRow("Mesai","⏱️",all.mesai,prevAll.mesai);
+  html+=cmpRow("İzin","🏠",all.izin,prevAll.izin);
+  html+=cmpRow("Ceza","⚠️",all.ceza,prevAll.ceza);
+  html+='<div style="margin-top:12px;text-align:right"><button class="btn" style="font-size:13px;padding:6px 12px" onclick="savePrevSnapshot()">Bu ayı geçen ay olarak kaydet</button></div>';
   html+='</div>';
 
-  html+='<div class="panel" style="margin:0"><h3 style="margin:0 0 10px">Şube Bazında Toplam</h3>';
+  // Bar chart
+  html+='<div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)">';
+  html+='<div style="font-weight:700;font-size:16px;margin-bottom:12px">Şube Bazında Toplam Ödenecek</div>';
   var max=Math.max(data.Kadıköy.toplam,data.Cadde.toplam,data["Çengelöy"].toplam,1);
   branches.forEach(function(b){
     var t=data[b];
-    var w=Math.round(t.toplam/max*100);
-    var color=b==="Kadıköy"?"#1f4b8f":b==="Cadde"?"#c45c26":"#0f7b4c";
-    html+='<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>'+b+'</span><b>'+tl(t.toplam)+' TL</b></div><div style="background:#eee;border-radius:6px;height:18px;overflow:hidden"><div style="background:'+color+';width:'+w+'%;height:100%"></div></div></div>';
+    var w=Math.max(8,Math.round(t.toplam/max*100));
+    var c=colors[b];
+    html+='<div style="margin-bottom:10px">';
+    html+='<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:'+c+'"></span>'+b+'</span><b>'+tl(t.toplam)+' TL</b></div>';
+    html+='<div style="background:#eee;border-radius:8px;height:22px;overflow:hidden"><div style="background:'+c+';width:'+w+'%;height:100%;border-radius:8px"></div></div>';
+    html+='</div>';
   });
   html+='</div>';
+
+  // Uyarılar
+  var missingIzin=0;
+  branches.forEach(function(b){
+    var s=loadBranch(b);
+    if(s&&s.people) s.people.forEach(function(p){ if((p.izinGun||0)>0 && !(p.izinBirim||p.izinTutar)) missingIzin++; });
+  });
+  html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">';
+  html+='<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:12px;font-size:13px"><span style="color:#c45c26;font-weight:700">⚠️ '+(missingIzin||0)+' kişide izin birim eksik</span><div style="color:#666;font-size:12px;margin-top:4px">İzin girişlerinde birim bilgisi eksik.</div></div>';
+  html+='<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:12px;font-size:13px"><span style="color:#c45c26;font-weight:700">⚠️ Ceza kontrolü</span><div style="color:#666;font-size:12px;margin-top:4px">Ceza girişi yapılmayan şube var mı kontrol et.</div></div>';
+  html+='</div>';
+
   html+='</div>';
   box.innerHTML=html;
 }
@@ -94,18 +119,5 @@ window.savePrevSnapshot=function(){
   localStorage.setItem("mesai_prev_snapshot",JSON.stringify({all:all,saved:new Date().toISOString()}));
   toast("Geçen ay kaydedildi");
   renderDashboard();
-};
-
-var _tab=window.tab;
-window.tab=function(el){
-  if(_tab) _tab(el);
-  var id=el.dataset.tab;
-  if(id==="dashboard"){
-    document.querySelectorAll(".tab[data-tab]").forEach(function(t){t.classList.toggle("on",t===el);});
-    ["liste","kurye","devam","ceza","ozet","rapor","duzenle","dashboard"].forEach(function(s){
-      var e=document.getElementById("sec-"+s); if(e) e.classList.toggle("hide",s!==id);
-    });
-    renderDashboard();
-  }
 };
 })();
