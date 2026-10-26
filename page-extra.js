@@ -193,11 +193,13 @@ function renderDuzenle(){
   var rows=(typeof state!=="undefined"&&state.people)?state.people:[];
   var max=rows.length;
   var showKurye=isCadde();
-  var head='<tr><th style="width:42px">Sıra</th><th>Ad Soyad</th>'+(showKurye?'<th>Kurye</th>':'')+'<th>Birim</th><th></th></tr>';
+  var head='<tr><th style="width:42px">Sıra</th><th>Ad Soyad</th>'+(showKurye?'<th>Kurye</th>':'')+'<th>Birim</th><th>İzin Birim</th><th></th></tr>';
   box.innerHTML='<div class="table-wrap" style="max-height:70vh;padding:0"><table class="sheet slim"><thead>'+head+'</thead><tbody>'+
     rows.map(function(p,i){
       var kuryeCell=showKurye?'<td><input type="checkbox" class="ky"'+(p.kurye?" checked":"")+'></td>':'';
-      return '<tr data-id="'+p.id+'"><td><input type="number" class="sira" value="'+(i+1)+'" min="1" max="'+max+'" style="width:36px;text-align:center"></td><td class="name"><input class="nm"></td>'+kuryeCell+'<td><input type="number" class="br" value="'+(p.mesaiBirim||300)+'"></td><td><button class="btn del" type="button">Sil</button></td></tr>';
+      var izinBirim = p.izinBirim || 0;
+      var izinCell = '<td style="text-align:center;font-weight:600">'+(typeof dash==="function"?dash(izinBirim):izinBirim)+'</td>';
+      return '<tr data-id="'+p.id+'"><td><input type="number" class="sira" value="'+(i+1)+'" min="1" max="'+max+'" style="width:36px;text-align:center"></td><td class="name"><input class="nm"></td>'+kuryeCell+'<td><input type="number" class="br" value="'+(p.mesaiBirim||300)+'"></td>'+izinCell+'<td><button class="btn del" type="button">Sil</button></td></tr>';
     }).join("")+"</tbody></table></div>";
   rows.forEach(function(p){
     var tr=box.querySelector('tr[data-id="'+p.id+'"]');
