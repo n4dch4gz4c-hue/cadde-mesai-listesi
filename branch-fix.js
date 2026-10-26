@@ -5,13 +5,21 @@
     if(!bar) return;
     var buttons = bar.querySelectorAll("button");
     buttons.forEach(function(btn){
-      if(btn.textContent && btn.textContent.indexOf("Çengel") !== -1){
-        btn.textContent = correct;
+      var txt = btn.textContent || "";
+      if(txt.indexOf("Çengel") !== -1 || txt.indexOf("Çengel") !== -1){
+        if(btn.textContent !== correct){
+          btn.textContent = correct;
+        }
       }
     });
   }
-  setTimeout(fix, 100);
-  setTimeout(fix, 500);
-  setTimeout(fix, 1500);
-  setInterval(fix, 2000);
+  setTimeout(fix, 50);
+  setTimeout(fix, 200);
+  setTimeout(fix, 600);
+  setTimeout(fix, 1200);
+  setInterval(fix, 800);
+  
+  var observer = new MutationObserver(fix);
+  var bar = document.getElementById("branchBar");
+  if(bar) observer.observe(bar, {childList:true, subtree:true, characterData:true});
 })();
