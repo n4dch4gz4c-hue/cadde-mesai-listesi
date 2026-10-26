@@ -198,7 +198,7 @@ function renderDuzenle(){
     rows.map(function(p,i){
       var kuryeCell=showKurye?'<td><input type="checkbox" class="ky"'+(p.kurye?" checked":"")+'></td>':'';
       var izinBirim = p.izinBirim || 0;
-      var izinCell = '<td style="text-align:center;font-weight:600">'+(typeof dash==="function"?dash(izinBirim):izinBirim)+'</td>';
+      var izinCell = '<td><input type="number" class="izb" value="'+izinBirim+'" style="width:70px;text-align:center"></td>';
       return '<tr data-id="'+p.id+'"><td><input type="number" class="sira" value="'+(i+1)+'" min="1" max="'+max+'" style="width:36px;text-align:center"></td><td class="name"><input class="nm"></td>'+kuryeCell+'<td><input type="number" class="br" value="'+(p.mesaiBirim||300)+'"></td>'+izinCell+'<td><button class="btn del" type="button">Sil</button></td></tr>';
     }).join("")+"</tbody></table></div>";
   rows.forEach(function(p){
@@ -214,6 +214,7 @@ function renderDuzenle(){
     if(ev.target.classList.contains("nm")){ p.name=ev.target.value.trim(); persist(); toast("Isim guncellendi"); }
     if(ev.target.classList.contains("ky")){ p.kurye=!!ev.target.checked; persist(); renderAll(); }
     if(ev.target.classList.contains("br")){ p.mesaiBirim=num(ev.target.value,300); persist(); renderAll(); }
+    if(ev.target.classList.contains("izb")){ p.izinBirim=num(ev.target.value,0); if(typeof patchPerson==="function") patchPerson(p); persist(); renderAll(); toast("Izin birim guncellendi"); }
     if(ev.target.classList.contains("sira")){
       var newPos=parseInt(ev.target.value,10)||1;
       if(newPos<1) newPos=1;
