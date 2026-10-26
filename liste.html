@@ -146,6 +146,10 @@ function selectBranch(b){
       }
     }catch(e){}
   }
+  // Çengel için yanlış kayıtları temizle
+  if(b && b.toLocaleLowerCase("tr-TR").indexOf("çengel")>=0){
+    ["mesai_Çengelöy","mesai_Çengelöy","mesai_Çengelöy"].forEach(function(k){localStorage.removeItem(k);});
+  }
   renderBranchBar();
   if(typeof load==='function') load();
   var active=document.querySelector(".tab.on");
@@ -166,7 +170,7 @@ renderBranchBar();
 <script src="lock.js?v=106"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
-<script src="seed.js?v=133"></script>
+<script src="seed.js?v=134"></script>
 <script src="app.js?v=125"></script>
 <script src="gh.js?v=108"></script>
 <script src="plus.js?v=113"></script>
