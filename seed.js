@@ -158,7 +158,8 @@ const SEED_KADIKOY={period:"KADIKÖY MESAİ",people:[
 
 const SEED=SEED_CADDE;
 function getSeedForBranch(b){
-  if(b==="Çengelköy") return SEED_CENGEL;
-  if(b==="Kadıköy") return SEED_KADIKOY;
+  var n=(b||"").toLocaleLowerCase("tr-TR");
+  if(n.indexOf("çengel")>=0 || n.indexOf("cengel")>=0) return SEED_CENGEL;
+  if(n.indexOf("kadık")>=0 || n.indexOf("kadik")>=0) return SEED_KADIKOY;
   return SEED_CADDE;
 }
