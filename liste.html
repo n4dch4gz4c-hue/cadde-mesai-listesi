@@ -146,10 +146,6 @@ function selectBranch(b){
       }
     }catch(e){}
   }
-  // Çengel için yanlış kayıtları temizle
-  if(b && b.toLocaleLowerCase("tr-TR").indexOf("çengel")>=0){
-    ["mesai_Çengelöy","mesai_Çengelöy","mesai_Çengelöy"].forEach(function(k){localStorage.removeItem(k);});
-  }
   renderBranchBar();
   if(typeof load==='function') load();
   var active=document.querySelector(".tab.on");
