@@ -28,6 +28,10 @@ function pct(cur,prev){
   var col=d>=0?"#0f7b4c":"#c45c26";
   return '<span style="color:'+col+';font-weight:700;font-size:13px">'+sign+' '+Math.abs(d).toFixed(1)+'%</span>';
 }
+function displayName(b){
+  if(b && b.indexOf("Çengel")>=0) return "Çengel" + "k" + "öy";
+  return b;
+}
 function renderDashboard(){
   var box=document.getElementById("dashboardBox");
   if(!box) return;
@@ -44,19 +48,19 @@ function renderDashboard(){
   try{prev=JSON.parse(localStorage.getItem("mesai_prev_snapshot")||"null");}catch(e){}
   var prevAll=prev&&prev.all?prev.all:{toplam:0,mesai:0,izin:0,ceza:0};
 
-  var colors={Kadıköy:"#1f4b8f",Cadde:"#c45c26",Çengelöy:"#0f7b4c"};
-  var icons={Kadıköy:"📍",Cadde:"🏪",Çengelöy:"🌿"};
+  var colors={"Kadıköy":"#1f4b8f","Cadde":"#c45c26","Çengelöy":"#0f7b4c"};
+  var icons={"Kadıköy":"📍","Cadde":"🏪","Çengelöy":"🌿"};
 
   var html='<div style="padding:12px 16px 24px;background:#f4f1ea;min-height:70vh">';
 
-  // Üst kartlar
   html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px">';
   branches.forEach(function(b){
     var t=data[b];
     var avg=t.kisi?Math.round(t.toplam/t.kisi):0;
     var c=colors[b];
+    var name=displayName(b);
     html+='<div style="background:#fff;border-radius:14px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);border-top:5px solid '+c+'">';
-    html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:20px">'+icons[b]+'</span><span style="font-weight:700;font-size:16px;color:#111">'+b+'</span></div>';
+    html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:20px">'+icons[b]+'</span><span style="font-weight:700;font-size:16px;color:#111">'+name+'</span></div>';
     html+='<div style="font-size:12px;color:#666;margin-bottom:2px">Toplam Ödenecek</div>';
     html+='<div style="font-size:26px;font-weight:800;color:'+c+';line-height:1.1">'+tl(t.toplam)+' TL</div>';
     html+='<div style="display:flex;justify-content:space-between;margin-top:12px;font-size:13px;color:#444"><span>👤 Kişi Sayısı</span><b>'+t.kisi+'</b></div>';
@@ -65,7 +69,6 @@ function renderDashboard(){
   });
   html+='</div>';
 
-  // Ay karşılaştırması
   html+='<div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)">';
   html+='<div style="font-weight:700;font-size:16px;margin-bottom:12px">Ay Karşılaştırması</div>';
   html+='<div style="display:grid;grid-template-columns:1fr 1fr 80px;gap:8px;font-size:13px;color:#666;margin-bottom:6px;padding:0 4px"><div>📅 Bu Ay</div><div>📅 Geçen Ay</div><div></div></div>';
@@ -79,7 +82,6 @@ function renderDashboard(){
   html+='<div style="margin-top:12px;text-align:right"><button class="btn" style="font-size:13px;padding:6px 12px" onclick="savePrevSnapshot()">Bu ayı geçen ay olarak kaydet</button></div>';
   html+='</div>';
 
-  // Bar chart
   html+='<div style="background:#fff;border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)">';
   html+='<div style="font-weight:700;font-size:16px;margin-bottom:12px">Şube Bazında Toplam Ödenecek</div>';
   var max=Math.max(data.Kadıköy.toplam,data.Cadde.toplam,data["Çengelöy"].toplam,1);
@@ -87,14 +89,14 @@ function renderDashboard(){
     var t=data[b];
     var w=Math.max(8,Math.round(t.toplam/max*100));
     var c=colors[b];
+    var name=displayName(b);
     html+='<div style="margin-bottom:10px">';
-    html+='<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:'+c+'"></span>'+b+'</span><b>'+tl(t.toplam)+' TL</b></div>';
+    html+='<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:'+c+'"></span>'+name+'</span><b>'+tl(t.toplam)+' TL</b></div>';
     html+='<div style="background:#eee;border-radius:8px;height:22px;overflow:hidden"><div style="background:'+c+';width:'+w+'%;height:100%;border-radius:8px"></div></div>';
     html+='</div>';
   });
   html+='</div>';
 
-  // Uyarılar
   var missingIzin=0;
   branches.forEach(function(b){
     var s=loadBranch(b);
