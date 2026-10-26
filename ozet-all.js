@@ -1,6 +1,6 @@
 (function(){
 var cs=document.createElement("style");
-cs.textContent=["#sec-ozet table,#kalemPanel table{background:#fff!important;color:#111!important}","#sec-ozet td,#sec-ozet td.name,#kalemPanel td,#kalemPanel td.name{color:#111!important;background:#fff!important;-webkit-text-fill-color:#111!important}","#sec-ozet td.tot{background:#f3e8d2!important;color:#111!important}","#sec-ozet tfoot td{background:#222!important;color:#fff!important}","#ozetKisa table.kisa-tbl{width:100%;max-width:420px;font-size:12px}","#ozetKisa table.kisa-tbl th,#ozetKisa table.kisa-tbl td{padding:3px 6px;line-height:1.2}","@media(max-width:768px){.ozet-card{background:#fff;border:1px solid #ddd;border-radius:8px;padding:8px;margin-bottom:6px;font-size:12px}.ozet-card .name{font-weight:700;color:#111}.ozet-card .tot{color:#0f7b4c;font-weight:700;float:right}.ozet-card .details{font-size:10px;color:#666;margin-top:4px}}"].join("\n");
+cs.textContent=["#sec-ozet table,#kalemPanel table{background:#fff!important;color:#111!important}","#sec-ozet td,#sec-ozet td.name,#kalemPanel td,#kalemPanel td.name{color:#111!important;background:#fff!important;-webkit-text-fill-color:#111!important}","#sec-ozet td.tot{background:#f3e8d2!important;color:#111!important}","#sec-ozet tfoot td{background:#222!important;color:#fff!important}","#ozetKisa table.kisa-tbl{width:auto!important;max-width:520px!important;font-size:13px}","#ozetKisa table.kisa-tbl th,#ozetKisa table.kisa-tbl td{padding:3px 6px;line-height:1.2}","@media(max-width:768px){.ozet-card{background:#fff;border:1px solid #ddd;border-radius:8px;padding:8px;margin-bottom:6px;font-size:12px}.ozet-card .name{font-weight:700;color:#111}.ozet-card .tot{color:#0f7b4c;font-weight:700;float:right}.ozet-card .details{font-size:10px;color:#666;margin-top:4px}}"].join("\n");
 document.head.appendChild(cs);
 function money(n){ n=Math.round(Number(n)||0); return n===0?"0":(typeof tl==="function"?tl(n):String(n)); }
 function dsh(n){ n=Math.round(Number(n)||0); return n===0?"-":money(n); }
@@ -44,7 +44,7 @@ function htmlKisa(list){
     }
     h+="<div class='ozet-card' style='background:#e8f5e9;font-weight:700'><span>TOPLAM</span><span class='tot'>"+money(tot)+" TL</span><div style='clear:both'></div></div>";
   }else{
-    h+="<table class='sheet slim kisa-tbl'>";
+    h+="<table class='sheet slim kisa-tbl' style='width:auto;max-width:520px;margin:0'>";
     h+="<thead><tr><th style='width:36px'>No</th><th>Ad Soyad</th><th style='width:78px'>Odenecek</th></tr></thead><tbody>";
     for(i=0;i<list.length;i++){
       p=list[i]; c=rowCalc(p);
