@@ -88,6 +88,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
 </header>
 <nav class="tabs">
   <button class="tab on" data-tab="liste" onclick="tab(this)">Liste</button>
+  <button class="tab" data-tab="dashboard" onclick="tab(this)">Dashboard</button>
   <button class="tab" data-tab="duzenle" onclick="tab(this)">Düzenleme</button>
   <button class="tab" data-tab="kurye" id="tabKurye" onclick="tab(this)">Kurye</button>
   <button class="tab" data-tab="devam" onclick="tab(this)">Devamsızlık</button>
@@ -100,6 +101,7 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
   <div class="table-wrap"><table class="sheet"><thead><tr><th>No</th><th>Ad Soyad</th><th>Mesai saat</th><th>Mesai tutar</th><th>HS adet</th><th>HS tutar</th><th>Prim</th><th>Yol</th><th>İzin gün</th><th>İzin tutar</th><th>Yıllık</th><th>Disiplin</th><th>Toplam</th></tr></thead><tbody id="tbody"></tbody><tfoot id="tfoot"></tfoot></table></div>
   <div id="mobileList"></div>
 </section>
+<section id="sec-dashboard" class="hide"><div id="dashboardBox"></div></section>
 <section id="sec-duzenle" class="hide">
   <div class="panel"><h2>Düzenleme</h2><p>İsim düzelt, sırayı taşı veya sil.</p>
     <b>Kişi ekle</b>
@@ -160,6 +162,7 @@ renderBranchBar();
 <script src="gh.js?v=108"></script>
 <script src="plus.js?v=113"></script>
 <script src="page-extra.js?v=137"></script>
+<script src="dashboard.js?v=1"></script>
 <script src="mobile-fix.js?v=106"></script>
 <script src="ozet-all.js?v=108"></script>
 <script src="all-pdf.js?v=9"></script>
