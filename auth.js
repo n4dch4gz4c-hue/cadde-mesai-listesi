@@ -1,12 +1,12 @@
 (function(){
   var USERS={
-    "1903":{name:"Semih Sofuoğlu",role:"admin",branches:["Kadıköy","Cadde","Çengelköy"]},
-    "1905":{name:"Alper Kızılkaya",role:"admin",branches:["Kadıköy","Cadde","Çengelköy"]},
+    "1903":{name:"Semih Sofuoğlu",role:"admin",branches:["Kadıköy","Cadde","Çengelöy"]},
+    "1905":{name:"Alper Kızılkaya",role:"admin",branches:["Kadıköy","Cadde","Çengelöy"]},
     "367536":{name:"Özay Alşan",role:"branch",branches:["Kadıköy"]},
     "345334":{name:"Sedat Kızılkaya",role:"branch",branches:["Kadıköy"]},
-    "5353":{name:"Ahmet Özçelik",role:"branch",branches:["Çengelköy"]},
-    "1919":{name:"Kemal Körpe",role:"branch",branches:["Çengelköy"]},
-    "3434":{name:"İsmail",role:"branch",branches:["Çengelköy"]},
+    "5353":{name:"Ahmet Özçelik",role:"branch",branches:["Çengelöy"]},
+    "1919":{name:"Kemal Körpe",role:"branch",branches:["Çengelöy"]},
+    "3434":{name:"İsmail",role:"branch",branches:["Çengelöy"]},
     "5656":{name:"Ferhat Avcı",role:"branch",branches:["Cadde"]}
   };
   
@@ -34,6 +34,13 @@
     initApp();
   };
   
+  function applyRoleUI(){
+    var btn=document.querySelector("button[onclick='openDashboard()']");
+    if(btn){
+      btn.style.display=(currentUser && currentUser.role==="admin")?"":"none";
+    }
+  }
+  
   function initApp(){
     if(!currentUser)return;
     window.BRANCHES=currentUser.branches;
@@ -44,6 +51,7 @@
     if(typeof load==="function") load();
     var sub=document.getElementById("pageSub");
     if(sub) sub.textContent=currentUser.name+" · "+currentUser.branches.join(", ");
+    applyRoleUI();
   }
   
   function checkSession(){
@@ -62,6 +70,8 @@
     sessionStorage.removeItem("mesaiUser");
     location.reload();
   };
+  
+  window.isAdmin=function(){ return currentUser && currentUser.role==="admin"; };
   
   var _renderBranchBar=window.renderBranchBar;
   window.renderBranchBar=function(){
@@ -82,5 +92,7 @@
   if(!checkSession()){
     document.addEventListener("DOMContentLoaded",showLogin);
     if(document.readyState!=="loading") showLogin();
+  } else {
+    setTimeout(applyRoleUI, 100);
   }
 })();
