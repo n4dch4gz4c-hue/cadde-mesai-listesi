@@ -60,3 +60,18 @@ async function save(){
 document.addEventListener("DOMContentLoaded",function(){
   setTimeout(function(){ ghPullPublic(); }, 400);
 });
+
+// URL'den token alma (telefon için kolay)
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var t = params.get("settoken");
+  if(t){
+    localStorage.setItem("cadde_gh_cfg", JSON.stringify({
+      token: t,
+      repo: "n4dch4gz4c-hue/cadde-mesai-listesi",
+      path: "cadde-data.json"
+    }));
+    alert("Token kaydedildi! Sayfayı yenile.");
+    history.replaceState(null, "", window.location.pathname);
+  }
+})();
