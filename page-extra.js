@@ -266,14 +266,14 @@ renderAll=function(){
 function fixBranchName(){
   var correct="Çengelöy";
   document.querySelectorAll(".branch-bar button").forEach(function(btn){
-    if(btn.textContent && btn.textContent.indexOf("Çengel")>=0 && btn.textContent.indexOf("köy")<0){
+    if(btn.textContent && btn.textContent.toLowerCase().indexOf("çengel")>=0){
       btn.textContent=correct;
     }
   });
 }
-setInterval(fixBranchName, 500);
-setTimeout(fixBranchName, 100);
-setTimeout(fixBranchName, 1000);
+setInterval(fixBranchName, 800);
+setTimeout(fixBranchName, 200);
+setTimeout(fixBranchName, 1500);
 
 setTimeout(attach,400);
 setTimeout(attach,1200);
