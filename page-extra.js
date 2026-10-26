@@ -243,7 +243,7 @@ window.setSira=function(id, newPos){
 window.tab=function(el){
   document.querySelectorAll(".tab[data-tab]").forEach(function(t){t.classList.toggle("on",t===el);});
   var id=el.dataset.tab;
-  ["liste","kurye","devam","ceza","ozet","rapor","duzenle"].forEach(function(s){
+  ["liste","kurye","devam","ceza","ozet","rapor","duzenle","dashboard"].forEach(function(s){
     var e=document.getElementById("sec-"+s); if(e) e.classList.toggle("hide",s!==id);
   });
   if(id==="kurye") renderKurye();
@@ -252,6 +252,7 @@ window.tab=function(el){
   if(id==="ozet"){ renderOzet(); if(typeof ozetMod==="function") ozetMod((document.querySelector("[data-ozet].on")||{}).dataset.ozet||"kisa"); }
   if(id==="rapor") renderRapor();
   if(id==="duzenle") renderDuzenle();
+  if(id==="dashboard" && typeof renderDashboard==="function") renderDashboard();
 };
 var _ra=renderAll;
 renderAll=function(){
