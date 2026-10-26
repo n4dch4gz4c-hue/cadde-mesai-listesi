@@ -83,12 +83,12 @@ input,select{padding:6px;border:1px solid #d7cfc3;border-radius:6px;font-size:16
     <button class="btn" onclick="yedekAl()">Yedek</button>
     <button class="btn" onclick="sharePDF()">PDF</button>
     <button id="allPdfBtn" class="btn hide" onclick="generateAllPdf()" style="background:#7c3aed;color:#fff">Tüm Şubeler</button>
+    <button class="btn" onclick="openDashboard()" style="background:#0b1220;color:#fff">Dashboard</button>
     <button class="btn" onclick="logout()" style="background:#c45c26;color:#fff">Çıkış</button>
   </div>
 </header>
 <nav class="tabs">
   <button class="tab on" data-tab="liste" onclick="tab(this)">Liste</button>
-  <button class="tab" data-tab="dashboard" onclick="tab(this)">Dashboard</button>
   <button class="tab" data-tab="duzenle" onclick="tab(this)">Düzenleme</button>
   <button class="tab" data-tab="kurye" id="tabKurye" onclick="tab(this)">Kurye</button>
   <button class="tab" data-tab="devam" onclick="tab(this)">Devamsızlık</button>
@@ -150,6 +150,15 @@ function selectBranch(b){
   if(typeof load==='function') load();
   var active=document.querySelector(".tab.on");
   if(active && typeof tab==="function") tab(active);
+}
+function openDashboard(){
+  document.querySelectorAll(".tab[data-tab]").forEach(function(t){t.classList.remove("on");});
+  ["liste","kurye","devam","ceza","ozet","rapor","duzenle"].forEach(function(s){
+    var e=document.getElementById("sec-"+s); if(e) e.classList.add("hide");
+  });
+  var d=document.getElementById("sec-dashboard");
+  if(d) d.classList.remove("hide");
+  if(typeof renderDashboard==="function") renderDashboard();
 }
 renderBranchBar();
 </script>
