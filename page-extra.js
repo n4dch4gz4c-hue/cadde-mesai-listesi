@@ -261,6 +261,20 @@ renderAll=function(){
   var d=document.getElementById("sec-duzenle");
   if(d && !d.classList.contains("hide")) renderDuzenle();
 };
+
+// Şube adı düzeltmesi
+function fixBranchName(){
+  var correct="Çengelöy";
+  document.querySelectorAll(".branch-bar button").forEach(function(btn){
+    if(btn.textContent && btn.textContent.indexOf("Çengel")>=0 && btn.textContent.indexOf("köy")<0){
+      btn.textContent=correct;
+    }
+  });
+}
+setInterval(fixBranchName, 500);
+setTimeout(fixBranchName, 100);
+setTimeout(fixBranchName, 1000);
+
 setTimeout(attach,400);
 setTimeout(attach,1200);
 })();
