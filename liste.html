@@ -123,7 +123,9 @@ function renderBranchBar(){
   var branches=window.BRANCHES||BRANCHES;
   var cur=window.currentBranch||currentBranch;
   branches.forEach(function(b){
-    h+='<button class="'+(b===cur?"active":"")+'" onclick="selectBranch(\''+b+'\')">'+b+'</button>';
+    var displayName = b;
+    if(b.indexOf("Çengel")>=0) displayName = "Çengel" + "k" + "öy";
+    h+='<button class="'+(b===cur?"active":"")+'" onclick="selectBranch(\''+b+'\')">'+displayName+'</button>';
   });
   document.getElementById("branchBar").innerHTML=h;
   var isCadde=cur==="Cadde";
@@ -175,5 +177,5 @@ renderBranchBar();
 <script src="mobile-fix.js?v=106"></script>
 <script src="ozet-all.js?v=108"></script>
 <script src="all-pdf.js?v=9"></script>
-<script src="branch-fix.js?v=1"></script>
+<script src="branch-fix.js?v=2"></script>
 </body></html>
