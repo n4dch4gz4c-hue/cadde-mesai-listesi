@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3 Şube Mesai Listesi - Firebase</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<style>
+body{font-family:system-ui,sans-serif;margin:0;background:#f4f1ea;color:#1f2933}
+.header{background:#1f4b8f;color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.header h1{margin:0;font-size:20px}
+button{padding:8px 14px;border:1px solid #d7cfc3;background:#fff;border-radius:8px;cursor:pointer;font-weight:600}
+button.primary{background:#1f4b8f;color:#fff;border-color:#1f4b8f}
+select,input{padding:8px;border:1px solid #d7cfc3;border-radius:6px}
+.table-wrap{overflow:auto;padding:0 16px 20px;max-height:75vh}
+table{border-collapse:collapse;width:100%;min-width:1200px;background:#fff;font-size:13px}
+th{background:#c45c26;color:#fff;padding:8px 4px;position:sticky;top:0;z-index:2}
+td{border:1px solid #eadfd2;padding:4px;text-align:center}
+td.name{text-align:left !important;font-weight:700;min-width:180px;padding-left:8px;}
+input.cell{width:60px;text-align:center;border:1px solid #ddd;border-radius:4px;padding:4px;background:#fff8e6}
+.formula{background:#e8f5e9;font-weight:700}
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 18px;border-radius:8px;display:none;z-index:99}
+.stats{display:flex;gap:12px;padding:12px 16px;flex-wrap:wrap}
+.stat{background:#fff;border:1px solid #d7cfc3;border-radius:8px;padding:10px 14px;min-width:140px}
+.stat b{display:block;font-size:18px;color:#1f4b8f}
+@media (max-width: 768px) {
+  body { padding: 6px; }
+  .header { flex-direction: column; align-items: flex-start; gap: 8px; padding: 12px; }
+  table { font-size: 11px; min-width: 700px; }
+  input.cell { width: 48px; }
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1>3 Şube Mesai Listesi</h1>
+    <div style="font-size:13px;opacity:.85">Firebase senkron</div>
+  </div>
+  <div>
+    <select id="branch" onchange="switchBranch()">
+      <option>Cadde</option>
+      <option>Kadıköy</option>
+      <option>Çengelöy</option>
+    </select>
+    <button class="primary" onclick="saveNow()">Kaydet</button>
+    <button onclick="downloadPDF('liste')">PDF</button>
+  </div>
+</div>
+<nav style="display:flex;gap:6px;padding:10px 16px;background:#fff;border-bottom:1px solid #ddd;flex-wrap:wrap;">
+  <button class="tab on" onclick="showTab('liste',this)">Liste</button>
+  <button class="tab" onclick="showTab('devam',this)">Devamsızlık</button>
+  <button class="tab" onclick="showTab('ceza',this)">Ceza</button>
+  <button class="tab" onclick="showTab('dashboard',this)">Dashboard</button>
+  <button class="tab" onclick="showTab('ozet',this)">Özet</button>
+</nav>
+<div class="stats" id="stats"></div>
+<div id="sec-liste" class="table-wrap">
+<table>
+<thead>
+<tr>
+  <th>#</th><th>AD SOYAD</th>
+  <th>Mesai Saat</th><th>Mesai</th>
+  <th>HS Saat</th><th>HS</th>
+  <th>Prim Adet</th><th>Prim</th>
+  <th>Yol</th><th>İzin</th><th>Yıllık</th><th>Disiplin</th>
+  <th>TOPLAM</th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+<div id="sec-devam" style="display:none;padding:16px;"></div>
+<div id="sec-ceza" style="display:none;padding:16px;"></div>
+<div id="sec-dashboard" style="display:none;padding:16px;"></div>
+<div id="sec-ozet" style="display:none;padding:16px;"></div>
+<div id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBHgiy7cM5TRYz2zuwY6CeFJwrqsVCaZjk",
+  authDomain: "cadde-mesai.firebaseapp.com",
+  databaseURL: "https://cadde-mesai-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "cadde-mesai",
+  storageBucket: "cadde-mesai.firebasestorage.app",
+  messagingSenderId: "622996188078",
+  appId: "1:622996188078:web:22962c989bedc87c02363f"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const SEED = 
