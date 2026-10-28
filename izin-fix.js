@@ -61,21 +61,9 @@
     persist();
     if(typeof renderListe==="function") renderListe();
   };
+  // lockIzinInputs devre dışı — desktop’ta izin günü inputu aktif olsun
   function lockIzinInputs(){
-    var rows=document.querySelectorAll("#tbody tr");
-    rows.forEach(function(tr){
-      var tds=tr.querySelectorAll("td");
-      if(tds.length<10) return;
-      var inp=tds[9].querySelector("input");
-      if(inp){
-        var idInp=tds[8].querySelector("input");
-        var gun=idInp?num(idInp.value,0):0;
-        var name=(tds[1].textContent||"");
-        var person=state.people.find(function(x){return name.indexOf(x.name)===0;});
-        var birim=person?person.izinBirim:0;
-        tds[9].textContent=dash(gun*birim);
-      }
-    });
+    // no-op
   }
   var tries=0;
   function hook(){
@@ -88,7 +76,7 @@
       window.renderListe=function(){
         old();
         if(Array.isArray(state&&state.people)) state.people.forEach(patchPerson);
-        lockIzinInputs();
+        // lockIzinInputs();  // kapatıldı
       };
       renderListe._izinHook=true;
     }
